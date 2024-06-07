@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchandizeService", "src\Ozon.MerchandizeService\Ozon.MerchandizeService.csproj", "{70426E2B-E18B-4770-BC8A-72E986D41A83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C7876B2B-7189-4888-A5A6-73B720FD26A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{530E10BA-E6FA-4F57-B007-7D5EA6DF73FE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70426E2B-E18B-4770-BC8A-72E986D41A83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70426E2B-E18B-4770-BC8A-72E986D41A83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70426E2B-E18B-4770-BC8A-72E986D41A83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70426E2B-E18B-4770-BC8A-72E986D41A83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70426E2B-E18B-4770-BC8A-72E986D41A83} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
+	EndGlobalSection
+EndGlobal
