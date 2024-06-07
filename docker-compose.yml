@@ -1,0 +1,6 @@
+﻿services:
+  ozon.merchandizeservice:
+    image: ozon.merchandizeservice
+    build:
+      context: .
+      dockerfile: src/Ozon.MerchandizeService/Dockerfile

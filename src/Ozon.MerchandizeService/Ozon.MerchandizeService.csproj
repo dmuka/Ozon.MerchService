@@ -20,6 +20,9 @@
     <ItemGroup>
       <Content Remove="src\**" />
       <Content Remove="tests\**" />
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
