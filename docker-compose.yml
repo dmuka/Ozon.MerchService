@@ -1,6 +1,9 @@
 ﻿services:
-  ozon.merchandizeservice:
-    image: ozon.merchandizeservice
+  ozon.merchandize_service:
+    image: ozon.merchandize_service
     build:
       context: .
       dockerfile: src/Ozon.MerchandizeService/Dockerfile
+      ports:
+        - "5072:5002"
+        - "5073:5003"
