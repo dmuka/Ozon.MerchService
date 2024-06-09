@@ -23,8 +23,7 @@ public static class HostBuilderExtensions
         {
             services.AddControllers();
 
-            services.AddSingleton<IStartupFilter, VersionInformation>();
-            services.AddSingleton<IStartupFilter, Swagger>();
+            AddStartupFilters(services);
                 
             services.AddSwaggerGen(options =>
             {
@@ -46,6 +45,13 @@ public static class HostBuilderExtensions
         });
 
         return builder;
+    }
+
+    private static void AddStartupFilters(IServiceCollection services)
+    {
+        services.AddSingleton<IStartupFilter, VersionInformation>();
+        services.AddSingleton<IStartupFilter, Swagger>();
+        services.AddSingleton<IStartupFilter, LiveResponse>();
     }
 
     private static string GetXmlFileName()

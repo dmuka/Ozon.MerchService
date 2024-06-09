@@ -6,4 +6,5 @@ namespace Ozon.MerchandizeService.Configuration.Constants;
 public static class Routes
 {
     public const string VersionInformation = "/version";
+    public const string LiveResponse = "/live";
 }
