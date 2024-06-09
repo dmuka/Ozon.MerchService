@@ -1,3 +1,5 @@
+using Ozon.MerchandizeService.Configuration.Middlewares;
+
 namespace Ozon.MerchandizeService;
 
 /// <summary>
@@ -22,6 +24,7 @@ public class Startup(IConfiguration configuration)
     public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
     {
         application.UseRouting();
+        
         application.UseEndpoints(endpoints =>
         {
             endpoints.MapGet("/", () => "Bla bla bla");
