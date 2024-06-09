@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Ozon.MerchandizeService;
+using Ozon.MerchandizeService.Configuration.Extensions;
 
 
 CreateHostBuilder(args).Build().Run();
@@ -12,4 +13,5 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-            });
+            })
+        .AddInfrastructure();
