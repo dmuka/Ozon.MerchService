@@ -52,6 +52,7 @@ public static class HostBuilderExtensions
         services.AddSingleton<IStartupFilter, VersionInformation>();
         services.AddSingleton<IStartupFilter, Swagger>();
         services.AddSingleton<IStartupFilter, LiveResponse>();
+        services.AddSingleton<IStartupFilter, ReadyResponse>();        
     }
 
     private static string GetXmlFileName()
