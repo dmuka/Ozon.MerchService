@@ -1,4 +1,5 @@
 using System.Text;
+using Ozon.MerchandizeService.Configuration.Constants;
 
 namespace Ozon.MerchandizeService.Configuration.Middlewares;
 
@@ -13,10 +14,13 @@ public class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggi
     /// <param name="context">Http context object</param>
     public async Task InvokeAsync(HttpContext context)
     {
-        var message = GetRouteHeadersLogMessage(context.Request.Path, context.Request.Headers);
-        
-        logger.LogInformation(message);
-        
+        if (context.Request.ContentType != ContentTypes.Grpc)
+        {
+            var message = GetRouteHeadersLogMessage(context.Request.Path, context.Request.Headers);
+
+            logger.LogInformation(message);
+        }
+
         await next(context);
     }
 }
