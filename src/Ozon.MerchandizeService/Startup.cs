@@ -1,3 +1,4 @@
+using Ozon.MerchandizeService.Configuration.ExceptionsFilters;
 using Ozon.MerchandizeService.Configuration.Middlewares;
 
 namespace Ozon.MerchandizeService;

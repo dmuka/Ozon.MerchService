@@ -1,7 +1,6 @@
-using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Ozon.MerchandizeService.Configuration.Constants;
-using Ozon.MerchandizeService.Configuration.Middlewares;
+using Ozon.MerchandizeService.Configuration.ExceptionsFilters;
 using Ozon.MerchandizeService.Configuration.OperationFilters;
 using Ozon.MerchandizeService.Configuration.StartupFilters;
 
@@ -21,7 +20,10 @@ public static class HostBuilderExtensions
     {
         builder.ConfigureServices(services =>
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+            });
 
             AddStartupFilters(services);
                 
