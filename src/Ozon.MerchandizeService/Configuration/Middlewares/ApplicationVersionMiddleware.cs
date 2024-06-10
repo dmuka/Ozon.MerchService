@@ -6,14 +6,8 @@ namespace Ozon.MerchandizeService.Configuration.Middlewares;
 /// <summary>
 /// Middleware for application version information
 /// </summary>
-public class ApplicationVersionMiddleware
+public class ApplicationVersionMiddleware(RequestDelegate next)
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="next">The delegate representing the remaining middleware in the request pipeline.</param>
-    public ApplicationVersionMiddleware(RequestDelegate next) {}
-
     /// <summary>
     /// Write application version information in response
     /// </summary>

@@ -49,10 +49,12 @@ public static class HostBuilderExtensions
 
     private static void AddStartupFilters(IServiceCollection services)
     {
-        services.AddSingleton<IStartupFilter, VersionInformation>();
         services.AddSingleton<IStartupFilter, Swagger>();
+        services.AddSingleton<IStartupFilter, ResponseLogging>();
+        services.AddSingleton<IStartupFilter, RequestLogging>();
+        services.AddSingleton<IStartupFilter, VersionInformation>();
         services.AddSingleton<IStartupFilter, LiveResponse>();
-        services.AddSingleton<IStartupFilter, ReadyResponse>();        
+        services.AddSingleton<IStartupFilter, ReadyResponse>();
     }
 
     private static string GetXmlFileName()
