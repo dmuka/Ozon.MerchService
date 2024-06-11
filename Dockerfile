@@ -7,17 +7,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Ozon.MerchService/Ozon.MerchService.csproj", "src/Ozon.MerchandizeService/"]
-RUN dotnet restore "src/Ozon.MerchandizeService/Ozon.MerchandizeService.csproj"
+COPY ["src/Ozon.MerchService/Ozon.MerchService.csproj", "src/Ozon.MerchService/"]
+RUN dotnet restore "src/Ozon.MerchService/Ozon.MerchService.csproj"
 COPY . .
-WORKDIR "/src/src/Ozon.MerchandizeService"
-RUN dotnet build "Ozon.MerchandizeService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/Ozon.MerchService"
+RUN dotnet build "Ozon.MerchService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Ozon.MerchandizeService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ozon.MerchService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Ozon.MerchandizeService.dll"]
+ENTRYPOINT ["dotnet", "Ozon.MerchService.dll"]
