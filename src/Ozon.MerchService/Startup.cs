@@ -1,5 +1,7 @@
 using Ozon.MerchandizeService.Configuration.ExceptionsFilters;
 using Ozon.MerchandizeService.Configuration.Middlewares;
+using Ozon.MerchandizeService.Services.Implementations;
+using Ozon.MerchandizeService.Services.Interfaces;
 
 namespace Ozon.MerchandizeService;
 
@@ -15,6 +17,7 @@ public class Startup(IConfiguration configuration)
     /// <param name="services">IOC container</param>
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton<IMerchService, MerchService>();
     }
     
     /// <summary>
