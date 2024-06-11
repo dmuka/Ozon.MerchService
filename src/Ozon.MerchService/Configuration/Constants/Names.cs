@@ -7,7 +7,7 @@ namespace Ozon.MerchandizeService.Configuration.Constants;
 /// </summary>
 public static class Names
 {
-    public const string DefaultApplicationName = "Ozon.MerchandizeService";
+    public const string DefaultApplicationName = "Ozon.MerchService";
     public const string SwaggerDocVersion = "Version 1";
 
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchandizeService", "src\Ozon.MerchandizeService\Ozon.MerchandizeService.csproj", "{70426E2B-E18B-4770-BC8A-72E986D41A83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService", "src\Ozon.MerchService\Ozon.MerchService.csproj", "{70426E2B-E18B-4770-BC8A-72E986D41A83}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}"
 EndProject
@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{530E10
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		readme.md = readme.md
-		Dockerfile = Dockerfile
-		.dockerignore = .dockerignore
 		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore 
 	EndProjectSection
 EndProject
 Global

@@ -7,6 +7,7 @@
         <Version>0.0.1</Version>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Ozon.MerchandizeService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,14 +23,12 @@
     <ItemGroup>
       <Content Remove="src\**" />
       <Content Remove="tests\**" />
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="src\**" />
       <None Remove="tests\**" />
+      <None Remove="Dockerfile" />
     </ItemGroup>
 
     <ItemGroup>

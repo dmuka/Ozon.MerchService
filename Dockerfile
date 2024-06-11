@@ -7,7 +7,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Ozon.MerchandizeService/Ozon.MerchandizeService.csproj", "src/Ozon.MerchandizeService/"]
+COPY ["src/Ozon.MerchService/Ozon.MerchService.csproj", "src/Ozon.MerchandizeService/"]
 RUN dotnet restore "src/Ozon.MerchandizeService/Ozon.MerchandizeService.csproj"
 COPY . .
 WORKDIR "/src/src/Ozon.MerchandizeService"
