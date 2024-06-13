@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Ozon.MerchandizeService.Configuration.ExceptionsFilters;
+namespace Ozon.MerchService.Configuration.ExceptionsFilters;
 
 /// <summary>
 /// Global exception filter

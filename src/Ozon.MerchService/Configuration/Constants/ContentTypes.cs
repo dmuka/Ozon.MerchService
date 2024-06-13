@@ -1,4 +1,4 @@
-namespace Ozon.MerchandizeService.Configuration.Constants;
+namespace Ozon.MerchService.Configuration.Constants;
 
 public static class ContentTypes
 {

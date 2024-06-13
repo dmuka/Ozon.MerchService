@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Ozon.MerchandizeService.Configuration.OperationFilters;
+namespace Ozon.MerchService.Configuration.OperationFilters;
 
 /// <summary>
 /// Add test header in the Swagger UI

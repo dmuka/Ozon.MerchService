@@ -1,6 +1,4 @@
-using Ozon.MerchandizeService.Configuration.Constants;
-
-namespace Ozon.MerchandizeService.Configuration.Middlewares;
+namespace Ozon.MerchService.Configuration.Middlewares;
 
 /// <summary>
 /// Middleware for live response

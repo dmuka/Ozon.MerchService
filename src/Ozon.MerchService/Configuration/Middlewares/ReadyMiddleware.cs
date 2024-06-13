@@ -1,4 +1,4 @@
-namespace Ozon.MerchandizeService.Configuration.Middlewares;
+namespace Ozon.MerchService.Configuration.Middlewares;
 
 /// <summary>
 /// Middleware for ready response

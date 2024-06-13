@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package Ozon.MerchService;
+
+option csharp_namespace = "Ozon.MerchService.GRPC";
+
+service MerchService{
+  rpc RequestMerch (RequestMerchRequest) returns (RequestMerchResponse);
+}
+
+message RequestMerchRequest {
+  int64 employee_id = 1;
+  MerchPackId merch_pack_id = 2;
+}
+
+message RequestMerchResponse{
+  int64 merch_id = 1;
+}
+
+enum MerchPackId
+{
+  STARTER_PACK = 0;
+  WELCOME_PACK = 1;
+  CONFERENCE_LISTENER_PACK = 2;
+  CONFERENCE_SPEAKER_PACK = 3;
+  VETERAN_PACK = 4;
+}

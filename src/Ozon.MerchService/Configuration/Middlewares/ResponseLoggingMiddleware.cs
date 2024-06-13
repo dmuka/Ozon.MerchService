@@ -1,7 +1,6 @@
-using System.Text;
-using Ozon.MerchandizeService.Configuration.Constants;
+using Ozon.MerchService.Configuration.Constants;
 
-namespace Ozon.MerchandizeService.Configuration.Middlewares;
+namespace Ozon.MerchService.Configuration.Middlewares;
 
 /// <summary>
 /// Middleware for logging of responses

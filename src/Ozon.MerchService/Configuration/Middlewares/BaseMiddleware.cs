@@ -1,6 +1,5 @@
 using System.Text;
-
-namespace Ozon.MerchandizeService.Configuration.Middlewares;
+namespace Ozon.MerchService.Configuration.Middlewares;
 
 public class BaseMiddleware
 {

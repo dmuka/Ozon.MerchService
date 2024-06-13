@@ -1,10 +1,10 @@
 using Microsoft.OpenApi.Models;
-using Ozon.MerchandizeService.Configuration.Constants;
-using Ozon.MerchandizeService.Configuration.ExceptionsFilters;
-using Ozon.MerchandizeService.Configuration.OperationFilters;
-using Ozon.MerchandizeService.Configuration.StartupFilters;
+using Ozon.MerchService.Configuration.Constants;
+using Ozon.MerchService.Configuration.ExceptionsFilters;
+using Ozon.MerchService.Configuration.OperationFilters;
+using Ozon.MerchService.Configuration.StartupFilters;
 
-namespace Ozon.MerchandizeService.Configuration.Extensions;
+namespace Ozon.MerchService.Configuration.Extensions;
 
 /// <summary>
 /// Contain host builder extensions

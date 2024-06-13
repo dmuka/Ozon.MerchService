@@ -1,4 +1,4 @@
-namespace Ozon.MerchandizeService.Configuration.StartupFilters;
+namespace Ozon.MerchService.Configuration.StartupFilters;
 
 /// <summary>
 /// Swagger startup filter

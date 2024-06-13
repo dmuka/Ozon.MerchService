@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Ozon.MerchandizeService.Configuration.Constants;
+namespace Ozon.MerchService.Configuration.Constants;
 
 /// <summary>
 /// Contain configuration names constants

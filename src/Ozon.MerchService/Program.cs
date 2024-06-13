@@ -1,5 +1,5 @@
-using Ozon.MerchandizeService;
-using Ozon.MerchandizeService.Configuration.Extensions;
+using Ozon.MerchService;
+using Ozon.MerchService.Configuration.Extensions;
 
 
 CreateHostBuilder(args).Build().Run();

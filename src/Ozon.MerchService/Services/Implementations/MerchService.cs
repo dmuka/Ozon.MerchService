@@ -1,32 +1,47 @@
-using Ozon.MerchandizeService.Models;
-using Ozon.MerchandizeService.Services.Interfaces;
+using Ozon.MerchService.Domain.Models;
+using Ozon.MerchService.HttpModels;
+using Ozon.MerchService.Services.Interfaces;
 
-namespace Ozon.MerchandizeService.Services.Implementations;
+namespace Ozon.MerchService.Services.Implementations;
 
 /// <summary>
 /// Merch service
 /// </summary>
 public class MerchService : IMerchService
 {
-    private readonly List<StockItem> StockItems =
+    private List<MerchPack> MerchPacks { get; } =
     [
-        new StockItem(1, "First stock item", 10),
-        new StockItem(2, "Second stock item", 15),
-        new StockItem(3, "Third stock item", 20)
+        new MerchPack(MerchPackType.StarterPack),
+        new MerchPack(MerchPackType.WelcomePack)
     ];
 
-    /// <summary>
-    /// Get all stock items
-    /// </summary>
-    public List<StockItem> GetAll() => StockItems;
+    private MerchPack MerchPack => new (MerchPackType.ConferenceListenerPack);
 
     /// <summary>
-    /// Get stock item by id
+    /// Get asynchronously information about merch pack(s) that user already get
     /// </summary>
-    /// <param name="itemId">Item id</param>
-    /// <returns>Stock item or null if not found</returns>
-    public StockItem? GetById(long itemId)
+    /// <param name="receivedMerchRequest">Received merch request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Received merch response</returns>
+    public async Task<List<MerchPack>> GetReceivedMerchAsync(
+        long employeeId, 
+        CancellationToken cancellationToken)
     {
-        return StockItems.Find(item => item.ItemId == itemId);
+        return await Task.FromResult(MerchPacks);
+    }
+
+    /// <summary>
+    /// Reserve merch for employee
+    /// </summary>
+    /// <param name="merchPack">Merch pack</param>
+    /// <param name="employeeId">Employee id</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Reserved merch pack</returns>
+    public async Task<MerchPack> ReserveMerchAsync(
+        long employeeId,
+        MerchPack merchPack,
+        CancellationToken cancellationToken)
+    {
+        return await Task.FromResult(merchPack);
     }
 }

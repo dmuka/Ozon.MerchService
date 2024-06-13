@@ -1,7 +1,7 @@
-using Ozon.MerchandizeService.Configuration.Constants;
-using Ozon.MerchandizeService.Configuration.Middlewares;
+using Ozon.MerchService.Configuration.Constants;
+using Ozon.MerchService.Configuration.Middlewares;
 
-namespace Ozon.MerchandizeService.Configuration.StartupFilters;
+namespace Ozon.MerchService.Configuration.StartupFilters;
 
 /// <summary>
 /// Ready response startup filter
