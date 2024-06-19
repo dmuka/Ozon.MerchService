@@ -1,3 +1,4 @@
+using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.HttpModels;
 using Ozon.MerchService.Services.Interfaces;
@@ -11,11 +12,11 @@ public class MerchService : IMerchService
 {
     private List<MerchPack> MerchPacks { get; } =
     [
-        new MerchPack(MerchPackType.StarterPack),
-        new MerchPack(MerchPackType.WelcomePack)
+        new MerchPack(MerchType.ProbationPeriodEndingPack),
+        new MerchPack(MerchType.WelcomePack)
     ];
 
-    private MerchPack MerchPack => new (MerchPackType.ConferenceListenerPack);
+    private MerchPack MerchPack => new (MerchType.ConferenceListenerPack);
 
     /// <summary>
     /// Get asynchronously information about merch pack(s) that user already get

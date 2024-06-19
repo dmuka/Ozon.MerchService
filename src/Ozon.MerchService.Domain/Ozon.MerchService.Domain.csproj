@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="CSharpCourse.Core.Lib" Version="2.1.0" />
       <PackageReference Include="MediatR" Version="12.3.0" />
     </ItemGroup>
 

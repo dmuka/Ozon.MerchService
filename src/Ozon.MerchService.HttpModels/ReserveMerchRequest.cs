@@ -1,9 +1,9 @@
-using Ozon.MerchService.Domain.Models;
+using CSharpCourse.Core.Lib.Enums;
 
 namespace Ozon.MerchService.HttpModels;
 
 public class ReserveMerchRequest
 {
     public int EmployeeId { get; set; }
-    public MerchPackType MerchPackType { get; set; }
+    public MerchType MerchPackType { get; set; }
 }

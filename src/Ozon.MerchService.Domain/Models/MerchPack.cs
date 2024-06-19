@@ -1,21 +1,9 @@
+using CSharpCourse.Core.Lib.Enums;
+
 namespace Ozon.MerchService.Domain.Models;
 
-public class MerchPack
+public class MerchPack(MerchType merchPackType)
 {
-    public MerchPack(MerchPackType merchPackType)
-    {
-        MerchPackType = merchPackType;
-        Items = merchPackType switch
-        {
-            MerchPackType.StarterPack => StarterPackItems,
-            MerchPackType.WelcomePack => WelcomePackItems,
-            MerchPackType.ConferenceListenerPack => ConferenceListenerPackItems,
-            MerchPackType.ConferenceSpeakerPack => ConferenceSpeakerPackItems,
-            MerchPackType.VeteranPack => VeteranPackItems,
-            _ => throw new ArgumentException("Wrong or unknown type of merch pack")
-        };
-    }
-    
     private static List<MerchItem> StarterPackItems { get; } =
     [
         new MerchItem() { Id = 1, Name = "Cap", StockKeepingUnit = 1000000},
@@ -48,6 +36,15 @@ public class MerchPack
         new MerchItem() { Id = 10, Name = "Keyboard", StockKeepingUnit = 1000010}
     ];
     
-    public MerchPackType MerchPackType { get; }
-    public List<MerchItem> Items { get; }
+    public MerchType MerchPackType { get; } = merchPackType;
+    
+    public List<MerchItem> Items { get; } = merchPackType switch
+    {
+        MerchType.WelcomePack => WelcomePackItems,
+        MerchType.ProbationPeriodEndingPack => StarterPackItems,
+        MerchType.ConferenceListenerPack => ConferenceListenerPackItems,
+        MerchType.ConferenceSpeakerPack => ConferenceSpeakerPackItems,
+        MerchType.VeteranPack => VeteranPackItems,
+        _ => throw new ArgumentException("Wrong or unknown type of merch pack")
+    };
 }
