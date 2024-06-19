@@ -16,38 +16,38 @@ public class MerchPack
         };
     }
     
-    private static List<MerchItem<long>> StarterPackItems { get; } =
+    private static List<MerchItem> StarterPackItems { get; } =
     [
-        new MerchItem<long>() { Id = 1, Name = "Cap", StockKeepingUnit = 1000000},
-        new MerchItem<long>() { Id = 5, Name = "Bottle", StockKeepingUnit = 1000005},
+        new MerchItem() { Id = 1, Name = "Cap", StockKeepingUnit = 1000000},
+        new MerchItem() { Id = 5, Name = "Bottle", StockKeepingUnit = 1000005},
     ];
 
-    private static List<MerchItem<long>> WelcomePackItems { get; } =
+    private static List<MerchItem> WelcomePackItems { get; } =
     [
-        new MerchItem<long>() { Id = 2, Name = "Backpack", StockKeepingUnit = 1000002},
-        new MerchItem<long>() { Id = 6, Name = "Mug", StockKeepingUnit = 1000006}
+        new MerchItem() { Id = 2, Name = "Backpack", StockKeepingUnit = 1000002},
+        new MerchItem() { Id = 6, Name = "Mug", StockKeepingUnit = 1000006}
     ];
 
-    private static List<MerchItem<long>> ConferenceListenerPackItems { get; } =
+    private static List<MerchItem> ConferenceListenerPackItems { get; } =
     [
-        new MerchItem<long>() { Id = 3, Name = "Pen", StockKeepingUnit = 1000003},
-        new MerchItem<long>() { Id = 4, Name = "Notebook", StockKeepingUnit = 1000004}
+        new MerchItem() { Id = 3, Name = "Pen", StockKeepingUnit = 1000003},
+        new MerchItem() { Id = 4, Name = "Notebook", StockKeepingUnit = 1000004}
     ];
 
-    private static List<MerchItem<long>> ConferenceSpeakerPackItems { get; } =
+    private static List<MerchItem> ConferenceSpeakerPackItems { get; } =
     [
-        new MerchItem<long>() { Id = 3, Name = "Pen", StockKeepingUnit = 1000003},
-        new MerchItem<long>() { Id = 4, Name = "Notebook", StockKeepingUnit = 1000004},
-        new MerchItem<long>() { Id = 7, Name = "Marker", StockKeepingUnit = 1000007}
+        new MerchItem() { Id = 3, Name = "Pen", StockKeepingUnit = 1000003},
+        new MerchItem() { Id = 4, Name = "Notebook", StockKeepingUnit = 1000004},
+        new MerchItem() { Id = 7, Name = "Marker", StockKeepingUnit = 1000007}
     ];
 
-    private static List<MerchItem<long>> VeteranPackItems { get; } =
+    private static List<MerchItem> VeteranPackItems { get; } =
     [
-        new MerchItem<long>() { Id = 8, Name = "Laptop", StockKeepingUnit = 1000008},
-        new MerchItem<long>() { Id = 9, Name = "Mouse", StockKeepingUnit = 1000009},
-        new MerchItem<long>() { Id = 10, Name = "Keyboard", StockKeepingUnit = 1000010}
+        new MerchItem() { Id = 8, Name = "Laptop", StockKeepingUnit = 1000008},
+        new MerchItem() { Id = 9, Name = "Mouse", StockKeepingUnit = 1000009},
+        new MerchItem() { Id = 10, Name = "Keyboard", StockKeepingUnit = 1000010}
     ];
     
     public MerchPackType MerchPackType { get; }
-    public List<MerchItem<long>> Items { get; }
+    public List<MerchItem> Items { get; }
 }

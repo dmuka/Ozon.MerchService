@@ -1,6 +1,3 @@
-using Ozon.MerchService.Configuration.ExceptionsFilters;
-using Ozon.MerchService.Configuration.Middlewares;
-using Ozon.MerchService.Services.Implementations;
 using Ozon.MerchService.Services.Interfaces;
 
 namespace Ozon.MerchService;

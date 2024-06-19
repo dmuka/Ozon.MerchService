@@ -1,7 +1,8 @@
+using Ozon.MerchService.Domain.Root;
+
 namespace Ozon.MerchService.Domain.Models;
 
-public class Item<T>
+public class Item : Entity<long>
 {
-    public T Id { get; set; }
     public string Name { get; set; }
 }
