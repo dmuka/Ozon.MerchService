@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Ozon.MerchService.Domain.Root;
+namespace Ozon.MerchService.Domain.Models;
 
 /// <summary>
 /// Represents enumeration abstract class

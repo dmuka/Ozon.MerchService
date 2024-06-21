@@ -1,10 +1,12 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
+using Ozon.MerchService.Domain.Models.ValueObjects;
+using Ozon.MerchService.Domain.Root;
 using RequestedAt = Ozon.MerchService.Domain.Models.ValueObjects.RequestedAt;
 
 namespace Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
-public class MerchPack
+public class MerchPack : Entity<long>, IAggregationRoot
 {
     public MerchPack(MerchType merchPackType)
     {
@@ -18,20 +20,25 @@ public class MerchPack
             MerchType.VeteranPack => VeteranPackItems,
             _ => throw new ArgumentException("Wrong or unknown type of merch pack")
         };
+        Status = Status.Created;
     }
 
     public MerchType MerchPackType { get; }
 
     public RequestedAt RequestedAt { get; } = new();
 
-    public Reserved Reserved {
-        get
-        {
-            return new Reserved(Items.TrueForAll(item => item.Reserved.Value));
-        }
-    }
+    public Issued Issued { get; } = new();
+    
+    public Status Status { get; }
 
     public List<MerchItem> Items { get; }
+    
+    public bool CheckMerchItemsReserveOnStock()
+    {
+        var result = Items.TrueForAll(item => item.Reserved.Value);
+
+        return result;
+    }   
 
     #region Predefined merch packs
 
