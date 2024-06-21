@@ -1,4 +1,4 @@
-namespace Ozon.MerchService.Domain.Root;
+namespace Ozon.MerchService.Domain.Models;
 
 /// <summary>
 /// Represents base value object class

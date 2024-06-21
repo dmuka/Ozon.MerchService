@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Ozon.MerchService.Domain.Models;
+using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.HttpModels;
 using Ozon.MerchService.Services.Interfaces;
 

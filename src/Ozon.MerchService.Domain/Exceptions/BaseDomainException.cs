@@ -1,4 +1,4 @@
-namespace Ozon.MerchService.Domain.Root.Exceptions;
+namespace Ozon.MerchService.Domain.Exceptions;
 
 /// <summary>
 /// Base domain exception

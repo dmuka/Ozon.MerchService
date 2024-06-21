@@ -1,5 +1,4 @@
-using Ozon.MerchService.Domain.Models;
-using Ozon.MerchService.HttpModels;
+using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
 namespace Ozon.MerchService.Services.Interfaces;
 
