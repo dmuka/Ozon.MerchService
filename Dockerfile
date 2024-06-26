@@ -23,4 +23,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 RUN chmod -x entrypoint.sh
-CMD /bin/bash entrypoint.sh
+CMD ["/bin/bash", "entrypoint.sh"]
