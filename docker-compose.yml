@@ -14,7 +14,7 @@
         published: 5003
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://0.0.0.0:8081;http://0.0.0.0:8080
+      - ASPNETCORE_URLS=http://+:8081;http://+:8080
     command: "-c log_statement=all"
 
   merch_db:
