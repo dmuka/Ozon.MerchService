@@ -1,9 +1,26 @@
 ﻿services:
-  ozon.merch_service:
+  merch_service:
     image: ozon.merch_service
     build:
       context: .
       dockerfile: src/Ozon.MerchService/Dockerfile
-      ports:
-        - "5072:5002"
-        - "5073:5003"
+    ports:
+      - name: http
+        target: 5002
+        published: 5072
+          
+      - name: https
+        target: 5003
+        published: 5073
+    command: "-c log_statement=all"
+
+  merch_db:
+    image: postgres:latest
+    ports: 
+      - 5426:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: merch_password
+      POSTGRES_DB: merch
+    command: "-c log_statement=all"
+        

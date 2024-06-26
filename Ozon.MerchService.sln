@@ -14,11 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{530E10
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 		.dockerignore = .dockerignore
+		entrypoint.sh = entrypoint.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.HttpModels", "src\Ozon.MerchService.HttpModels\Ozon.MerchService.HttpModels.csproj", "{240C1ECE-672D-42A7-915C-B83E2B5684F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.Domain", "src\Ozon.MerchService.Domain\Ozon.MerchService.Domain.csproj", "{81C8B188-2AB0-47A2-8F45-BC5F4697CF32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.Migrator", "src\Ozon.MerchService.Migrator\Ozon.MerchService.Migrator.csproj", "{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,11 +49,16 @@ Global
 		{81C8B188-2AB0-47A2-8F45-BC5F4697CF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81C8B188-2AB0-47A2-8F45-BC5F4697CF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81C8B188-2AB0-47A2-8F45-BC5F4697CF32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{70426E2B-E18B-4770-BC8A-72E986D41A83} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{D9901C1B-295D-4D01-8574-A15DDDCD0568} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{240C1ECE-672D-42A7-915C-B83E2B5684F4} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{81C8B188-2AB0-47A2-8F45-BC5F4697CF32} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
+		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 	EndGlobalSection
 EndGlobal
