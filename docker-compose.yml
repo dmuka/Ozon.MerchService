@@ -1,17 +1,17 @@
 ﻿services:
   merch_service:
-    image: ghcr.io/dmuka/ozon.merchservice:latest
+    image: ghcr.io/dmuka/ozon.merchservice:sha256-8e301ad7afccea25a1073dbcd048a87a4b5a0edf9b261a020508e2c4c8ae5d75.sig
     build:
       context: .
       dockerfile: src/Ozon.MerchService/Dockerfile
     ports:
       - name: http
         target: 5002
-        published: 80
+        published: 5002
           
-      - name: https
+      - name: grpc
         target: 5003
-        published: 443
+        published: 5003
     command: "-c log_statement=all"
 
   merch_db:
