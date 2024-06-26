@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["src/Ozon.MerchService/Ozon.MerchService.csproj", "src/Ozon.MerchService/"]
 RUN dotnet restore "src/Ozon.MerchService/Ozon.MerchService.csproj"
 COPY . .
-WORKDIR "/src/Ozon.MerchService"
+WORKDIR "/src/src/Ozon.MerchService"
 RUN dotnet build "Ozon.MerchService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
