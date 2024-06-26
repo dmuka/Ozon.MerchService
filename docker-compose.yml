@@ -7,11 +7,11 @@
     ports:
       - name: http
         target: 5002
-        published: 5072
+        published: 80
           
       - name: https
         target: 5003
-        published: 5073
+        published: 443
     command: "-c log_statement=all"
 
   merch_db:
