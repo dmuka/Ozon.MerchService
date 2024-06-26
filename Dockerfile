@@ -25,8 +25,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-ENV ASPNETCORE_URLS="http://0.0.0.0:5002;http://0.0.0.0:5003"
-
 COPY --from=publish /app/publish .
 
 CMD ["/bin/bash", "entrypoint.sh"]
