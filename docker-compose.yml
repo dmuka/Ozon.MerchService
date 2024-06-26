@@ -1,6 +1,6 @@
 ﻿services:
   merch_service:
-    image: ghcr.io/dmuka/ozon.merchservice:sha256-4ed186e4bc450d3527076783b7c6d40a93ae7644467c358ff3e8ca29942d18e0.sig
+    image: ghcr.io/dmuka/ozon.merchservice:sha256-fbd3954865ecbf4537acfccec3ca4fb928d05c1050f960484595a801cf9b4012.sig
     build:
       context: .
       dockerfile: src/Ozon.MerchService/Dockerfile
@@ -15,6 +15,9 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8081;http://+:8080
+      - DatabaseConnectionOptions__ConnectionString="Host=host.docker.internal;Port=5426;Database=merch;Username=postgres;Password=merch_password"
+    depends_on:
+      - merch_db
     command: "-c log_statement=all"
 
   merch_db:
