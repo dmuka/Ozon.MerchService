@@ -22,8 +22,8 @@ RUN chmod +x entrypoint.sh
 FROM base AS final
 WORKDIR /app
 
-EXPOSE 5002
-EXPOSE 5003
+EXPOSE 8080
+EXPOSE 8081
 
 ENV ASPNETCORE_URLS="http://0.0.0.0:5002;http://0.0.0.0:5003"
 

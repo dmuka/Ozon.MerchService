@@ -1,6 +1,6 @@
 ﻿services:
   merch_service:
-    image: ghcr.io/dmuka/ozon.merchservice:sha256-9a7523d616ac8ad415ec1d10195735d54323e461099e5fbb34072794ca9b596d.sig
+    image: ghcr.io/dmuka/ozon.merchservice:sha256-122d406f7eb7e730b9666306145970bdc86d6eeeb25b3dcc86fe86b67135ef1f.sig
     build:
       context: .
       dockerfile: src/Ozon.MerchService/Dockerfile
@@ -12,6 +12,9 @@
       - name: grpc
         target: 8081
         published: 5003
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8081;http://+:8080
     command: "-c log_statement=all"
 
   merch_db:
