@@ -25,7 +25,7 @@ WORKDIR /app
 EXPOSE 5002
 EXPOSE 5003
 
-ENV ASPNETCORE_URLS="http://+:5002;http://+:5003"
+ENV ASPNETCORE_URLS="http://0.0.0.0:5002;http://0.0.0.0:5003"
 
 COPY --from=publish /app/publish .
 

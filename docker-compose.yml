@@ -1,6 +1,6 @@
 ﻿services:
   merch_service:
-    image: ghcr.io/dmuka/ozon.merchservice:sha256-8e301ad7afccea25a1073dbcd048a87a4b5a0edf9b261a020508e2c4c8ae5d75.sig
+    image: ghcr.io/dmuka/ozon.merchservice:sha256-b8dbb62de5f6b4a8ecc458c79d4c4fbc8fbd861c169d474c50c13d9e0b9b5582.sig
     build:
       context: .
       dockerfile: src/Ozon.MerchService/Dockerfile
