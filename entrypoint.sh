@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 run_cmd="dotnet Ozon.MerchService.dll --no-build -v d"
