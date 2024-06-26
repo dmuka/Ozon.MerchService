@@ -1,6 +1,6 @@
 ﻿services:
   merch_service:
-    image: ghcr.io/dmuka/ozon.merchservice
+    image: ghcr.io/dmuka/ozon.merchservice:latest
     build:
       context: .
       dockerfile: src/Ozon.MerchService/Dockerfile

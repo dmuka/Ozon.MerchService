@@ -21,6 +21,12 @@ RUN chmod +x entrypoint.sh
 
 FROM base AS final
 WORKDIR /app
+
+EXPOSE 80
+EXPOSE 443
+
+ENV ASPNETCORE_URLS="http://+:80;https://+:443"
+
 COPY --from=publish /app/publish .
 
 CMD ["/bin/bash", "entrypoint.sh"]
