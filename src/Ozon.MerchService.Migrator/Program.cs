@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentMigrator.Runner;
+using Npgsql;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -27,5 +28,16 @@ var serviceProvider = services.BuildServiceProvider();
 using (serviceProvider.CreateScope())
 {
     var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
-    runner.MigrateUp();
+    if (args.Contains("--dryrun"))
+    {
+        runner.ListMigrations();
+    }
+    else
+    {
+        runner.MigrateUp();
+    }
+
+    using var connection = new NpgsqlConnection(connectionString);
+    connection.Open();
+    connection.ReloadTypes();
 }             
