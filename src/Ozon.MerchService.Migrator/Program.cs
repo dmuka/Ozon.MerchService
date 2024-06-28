@@ -13,21 +13,33 @@ var connectionString = configuration
     .GetSection("DBConnectionOptions:ConnectionString")
     .Value;
 
-var services = new ServiceCollection()
-    .AddFluentMigratorCore()
-    .ConfigureRunner(
-        runner =>
-            runner.AddPostgres()
-                .WithGlobalConnectionString(connectionString)
-                .ScanIn(typeof(Program).Assembly)
-                .For.Migrations())
-    .AddLogging(loggingBuilder => loggingBuilder.AddFluentMigratorConsole());
+using (var serviceProvider = CreateServices())
+using (var scope = serviceProvider.CreateScope())
+{
+    UpdateDatabase(scope.ServiceProvider, connectionString, args);
+}
 
-var serviceProvider = services.BuildServiceProvider();
+return;
 
-using (serviceProvider.CreateScope())
+ServiceProvider CreateServices()
+{
+    return new ServiceCollection()
+        .AddFluentMigratorCore()
+        .ConfigureRunner(rb => rb
+            .AddPostgres()
+            .WithGlobalConnectionString(connectionString)
+            .ScanIn(typeof(Program).Assembly).For.Migrations())
+        .AddLogging(lb => lb.AddFluentMigratorConsole())
+        .BuildServiceProvider(false);
+}
+
+static void UpdateDatabase(
+    IServiceProvider serviceProvider, 
+    string connectionString, 
+    string[] args)
 {
     var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
+    
     if (args.Contains("--dryrun"))
     {
         runner.ListMigrations();
@@ -40,4 +52,5 @@ using (serviceProvider.CreateScope())
     using var connection = new NpgsqlConnection(connectionString);
     connection.Open();
     connection.ReloadTypes();
-}             
+    runner.MigrateUp();
+}    

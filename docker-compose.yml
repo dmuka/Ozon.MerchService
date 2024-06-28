@@ -1,32 +1,32 @@
 ﻿services:
-  merch_service:
-    image: ghcr.io/dmuka/ozon.merchservice:sha256-fbd3954865ecbf4537acfccec3ca4fb928d05c1050f960484595a801cf9b4012.sig
-    build:
-      context: .
-      dockerfile: src/Ozon.MerchService/Dockerfile
-    ports:
-      - name: http
-        target: 8080
-        published: 5002
-          
-      - name: grpc
-        target: 8081
-        published: 5003
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:8081;http://+:8080
-      - DatabaseConnectionOptions__ConnectionString="Host=host.docker.internal;Port=5426;Database=merch;Username=postgres;Password=merch_password"
-    depends_on:
-      - merch_db
-    command: "-c log_statement=all"
-
   merch_db:
     image: postgres:latest
-    ports: 
+    ports:
       - 5426:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: merch_password
       POSTGRES_DB: merch
     command: "-c log_statement=all"
-        
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+  merch_service:
+    image: ozon-merch-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5002:8080
+      - 5003:8081
+    environment:
+      DBConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5426;Database=merch;Username=postgres;Password=merch_password"
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8081;http://+:8080
+    depends_on:
+      merch_db:
+        condition: service_healthy
+    entrypoint: ["./wait-for-it.sh", "merch_db:5426", "--", "/bin/bash", "entrypoint.sh"]        
