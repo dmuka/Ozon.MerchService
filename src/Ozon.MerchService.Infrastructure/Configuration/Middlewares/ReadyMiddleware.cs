@@ -1,4 +1,6 @@
-namespace Ozon.MerchService.Configuration.Middlewares;
+using Microsoft.AspNetCore.Http;
+
+namespace Ozon.MerchService.Infrastructure.Configuration.Middlewares;
 
 /// <summary>
 /// Middleware for ready response

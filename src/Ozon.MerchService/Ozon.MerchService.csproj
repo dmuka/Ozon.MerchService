@@ -47,6 +47,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Ozon.MerchService.Domain\Ozon.MerchService.Domain.csproj" />
       <ProjectReference Include="..\Ozon.MerchService.HttpModels\Ozon.MerchService.HttpModels.csproj" />
+      <ProjectReference Include="..\Ozon.MerchService.Infrastructure\Ozon.MerchService.Infrastructure.csproj" />
       <ProjectReference Include="..\Ozon.MerchService.Migrator\Ozon.MerchService.Migrator.csproj" />
     </ItemGroup>
 

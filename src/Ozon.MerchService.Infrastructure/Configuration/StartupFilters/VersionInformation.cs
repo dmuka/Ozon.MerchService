@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Configuration.Middlewares;
+using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
 
-namespace Ozon.MerchService.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 
 /// <summary>
-/// Live response startup filter
+/// Application version startup filter
 /// </summary>
-public class LiveResponse : IStartupFilter
+public class VersionInformation : IStartupFilter
 {
     /// <summary>
-    /// Add live middleware 
+    /// Return application version
     /// </summary>
     /// <param name="next">The Configure method to extend.</param>
     /// <returns>A modified <see cref="T:System.Action" />.</returns>
@@ -19,8 +21,8 @@ public class LiveResponse : IStartupFilter
         {
         
             application.Map(
-                Routes.LiveResponse, 
-                configuration => configuration.UseMiddleware<LiveMiddleware>());
+                Routes.VersionInformation, 
+                configuration => configuration.UseMiddleware<ApplicationVersionMiddleware>());
             
             next(application);
         };

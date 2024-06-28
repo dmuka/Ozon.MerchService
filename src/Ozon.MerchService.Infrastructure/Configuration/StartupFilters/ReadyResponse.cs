@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Configuration.Middlewares;
+using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
 
-namespace Ozon.MerchService.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 
 /// <summary>
 /// Ready response startup filter

@@ -1,4 +1,7 @@
-namespace Ozon.MerchService.Configuration.StartupFilters;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+
+namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 
 /// <summary>
 /// Swagger startup filter

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Ozon.MerchService.Configuration.Constants;
 
-namespace Ozon.MerchService.Configuration.Middlewares;
+namespace Ozon.MerchService.Infrastructure.Configuration.Middlewares;
 
 /// <summary>
 /// Middleware for logging of responses

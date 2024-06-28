@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.Domain", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.Migrator", "src\Ozon.MerchService.Migrator\Ozon.MerchService.Migrator.csproj", "{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.Infrastructure", "src\Ozon.MerchService.Infrastructure\Ozon.MerchService.Infrastructure.csproj", "{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,11 +51,16 @@ Global
 		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{70426E2B-E18B-4770-BC8A-72E986D41A83} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{240C1ECE-672D-42A7-915C-B83E2B5684F4} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{81C8B188-2AB0-47A2-8F45-BC5F4697CF32} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
+		{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 	EndGlobalSection
 EndGlobal

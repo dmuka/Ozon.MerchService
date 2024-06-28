@@ -1,12 +1,15 @@
 using System.Net;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Configuration.ExceptionsFilters;
-using Ozon.MerchService.Configuration.OperationFilters;
-using Ozon.MerchService.Configuration.StartupFilters;
+using Ozon.MerchService.Infrastructure.Configuration.ExceptionsFilters;
+using Ozon.MerchService.Infrastructure.Configuration.OperationFilters;
+using Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 
-namespace Ozon.MerchService.Configuration.Extensions;
+namespace Ozon.MerchService.Infrastructure.Configuration.Extensions;
 
 /// <summary>
 /// Contain host builder extensions

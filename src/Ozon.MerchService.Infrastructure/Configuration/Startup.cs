@@ -1,6 +1,10 @@
-using Ozon.MerchService.Services.Interfaces;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
-namespace Ozon.MerchService;
+namespace Ozon.MerchService.Infrastructure.Configuration;
 
 /// <summary>
 /// Configure and setup application
@@ -14,7 +18,9 @@ public class Startup(IConfiguration configuration)
     /// <param name="services">IOC container</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IMerchService, Services.Implementations.MerchService>();
+        services
+            .AddSingleton<IMerchService, Services.Implementations.MerchService>()
+            .Configure<DBConnectionOptions>(configuration.GetSection(nameof(DBConnectionOptions)));
     }
     
     /// <summary>

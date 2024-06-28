@@ -1,6 +1,8 @@
-using Ozon.MerchService.Configuration.Middlewares;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
 
-namespace Ozon.MerchService.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 
 /// <summary>
 /// Response logging startup filter

@@ -1,8 +1,8 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Services.Interfaces;
+using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
-namespace Ozon.MerchService.Services.Implementations;
+namespace Ozon.MerchService.Infrastructure.Services.Implementations;
 
 /// <summary>
 /// Merch service

@@ -1,5 +1,7 @@
 using System.Text;
-namespace Ozon.MerchService.Configuration.Middlewares;
+using Microsoft.AspNetCore.Http;
+
+namespace Ozon.MerchService.Infrastructure.Configuration.Middlewares;
 
 public class BaseMiddleware
 {
