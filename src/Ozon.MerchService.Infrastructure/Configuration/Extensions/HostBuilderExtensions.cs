@@ -3,11 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Ozon.MerchService.Configuration.Constants;
 using Ozon.MerchService.Infrastructure.Configuration.ExceptionsFilters;
-using Ozon.MerchService.Infrastructure.Configuration.OperationFilters;
-using Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 
 namespace Ozon.MerchService.Infrastructure.Configuration.Extensions;
 
@@ -25,30 +21,13 @@ public static class HostBuilderExtensions
     {
         builder.ConfigureServices(services =>
         {
-            services.AddControllers(options =>
-            {
-                options.Filters.Add<GlobalExceptionFilter>();
-            });
-
-            AddStartupFilters(services);
-                
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc(
-                    Names.SwaggerDocVersion,
-                    new OpenApiInfo
-                    {
-                        Title = Names.GetApplicationName(),
-                        Version = Names.SwaggerDocVersion
-                    });
-                options.CustomSchemaIds(selector => selector.FullName);
-
-                var xmlFileName = GetXmlFileName();
-                var xmlFilePath = GetXmlFilePath(xmlFileName);
-                    
-                options.IncludeXmlComments(xmlFilePath);
-                options.OperationFilter<AddSwaggerTestHeader>();
-            });
+            services
+                .AddSwagger()
+                .AddStartupFilters()
+                .AddControllers(options =>
+                {
+                    options.Filters.Add<GlobalExceptionFilter>();
+                });
         });
 
         return builder;
@@ -95,25 +74,5 @@ public static class HostBuilderExtensions
         var address = IPAddress.Any;
 
         kestrelServerOptions.Listen(address, port.Value, listenOptions => { listenOptions.Protocols = protocols; });
-    }
-
-    private static void AddStartupFilters(IServiceCollection services)
-    {
-        services.AddSingleton<IStartupFilter, Swagger>();
-        services.AddSingleton<IStartupFilter, ResponseLogging>();
-        services.AddSingleton<IStartupFilter, RequestLogging>();
-        services.AddSingleton<IStartupFilter, VersionInformation>();
-        services.AddSingleton<IStartupFilter, LiveResponse>();
-        services.AddSingleton<IStartupFilter, ReadyResponse>();
-    }
-
-    private static string GetXmlFileName()
-    {
-        return Names.GetApplicationName();
-    }
-
-    private static string GetXmlFilePath(string xmlFileName)
-    {
-        return Path.Combine(AppContext.BaseDirectory, $"{xmlFileName}.xml");
     }
 }
