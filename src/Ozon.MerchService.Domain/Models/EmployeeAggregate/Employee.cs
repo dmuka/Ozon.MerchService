@@ -1,12 +1,13 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
+using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.Root;
 
 namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
 
 public class Employee : Entity<long>, IAggregationRoot
 {
-    public List<MerchPack> MerchPacks { get; } = [];
+    public List<MerchPackRequest> MerchPacksRequests { get; } = [];
 
     public bool CanReceiveMerchPack(MerchType merchType)
     {
@@ -16,7 +17,7 @@ public class Employee : Entity<long>, IAggregationRoot
             or MerchType.ConferenceListenerPack
             or MerchType.ConferenceSpeakerPack)
         {
-            var previousActiveMerchPacks = MerchPacks
+            var previousActiveMerchPacks = MerchPacksRequests
                 .Where(pack =>
                     pack.MerchPackType == merchType 
                     && Equals(pack.Status, Status.Issued) 
@@ -26,7 +27,7 @@ public class Employee : Entity<long>, IAggregationRoot
         }
         else
         {
-            result = MerchPacks.All(pack => pack.MerchPackType != merchType);
+            result = MerchPacksRequests.All(pack => pack.MerchPackType != merchType);
         }
         
         return result;

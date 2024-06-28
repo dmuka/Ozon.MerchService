@@ -24,6 +24,7 @@ public static class HostBuilderExtensions
             services
                 .AddSwagger()
                 .AddStartupFilters()
+                .AddInfrastructureServices()
                 .AddControllers(options =>
                 {
                     options.Filters.Add<GlobalExceptionFilter>();
@@ -52,7 +53,6 @@ public static class HostBuilderExtensions
         
         builder.ConfigureWebHostDefaults(webBuilder =>
         {
-            webBuilder.UseStartup<Startup>();
             webBuilder.ConfigureKestrel(
                 options =>
                 {
@@ -73,6 +73,9 @@ public static class HostBuilderExtensions
 
         var address = IPAddress.Any;
 
-        kestrelServerOptions.Listen(address, port.Value, listenOptions => { listenOptions.Protocols = protocols; });
+        kestrelServerOptions.Listen(
+            address, 
+            port.Value, 
+            listenOptions => { listenOptions.Protocols = protocols; });
     }
 }

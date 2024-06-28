@@ -20,25 +20,11 @@ public class MerchPack : Entity<long>, IAggregationRoot
             MerchType.VeteranPack => VeteranPackItems,
             _ => throw new ArgumentException("Wrong or unknown type of merch pack")
         };
-        Status = Status.Created;
     }
 
     public MerchType MerchPackType { get; }
 
-    public RequestedAt RequestedAt { get; } = new();
-
-    public Issued Issued { get; } = new();
-    
-    public Status Status { get; }
-
     public List<MerchItem> Items { get; }
-    
-    public bool CheckMerchItemsReserveOnStock()
-    {
-        var result = Items.TrueForAll(item => item.Reserved.Value);
-
-        return result;
-    }   
 
     #region Predefined merch packs
 

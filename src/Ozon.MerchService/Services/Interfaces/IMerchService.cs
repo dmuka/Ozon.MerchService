@@ -1,6 +1,6 @@
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
-namespace Ozon.MerchService.Infrastructure.Services.Interfaces;
+namespace Ozon.MerchService.Services.Interfaces;
 
 /// <summary>
 /// Interface for merch service

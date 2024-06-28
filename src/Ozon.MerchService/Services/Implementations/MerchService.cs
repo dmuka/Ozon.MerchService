@@ -1,8 +1,8 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Infrastructure.Services.Interfaces;
+using Ozon.MerchService.Services.Interfaces;
 
-namespace Ozon.MerchService.Infrastructure.Services.Implementations;
+namespace Ozon.MerchService.Services.Implementations;
 
 /// <summary>
 /// Merch service
@@ -20,7 +20,7 @@ public class MerchService : IMerchService
     /// <summary>
     /// Get asynchronously information about merch pack(s) that user already get
     /// </summary>
-    /// <param name="receivedMerchRequest">Received merch request</param>
+    /// <param name="employeeId">Employee id</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Received merch response</returns>
     public async Task<List<MerchPack>> GetReceivedMerchAsync(

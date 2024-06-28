@@ -1,17 +1,29 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Ozon.MerchService.Configuration.Constants;
 using Ozon.MerchService.Infrastructure.Configuration.OperationFilters;
 using Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
+using Ozon.MerchService.Infrastructure.Repositories.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.Postgres;
 
 namespace Ozon.MerchService.Infrastructure.Configuration.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
+    internal static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+
+        return services;
+    }
+    
     internal static IServiceCollection AddStartupFilters(this IServiceCollection services)
     {
-        services.AddSingleton<IStartupFilter, Swagger>()
+        services
+            .AddSingleton<IStartupFilter, Swagger>()
             .AddSingleton<IStartupFilter, ResponseLogging>()
             .AddSingleton<IStartupFilter, RequestLogging>()
             .AddSingleton<IStartupFilter, VersionInformation>()
