@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.DataAccess.Postgres", "src\Ozon.MerchService.DataAccess.Postgres\Ozon.MerchService.DataAccess.Postgres.csproj", "{95604A5D-3DE5-4D40-8BF0-65BEB74F9520}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ozon.MerchService.HttpClient", "src\Ozon.MerchService.HttpClient\Ozon.MerchService.HttpClient.csproj", "{93CF188F-08D1-43B1-A5A9-EDEBE32D0597}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{95604A5D-3DE5-4D40-8BF0-65BEB74F9520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95604A5D-3DE5-4D40-8BF0-65BEB74F9520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95604A5D-3DE5-4D40-8BF0-65BEB74F9520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93CF188F-08D1-43B1-A5A9-EDEBE32D0597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93CF188F-08D1-43B1-A5A9-EDEBE32D0597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93CF188F-08D1-43B1-A5A9-EDEBE32D0597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93CF188F-08D1-43B1-A5A9-EDEBE32D0597}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{70426E2B-E18B-4770-BC8A-72E986D41A83} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
@@ -69,5 +75,6 @@ Global
 		{7B0A5A4E-34EF-4AD6-B5F1-730BB5B5FA69} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{3F8AA4F1-9025-43FD-86B1-0A24F20E1E76} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 		{95604A5D-3DE5-4D40-8BF0-65BEB74F9520} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
+		{93CF188F-08D1-43B1-A5A9-EDEBE32D0597} = {A7D7AB30-5D16-4250-BCB7-43A9BD0FC7CA}
 	EndGlobalSection
 EndGlobal
