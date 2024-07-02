@@ -8,6 +8,8 @@ namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
 public class Employee : Entity<long>, IAggregationRoot
 {
     public List<MerchPackRequest> MerchPacksRequests { get; } = [];
+    
+    public string Email { get; }
 
     public bool CanReceiveMerchPack(MerchType merchType)
     {
