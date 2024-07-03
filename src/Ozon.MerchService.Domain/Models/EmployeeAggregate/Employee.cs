@@ -7,9 +7,30 @@ namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
 
 public class Employee : Entity<long>, IAggregationRoot
 {
-    public List<MerchPackRequest> MerchPacksRequests { get; } = [];
+    public Employee(
+        int id,
+        FullName fullName,
+        Email email,
+        Email hrEmail,
+        ClothingSize clothingSize
+    )
+    {
+        Id = id;
+        FullName = fullName;
+        Email = email;
+        HREmail = hrEmail;
+        ClothingSize = clothingSize;
+    }
     
-    public string Email { get; }
+    public FullName FullName { get; }
+    
+    public Email Email { get; }
+    
+    public Email HREmail { get; }
+    
+    public ClothingSize ClothingSize { get; }
+    
+    public List<MerchPackRequest> MerchPacksRequests { get; } = [];
 
     public bool CanReceiveMerchPack(MerchType merchType)
     {
