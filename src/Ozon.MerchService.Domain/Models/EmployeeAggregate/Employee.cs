@@ -18,7 +18,7 @@ public class Employee : Entity<long>, IAggregationRoot
         Id = id;
         FullName = fullName;
         Email = email;
-        HREmail = hrEmail;
+        HrEmail = hrEmail;
         ClothingSize = clothingSize;
     }
     
@@ -26,7 +26,7 @@ public class Employee : Entity<long>, IAggregationRoot
     
     public Email Email { get; }
     
-    public Email HREmail { get; }
+    public Email HrEmail { get; }
     
     public ClothingSize ClothingSize { get; }
     

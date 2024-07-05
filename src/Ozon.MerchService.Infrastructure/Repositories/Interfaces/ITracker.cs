@@ -8,7 +8,7 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Interfaces;
 public interface ITracker<T> where T : IEquatable<T>
 {
     /// <summary>
-    /// Tracked entities in query.
+    /// Tracked entities in query
     /// </summary>
     IEnumerable<Entity<T>> TrackedEntities { get; }
 

@@ -33,20 +33,24 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
                 throw new NoActiveTransactionsException();
             }
 
-            var domainEvents = new Queue<INotification>(
+            var domainNotifications = 
                 tracker.TrackedEntities
                     .SelectMany(entity =>
                     {
-                        var events = entity.DomainEvents.ToList();
+                        var events = entity.DomainEvents;
                         entity.ClearDomainEvents();
                         
                         return events;
-                    }));
-            
-            while (domainEvents.TryDequeue(out var notification))
-            {
-                await publisher.Publish(notification, cancellationToken);
-            }
+                    });
+                
+            var tasks = domainNotifications
+                .Select<INotification, Task>(notification =>
+                {
+                    return new Task(() => publisher.Publish(notification, cancellationToken));
+                })
+                .ToArray();
+
+            await Task.WhenAll(tasks);
 
             await _npgsqlTransaction.CommitAsync(cancellationToken);
         }
