@@ -33,14 +33,14 @@ public interface IRepository<TEntity, TId>
     /// </summary>
     /// <param name="itemToUpdate">Item to update</param>
     /// <param name="cancellationToken">Cancellation token  <see cref="CancellationToken"/></param>
-    /// <returns>Updated item id</returns>
-    Task<TId> UpdateAsync(TEntity itemToUpdate, CancellationToken cancellationToken);
+    /// <returns>Affected rows count</returns>
+    Task<int> UpdateAsync(TEntity itemToUpdate, CancellationToken cancellationToken);
     
     /// <summary>
     /// Delete item
     /// </summary>
     /// <param name="itemId">Item to delete</param>
     /// <param name="token">Cancellation token <see cref="CancellationToken"/></param>
-    /// <returns>Deleted item id</returns>
-    Task<TId> DeleteAsync(TId itemId, CancellationToken token);
+    /// <returns>Affected rows count</returns>
+    Task<int> DeleteAsync(TId itemId, CancellationToken token);
 }
