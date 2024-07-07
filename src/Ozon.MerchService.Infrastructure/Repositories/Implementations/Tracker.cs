@@ -4,7 +4,7 @@ using Ozon.MerchService.Infrastructure.Repositories.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
-public class ChangeTracker<T> : ITracker<T> where T : IEquatable<T>
+public class Tracker<T> : ITracker<T> where T : IEquatable<T>
 {
     public IEnumerable<Entity<T>> TrackedEntities => _trackedEntities.ToArray();
 

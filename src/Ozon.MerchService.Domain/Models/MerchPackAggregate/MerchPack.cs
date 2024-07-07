@@ -6,7 +6,7 @@ using RequestedAt = Ozon.MerchService.Domain.Models.ValueObjects.RequestedAt;
 
 namespace Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
-public class MerchPack : Entity<long>, IAggregationRoot
+public class MerchPack : Item, IAggregationRoot
 {
     public MerchPack(MerchType merchPackType)
     {

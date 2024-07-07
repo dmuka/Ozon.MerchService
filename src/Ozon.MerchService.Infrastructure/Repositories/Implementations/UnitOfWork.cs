@@ -13,6 +13,7 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
         : IUnitOfWork, IDisposable
         where T : IEquatable<T>
     {
+        public NpgsqlConnection? Connection { get; private set; }
         private NpgsqlTransaction? _npgsqlTransaction;
         
         private readonly IDbConnectionFactory<NpgsqlConnection>? _dbConnectionFactory = dbConnectionFactory;
@@ -21,9 +22,9 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
         {
             if (!(_npgsqlTransaction is null && _dbConnectionFactory is not null)) return;
             
-            var connection = await _dbConnectionFactory.Create(token);
+            Connection = await _dbConnectionFactory.Create(token);
             
-            _npgsqlTransaction = await connection.BeginTransactionAsync(token);
+            _npgsqlTransaction = await Connection.BeginTransactionAsync(token);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
