@@ -5,7 +5,7 @@ using Npgsql;
 using Ozon.MerchService.Configuration.Constants;
 using Ozon.MerchService.Infrastructure.Configuration.OperationFilters;
 using Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
-using Ozon.MerchService.Infrastructure.Repositories.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 using Ozon.MerchService.Infrastructure.Repositories.Postgres;
 
 namespace Ozon.MerchService.Infrastructure.Configuration.Extensions;

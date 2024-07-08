@@ -1,6 +1,6 @@
 using Ozon.MerchService.Domain.Root;
 
-namespace Ozon.MerchService.Infrastructure.Repositories.Interfaces;
+namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 /// <summary>
 /// Tracker with entities changing in query 

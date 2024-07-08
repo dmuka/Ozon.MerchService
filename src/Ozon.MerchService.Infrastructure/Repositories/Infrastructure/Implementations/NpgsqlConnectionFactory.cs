@@ -2,9 +2,9 @@ using System.Data;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Ozon.MerchService.Infrastructure.Configuration;
-using Ozon.MerchService.Infrastructure.Repositories.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
+namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 
 public class NpgsqlConnectionFactory(IOptions<DbConnectionOptions> options) : IDbConnectionFactory<NpgsqlConnection>
 {

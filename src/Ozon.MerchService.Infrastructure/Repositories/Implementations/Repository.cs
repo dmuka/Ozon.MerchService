@@ -8,6 +8,12 @@ using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
+/// <summary>
+/// Generic repository for basic operations with entities
+/// </summary>
+/// <param name="unitOfWork">Unit of work object</param>
+/// <typeparam name="T">Entity type</typeparam>
+/// <typeparam name="TId">Entity id type</typeparam>
 public class Repository<T, TId>(IUnitOfWork unitOfWork) : BaseRepository<T>
 where T : IAggregationRoot
 where TId : IEquatable<TId>

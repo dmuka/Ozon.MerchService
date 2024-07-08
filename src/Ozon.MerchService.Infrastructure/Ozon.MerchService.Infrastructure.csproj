@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <Folder Include="Repositories\DTOs\" />
+      <Folder Include="Repositories\Interfaces\" />
       <Folder Include="Repositories\Mappings\" />
     </ItemGroup>
 

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Ozon.MerchService.Infrastructure.Configuration;
-using Ozon.MerchService.Infrastructure.Repositories.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Postgres;
 

@@ -2,15 +2,14 @@ using MediatR;
 using Npgsql;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
-using Ozon.MerchService.Infrastructure.Repositories.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
+namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 
     public class UnitOfWork<T>(
         IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
         IPublisher publisher,
-        ITracker<T> tracker)
-        : IUnitOfWork, IDisposable
+        ITracker<T> tracker) : IUnitOfWork, IDisposable
         where T : IEquatable<T>
     {
         public NpgsqlConnection? Connection { get; private set; }
