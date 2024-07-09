@@ -27,7 +27,7 @@ public class MerchController(IMerchService merchService) : ControllerBase
         CancellationToken cancellationToken)
     {
 
-        var merchPack = new MerchPack(reserveMerchRequest.MerchPackType);
+        var merchPack = new MerchPack(reserveMerchRequest.MerchPackType, reserveMerchRequest.ClothingSize);
         
         var merch = await merchService.ReserveMerchAsync(reserveMerchRequest.EmployeeId, merchPack, cancellationToken);
 

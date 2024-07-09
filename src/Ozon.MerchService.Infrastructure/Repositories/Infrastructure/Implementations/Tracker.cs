@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Ozon.MerchService.Domain.Root;
+using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;

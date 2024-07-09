@@ -1,36 +1,25 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
-using Ozon.MerchService.Domain.Root;
 
 namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
 
-public class Employee : Entity<long>, IAggregationRoot
+public class Employee(
+    FullName fullName,
+    Email email,
+    Email hrEmail,
+    ClothingSize clothingSize)
+    : Entity<long>, IAggregationRoot
 {
-    public Employee(
-        int id,
-        FullName fullName,
-        Email email,
-        Email hrEmail,
-        ClothingSize clothingSize
-    )
-    {
-        Id = id;
-        FullName = fullName;
-        Email = email;
-        HrEmail = hrEmail;
-        ClothingSize = clothingSize;
-    }
-    
-    public FullName FullName { get; }
-    
-    public Email Email { get; }
-    
-    public Email HrEmail { get; }
-    
-    public ClothingSize ClothingSize { get; }
-    
-    public List<MerchPackRequest> MerchPacksRequests { get; } = [];
+    public FullName FullName { get; private set; } = fullName;
+
+    public Email Email { get; private set; } = email;
+
+    public Email HrEmail { get; private set; } = hrEmail;
+
+    public ClothingSize ClothingSize { get; private set; } = clothingSize;
+
+    public List<MerchPackRequest> MerchPacksRequests { get; private set; } = [];
 
     public bool CanReceiveMerchPack(MerchType merchType)
     {
@@ -54,5 +43,12 @@ public class Employee : Entity<long>, IAggregationRoot
         }
         
         return result;
-    } 
+    }
+
+    public static Employee CreateInstance(long id, Employee employee)
+    {
+        employee.Id = id;
+
+        return employee;
+    }
 }

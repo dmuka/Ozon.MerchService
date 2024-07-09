@@ -2,50 +2,46 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Text;
 using Dapper;
-using Ozon.MerchService.Domain.DataContracts;
+using Npgsql;
 using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
 /// <summary>
 /// Generic repository for basic operations with entities
 /// </summary>
-/// <param name="unitOfWork">Unit of work object</param>
+/// <param name="connectionFactory">Connection factory</param>
 /// <typeparam name="T">Entity type</typeparam>
 /// <typeparam name="TId">Entity id type</typeparam>
-public class Repository<T, TId>(IUnitOfWork unitOfWork) : BaseRepository<T>
+public class Repository<T, TId>(IDbConnectionFactory<NpgsqlConnection> connectionFactory) : BaseRepository<T>
 where T : IAggregationRoot
 where TId : IEquatable<TId>
 {
-    public async Task<long> CreateAsync(T entity, CancellationToken cancellationToken)
+    public async Task<TId> CreateAsync(T entity, CancellationToken cancellationToken)
     {
-        int rowsAffected;
-
+        TId entityId;
+        
         try
         {
             var tableName = GetTableName();
+            var keyColumnName = GetKeyColumnName();
             var columns = GetColumns(excludeKey: true);
             var properties = GetPropertyValues(excludeKey: true);
 
-            var query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
+            var query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties}) RETURNING {keyColumnName}";
 
-            await unitOfWork.StartTransaction(cancellationToken);
+            var connection = await GetConnection(cancellationToken);
 
-            rowsAffected = await unitOfWork.Connection.ExecuteAsync(query);
-
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            entityId = await connection.QuerySingleAsync<TId>(query);
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
         }
-        finally
-        {
-            await unitOfWork.Connection.CloseAsync();
-        }
-
-        return rowsAffected;
+        
+        return entityId;
     }
 
     public async Task<T?> GetByIdAsync(TId entityId, CancellationToken cancellationToken)
@@ -59,19 +55,13 @@ where TId : IEquatable<TId>
 
         try
         {
-            await unitOfWork.StartTransaction(cancellationToken);
-
-            entity = await unitOfWork.Connection.QuerySingleOrDefaultAsync<T>(query);
-
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            var connection = await GetConnection(cancellationToken);
+            
+            entity = await connection.QuerySingleOrDefaultAsync<T>(query);
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
-        }
-        finally
-        {
-            await unitOfWork.Connection.CloseAsync();
         }
 
         return entity;
@@ -87,19 +77,13 @@ where TId : IEquatable<TId>
 
         try
         {
-            await unitOfWork.StartTransaction(cancellationToken);
+            var connection = await GetConnection(cancellationToken);
 
-            entities = await unitOfWork.Connection.QueryAsync<T>(query);
-
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            entities = await connection.QueryAsync<T>(query);
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
-        }
-        finally
-        {
-            await unitOfWork.Connection.CloseAsync();
         }
 
         return entities;
@@ -134,16 +118,14 @@ where TId : IEquatable<TId>
             query.Remove(query.Length - 1, 1);
 
             query.Append($" WHERE {keyColumnName} = @{keyColumnValue}");
+            
+            var connection = await GetConnection(cancellationToken);
 
-            rowsAffected = await unitOfWork.Connection.ExecuteAsync(query.ToString());
+            rowsAffected = await connection.ExecuteAsync(query.ToString());
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
-        }
-        finally
-        {
-            await unitOfWork.Connection.CloseAsync();
         }
 
         return rowsAffected;
@@ -160,21 +142,20 @@ where TId : IEquatable<TId>
 
         try
         {
-            await unitOfWork.StartTransaction(cancellationToken);
+            var connection = await GetConnection(cancellationToken);
 
-            rowsAffected = await unitOfWork.Connection.ExecuteAsync(query);
-
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            rowsAffected = await connection.ExecuteAsync(query);
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
         }
-        finally
-        {
-            await unitOfWork.Connection.CloseAsync();
-        }
 
         return rowsAffected;
+    }
+
+    internal async Task<NpgsqlConnection> GetConnection(CancellationToken cancellationToken)
+    {
+        return await connectionFactory.Create(cancellationToken);
     }
 }

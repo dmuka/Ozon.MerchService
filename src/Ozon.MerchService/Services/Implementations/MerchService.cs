@@ -11,11 +11,11 @@ public class MerchService : IMerchService
 {
     private List<MerchPack> MerchPacks { get; } =
     [
-        new MerchPack(MerchType.ProbationPeriodEndingPack),
-        new MerchPack(MerchType.WelcomePack)
+        new MerchPack(MerchType.ProbationPeriodEndingPack, ClothingSize.L),
+        new MerchPack(MerchType.WelcomePack, ClothingSize.M)
     ];
 
-    private MerchPack MerchPack => new (MerchType.ConferenceListenerPack);
+    private MerchPack MerchPack => new (MerchType.ConferenceListenerPack, ClothingSize.XL);
 
     /// <summary>
     /// Get asynchronously information about merch pack(s) that user already get

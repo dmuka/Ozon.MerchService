@@ -11,6 +11,7 @@ service MerchService{
 message RequestMerchRequest {
   int64 employee_id = 1;
   MerchPackId merch_pack_id = 2;
+  int64 size_id = 3;
 }
 
 message RequestMerchResponse{

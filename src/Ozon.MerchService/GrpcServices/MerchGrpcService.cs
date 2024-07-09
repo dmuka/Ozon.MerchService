@@ -41,7 +41,7 @@ public class MerchGrpcService : GRPC.MerchService.MerchServiceBase
             throw new ArgumentException($"{nameof(RequestMerchRequest.MerchPackId)} is unknown");
         }
 
-        var merchPack = new MerchPack((MerchType)request.MerchPackId);
+        var merchPack = new MerchPack((MerchType)request.MerchPackId, (ClothingSize)request.SizeId);
 
         await _merchService.ReserveMerchAsync(request.EmployeeId, merchPack, context.CancellationToken);
             

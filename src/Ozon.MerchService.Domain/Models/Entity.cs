@@ -1,13 +1,13 @@
 using MediatR;
 
-namespace Ozon.MerchService.Domain.Root;
+namespace Ozon.MerchService.Domain.Models;
 
 public abstract class Entity<TKey>
     where TKey : IEquatable<TKey>
 {
     private int? _requestedHashCode;
 
-    public TKey Id { get; internal init; }
+    public TKey Id { get; protected set; }
 
     private readonly List<INotification> _domainEvents = [];
 

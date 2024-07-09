@@ -1,5 +1,5 @@
+using Npgsql;
 using Ozon.MerchService.Domain.Models;
-using Ozon.MerchService.Domain.Root;
 
 namespace Ozon.MerchService.Domain.DataContracts;
 
@@ -27,7 +27,7 @@ public interface IRepository<TEntity, TId>
     /// <param name="token">Cancellation token <see cref="CancellationToken"/></param>
     /// <returns>Item with related id</returns>
     Task<TEntity> GetByIdAsync(TId itemId, CancellationToken token);
-
+    
     /// <summary>
     /// Update item
     /// </summary>

@@ -6,4 +6,6 @@ public class ReserveMerchRequest
 {
     public int EmployeeId { get; set; }
     public MerchType MerchPackType { get; set; }
+    
+    public ClothingSize ClothingSize { get; set; }
 }
