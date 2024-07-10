@@ -9,13 +9,12 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
     public class ReserveMerchPackHandler(
             IEmployeeRepository employeeRepository,
-            IMerchPacksRepository merchPacksRepository,
             IMerchPackRequestRepository merchPackRequestRepository,
-            IStockGrpcService stockGrpcService) : IRequestHandler<ReserveMerchPackCommand>
+            IStockGrpcService stockGrpcService) : IRequestHandler<ReserveMerchPackCommand, Status>
     {
         private const string HandlerName = nameof(ReserveMerchPackHandler);
         
-        public async Task Handle(ReserveMerchPackCommand request, CancellationToken token)
+        public async Task<Status> Handle(ReserveMerchPackCommand request, CancellationToken token)
         {
             var employee = await employeeRepository.GetByEmailAsync(request.EmployeeEmail, token);
 
@@ -40,7 +39,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
             {
                 merchPackRequestData.SetStatus(Status.Declined);
                 
-                return;
+                return merchPackRequestData.Status;
             }
 
             var merchPackRequestId = await merchPackRequestRepository.CreateAsync(merchPackRequestData, token);
@@ -57,6 +56,6 @@ namespace Ozon.MerchService.CQRS.Handlers;
             
             await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
             
-            return;
+            return merchPackRequest.Status;
         }
     }

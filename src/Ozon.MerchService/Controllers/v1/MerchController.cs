@@ -1,4 +1,6 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Ozon.MerchService.CQRS.Commands;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.HttpModels;
 using Ozon.MerchService.Services.Interfaces;
@@ -7,7 +9,7 @@ namespace Ozon.MerchService.Controllers.v1;
 
 [ApiController]
 [Route("/api/merch")]
-public class MerchController(IMerchService merchService) : ControllerBase
+public class MerchController(IMerchService merchService, IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [Route("received")]
@@ -27,12 +29,18 @@ public class MerchController(IMerchService merchService) : ControllerBase
         CancellationToken cancellationToken)
     {
 
-        var merchPack = new MerchPack(reserveMerchRequest.MerchPackType, reserveMerchRequest.ClothingSize);
-        
-        var merch = await merchService.ReserveMerchAsync(reserveMerchRequest.EmployeeId, merchPack, cancellationToken);
+        var command = new ReserveMerchPackCommand(
+            null,
+            reserveMerchRequest.EmployeeId,
+            reserveMerchRequest.EmployeeFirstName,
+            reserveMerchRequest.EmployeeLastName,
+            reserveMerchRequest.EmployeeEmail,
+            reserveMerchRequest.HrEmail,
+            reserveMerchRequest.ClothingSize,
+            reserveMerchRequest.MerchPackType);
 
-        if (merch is null) return NotFound();
+        var result = await mediator.Send(command, cancellationToken);
 
-        return Ok(merch);
+        return Ok(result);
     }
 }

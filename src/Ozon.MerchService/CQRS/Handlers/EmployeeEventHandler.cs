@@ -10,15 +10,17 @@ public class EmployeeEventHandler(IEmployeeRepository employeeRepository, IMedia
 {
     public async Task Handle(EmployeeEvent employeeEvent, CancellationToken cancellationToken)
     {
-        var merchData = employeeEvent.NotificationEvent.Payload as MerchDeliveryEventPayload;
-
-        var employee = await employeeRepository.GetByEmailAsync(employeeEvent.NotificationEvent.EmployeeEmail, cancellationToken);
+        var employee = await employeeRepository.GetByEmailAsync(employeeEvent.EmployeeEmail, cancellationToken);
         
-        var command = new ReserveMerchPackCommand()
-        {
-            EmployeeId = employee.Id,
-            MerchPackType = merchData.MerchType
-        };
+        var command = new ReserveMerchPackCommand(
+            employeeEvent.EventType,
+            default(long),
+            employeeEvent.EmployeeName,
+            "",
+            employeeEvent.EmployeeEmail,
+            employeeEvent.HrEmail,
+            employeeEvent.ClothingSize,
+            employeeEvent.MerchType);
             
         await mediator.Send(command, cancellationToken);
     }
