@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Ozon.MerchService.Configuration.Constants;
+using Ozon.MerchService.Infrastructure.BackgroundServices;
 using Ozon.MerchService.Infrastructure.Configuration.OperationFilters;
 using Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
@@ -15,7 +16,9 @@ internal static class ServiceCollectionExtensions
     internal static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services
-            .AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+            .AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>()
+            .AddHostedService<StockReplenishedService>()
+            .AddHostedService<EmployeeNotificationService>();
 
         return services;
     }
@@ -31,7 +34,8 @@ internal static class ServiceCollectionExtensions
             .AddSingleton<IStartupFilter, ReadyResponse>();
 
         return services;
-    }
+        
+    }   
     
     internal static IServiceCollection AddSwagger(this IServiceCollection services)
     {
