@@ -42,8 +42,43 @@ public class MerchPackRequest : Entity<long>, IAggregationRoot
         return result;
     }
 
-    public void SetStatus(Status status)
+    public void SetStatusDeclined()
     {
-        Status = status;
+        if (Status.Equals(Status.Issued))
+        {
+            throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
+        }
+        
+        Status = Status.Declined;
+    }
+
+    public void SetStatusQuequed()
+    {
+        if (Status.Equals(Status.Issued))
+        {
+            throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
+        }
+        
+        if (Status.Equals(Status.Quequed))
+        {
+            throw new ArgumentException($"Merch {MerchPackType} already quequed ({Employee.FullName})");
+        }
+        
+        Status = Status.Quequed;
+    }
+
+    public void SetStatusIssued()
+    {
+        if (Status.Equals(Status.Issued))
+        {
+            throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
+        }
+        
+        if (Status.Equals(Status.Declined))
+        {
+            throw new ArgumentException($"Merch {MerchPackType} declined to {Employee.FullName}");
+        }
+        
+        Status = Status.Issued;
     }
 }

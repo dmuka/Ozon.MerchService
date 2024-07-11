@@ -1,5 +1,6 @@
 using MediatR;
 using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.Domain.Events.Integration;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
@@ -37,7 +38,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             if (!canReceiveMerchPack)
             {
-                merchPackRequestData.SetStatus(Status.Declined);
+                merchPackRequestData.SetStatusDeclined();
                 
                 return merchPackRequestData.Status;
             }
@@ -47,11 +48,14 @@ namespace Ozon.MerchService.CQRS.Handlers;
             
             if (await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
             {
+                var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType);
+                merchPackRequest.SetStatusIssued();
                 //await SendMessage(employee, merchPackRequest, token); Add kafka
             }
             else
             {
-                merchPackRequest.SetStatus(Status.Quequed);
+                merchPackRequest.SetStatusQuequed();
+                var hrNotificationEvent = new MerchEndedEvent(employee.HrEmail, request.MerchPackType);
             }
             
             await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
