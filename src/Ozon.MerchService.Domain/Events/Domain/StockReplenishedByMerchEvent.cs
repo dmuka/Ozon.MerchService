@@ -1,8 +1,8 @@
-using CSharpCourse.Core.Lib.Models;
 using CSharpCourse.Core.Lib.Events;
+using CSharpCourse.Core.Lib.Models;
 using MediatR;
 
-namespace Ozon.MerchService.Domain.Events;
+namespace Ozon.MerchService.Domain.Events.Domain;
 
 public class StockReplenishedByMerchEvent(StockReplenishedEvent stockReplenishedByMerchEvent) : INotification
 {

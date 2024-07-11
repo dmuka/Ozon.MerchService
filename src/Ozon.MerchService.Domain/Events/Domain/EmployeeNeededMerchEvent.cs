@@ -2,9 +2,9 @@ using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
 
-namespace Ozon.MerchService.Domain.Events;
+namespace Ozon.MerchService.Domain.Events.Domain;
 
-public class EmployeeEvent(NotificationEvent notificationEvent) : INotification
+public class EmployeeNeededMerchEvent(NotificationEvent notificationEvent) : INotification
 {
     public string EmployeeEmail { get; private set; } = notificationEvent.EmployeeEmail;
     public string HrEmail { get; private set; } = notificationEvent.ManagerEmail;
