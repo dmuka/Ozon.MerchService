@@ -10,7 +10,7 @@ public class MerchPack : Item, IAggregationRoot
     public MerchPack(MerchType merchPackType, ClothingSize clothingSize)
     {
         MerchPackType = merchPackType;
-        Items = MerchPackType switch
+        _merchPackItems = MerchPackType switch
         {
             MerchType.WelcomePack => WelcomePackItems,
             MerchType.ProbationPeriodEndingPack => StarterPackItems,
@@ -23,7 +23,8 @@ public class MerchPack : Item, IAggregationRoot
 
     public MerchType MerchPackType { get; }
 
-    public List<MerchItem> Items { get; }
+    private List<MerchItem> _merchPackItems;
+    public IEnumerable<MerchItem> Items => _merchPackItems.AsReadOnly();
 
     public static MerchPack CreateInstance(long id, MerchPack merchPack)
     {

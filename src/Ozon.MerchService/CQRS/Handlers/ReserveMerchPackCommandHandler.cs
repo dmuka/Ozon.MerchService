@@ -8,12 +8,12 @@ using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
 namespace Ozon.MerchService.CQRS.Handlers;
 
-    public class ReserveMerchPackHandler(
+    public class ReserveMerchPackCommandHandler(
             IEmployeeRepository employeeRepository,
             IMerchPackRequestRepository merchPackRequestRepository,
             IStockGrpcService stockGrpcService) : IRequestHandler<ReserveMerchPackCommand, Status>
     {
-        private const string HandlerName = nameof(ReserveMerchPackHandler);
+        private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
         
         public async Task<Status> Handle(ReserveMerchPackCommand request, CancellationToken token)
         {
@@ -48,7 +48,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
             
             if (await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
             {
-                var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType);
+                //var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType); for queued employees
                 merchPackRequest.SetStatusIssued();
                 //await SendMessage(employee, merchPackRequest, token); Add kafka
             }

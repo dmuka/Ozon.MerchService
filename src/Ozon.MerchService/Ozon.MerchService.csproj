@@ -52,8 +52,4 @@
       <ProjectReference Include="..\Ozon.MerchService.Migrator\Ozon.MerchService.Migrator.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="CQRS\Queries\" />
-    </ItemGroup>
-
 </Project>

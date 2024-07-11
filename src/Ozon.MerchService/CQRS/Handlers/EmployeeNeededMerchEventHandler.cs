@@ -7,7 +7,8 @@ using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 
 namespace Ozon.MerchService.CQRS.Handlers;
 
-public class EmployeeNeededMerchEventHandler(IEmployeeRepository employeeRepository, IMediator mediator) : INotificationHandler<EmployeeNeededMerchEvent>
+public class EmployeeNeededMerchEventHandler(IEmployeeRepository employeeRepository, IMediator mediator)
+    : INotificationHandler<EmployeeNeededMerchEvent>
 {
     public async Task Handle(EmployeeNeededMerchEvent employeeNeededMerchEvent, CancellationToken cancellationToken)
     {

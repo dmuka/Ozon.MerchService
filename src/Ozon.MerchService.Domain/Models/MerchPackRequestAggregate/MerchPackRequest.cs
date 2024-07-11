@@ -11,14 +11,15 @@ public class MerchPackRequest : Entity<long>, IAggregationRoot
     public MerchPackRequest(MerchType merchPackType, Employee employee)
     {
         MerchPackType = merchPackType;
-        MerchItems = new MerchPack(MerchPackType, employee.ClothingSize).Items;
+        _merchPackItems = new MerchPack(MerchPackType, employee.ClothingSize).Items.ToList();
         Employee = employee;
         Status = Status.Created;
     }
 
     public MerchType MerchPackType { get; }
 
-    public IReadOnlyCollection<MerchItem> MerchItems { get; }
+    private List<MerchItem> _merchPackItems;
+    public IEnumerable<MerchItem> MerchItems => _merchPackItems.AsReadOnly();
 
     public Employee Employee { get; }
 

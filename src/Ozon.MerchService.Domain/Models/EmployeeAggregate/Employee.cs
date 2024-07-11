@@ -19,7 +19,9 @@ public class Employee(
 
     public ClothingSize ClothingSize { get; private set; } = clothingSize;
 
-    public List<MerchPackRequest> MerchPacksRequests { get; private set; } = [];
+
+    private List<MerchPackRequest> _merchPackRequests;
+    public IEnumerable<MerchPackRequest> MerchPacksRequests  => _merchPackRequests.AsReadOnly();
 
     public bool CanReceiveMerchPack(MerchType merchType)
     {
