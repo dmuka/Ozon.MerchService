@@ -8,12 +8,16 @@ namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
 public class MerchPackRequest : Entity<long>, IAggregationRoot
 {
-    public MerchPackRequest(MerchType merchPackType, Employee employee)
+    public MerchPackRequest(
+        MerchType merchPackType, 
+        Employee employee, 
+        RequestType requestType)
     {
         MerchPackType = merchPackType;
         _merchPackItems = new MerchPack(MerchPackType, employee.ClothingSize).Items.ToList();
         Employee = employee;
         Status = Status.Created;
+        RequestType = requestType;
     }
 
     public MerchType MerchPackType { get; }
@@ -28,6 +32,8 @@ public class MerchPackRequest : Entity<long>, IAggregationRoot
     public Issued Issued { get; } = new();
 
     public Status Status { get; private set; }
+
+    public RequestType RequestType { get; private set; }
 
     public static MerchPackRequest CreateInstance(long id, MerchPackRequest merchPackRequest)
     {

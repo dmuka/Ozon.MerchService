@@ -1,6 +1,9 @@
 using CSharpCourse.Core.Lib.Enums;
 using MediatR;
+using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
+using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.HttpModels;
 
 namespace Ozon.MerchService.CQRS.Commands;
 
@@ -10,24 +13,50 @@ namespace Ozon.MerchService.CQRS.Commands;
 public class ReserveMerchPackCommand : IRequest<Status>
 {
     public ReserveMerchPackCommand(
-        EmployeeEventType? eventType,
-        long employeeId,
-        string employeeFirstName,
-        string employeeLastName,
-        string employeeEmail,
-        string hrEmail,
-        ClothingSize employeeClothingSize,
-        MerchType merchPackType)
+        ReserveMerchRequest request, 
+        EmployeeEventType eventType, 
+        Status status, 
+        RequestType requestType)
     {
-        EmployeeId = employeeId;
+        EmployeeId = request.EmployeeId;
         EventType = eventType;
-        EmployeeFirstName = employeeFirstName;
-        EmployeeLastName = employeeLastName;
-        EmployeeEmail = employeeEmail;
-        HrEmail = hrEmail;
-        EmployeeClothingSize = employeeClothingSize;
-        MerchPackType = merchPackType;
+        EmployeeFullName = new FullName(request.EmployeeFirstName, request.EmployeeLastName).ToString();
+        EmployeeEmail = request.EmployeeEmail;
+        HrEmail = request.HrEmail;
+        EmployeeClothingSize = request.ClothingSize;
+        MerchPackType = request.MerchPackType;
+        Status = status;
+        RequestType = requestType;
     }
+    
+    public ReserveMerchPackCommand(MerchPackRequest merchPackRequest, EmployeeEventType eventType)
+    {
+        EmployeeId = merchPackRequest.Employee.Id;
+        EventType = eventType;
+        EmployeeFullName = merchPackRequest.Employee.FullName.ToString();
+        EmployeeEmail = merchPackRequest.Employee.Email.ToString();
+        HrEmail = merchPackRequest.Employee.HrEmail.ToString();
+        EmployeeClothingSize = merchPackRequest.Employee.ClothingSize;
+        MerchPackType = merchPackRequest.MerchPackType;
+        Status = merchPackRequest.Status;
+        RequestType = merchPackRequest.RequestType;
+    }
+    
+    public ReserveMerchPackCommand(MerchPackRequest merchPackRequest)
+    {
+        Id = merchPackRequest.Id;
+        Employee = merchPackRequest.Employee;
+        MerchPackType = merchPackRequest.MerchPackType;
+        Status = merchPackRequest.Status;
+        RequestType = merchPackRequest.RequestType;
+    }
+
+    public long Id { get; private set; }
+
+    /// <summary>
+    /// Employee
+    /// </summary>
+    public Employee Employee { get; private set; }
     
     /// <summary>
     /// Employee id
@@ -39,25 +68,25 @@ public class ReserveMerchPackCommand : IRequest<Status>
     /// <summary>
     /// Employee email
     /// </summary>
-    public string EmployeeFirstName { get; set;  }
+    public string? EmployeeFullName { get; private set; }
     /// <summary>
     /// Employee email
     /// </summary>
-    public string EmployeeLastName { get; set;  }
-    /// <summary>
-    /// Employee email
-    /// </summary>
-    public string EmployeeEmail { get; set;  }
+    public string? EmployeeEmail { get; private set; }
     /// <summary>
     /// Employee clothing size
     /// </summary>
-    public ClothingSize EmployeeClothingSize { get; set;  }
+    public ClothingSize EmployeeClothingSize { get; private set; }
     /// <summary>
     /// Hr email
     /// </summary>
-    public string HrEmail { get; set;  }
+    public string? HrEmail { get; private set; }
     /// <summary>
     /// Merch pack type id
     /// </summary>
-    public MerchType MerchPackType { get; set; }
+    public MerchType MerchPackType { get; private set; }
+    
+    public Status Status { get; private set; }
+
+    public RequestType RequestType { get; private set; }
 }

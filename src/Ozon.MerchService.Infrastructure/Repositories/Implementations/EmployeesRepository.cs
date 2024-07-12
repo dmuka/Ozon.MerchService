@@ -9,7 +9,6 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory) 
     : Repository<Employee, long>(connectionFactory), IEmployeeRepository
 {
-
     public async Task<Employee?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         Employee? entity;

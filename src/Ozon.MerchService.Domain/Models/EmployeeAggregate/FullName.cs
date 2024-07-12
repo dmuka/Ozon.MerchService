@@ -19,6 +19,16 @@ public class FullName : ValueObject, IRegexValid
         Value = firstName + " " + lastName;
     }
     
+    public FullName(string fullName)
+    {
+        if (!((IRegexValid)this).IsValid(fullName, NameConstants.RegexPattern))
+        {
+            throw new ArgumentException($"Incorrect fullName value: {fullName}", nameof(fullName));
+        }
+
+        Value = fullName;
+    }
+    
     public string Value { get; }
     
     protected override IEnumerable<object> GetEqualityComponents()

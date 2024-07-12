@@ -17,24 +17,20 @@ namespace Ozon.MerchService.CQRS.Handlers;
         
         public async Task<Status> Handle(ReserveMerchPackCommand request, CancellationToken token)
         {
-            var employee = await employeeRepository.GetByEmailAsync(request.EmployeeEmail, token);
-
-            if (employee is null)
-            {
-                var employeeData = new Employee(
-                    new FullName(request.EmployeeFirstName, request.EmployeeLastName),
-                    new Email(request.EmployeeEmail),
-                    new Email(request.HrEmail),
-                    request.EmployeeClothingSize);
-
-                var employeeId = await employeeRepository.CreateAsync(employeeData, token);
-
-                employee = Employee.CreateInstance(employeeId, employee);
-            }
+            Employee employee;
             
+            if (Equals(request.Status, Status.Created))
+            {
+                employee = await GetEmployee(request, token);
+            }
+            else
+            {
+                employee = request.Employee;
+            }
+
             var canReceiveMerchPack = employee.CanReceiveMerchPack(request.MerchPackType);
 
-            var merchPackRequestData = new MerchPackRequest(request.MerchPackType, employee);
+            var merchPackRequestData = new MerchPackRequest(request.MerchPackType, employee, request.RequestType);
 
             if (!canReceiveMerchPack)
             {
@@ -43,23 +39,56 @@ namespace Ozon.MerchService.CQRS.Handlers;
                 return merchPackRequestData.Status;
             }
 
-            var merchPackRequestId = await merchPackRequestRepository.CreateAsync(merchPackRequestData, token);
+            var merchPackRequestId = Equals(request.Status, Status.Created)
+                ? await merchPackRequestRepository.CreateAsync(merchPackRequestData, token)
+                : request.Id;
             var merchPackRequest = MerchPackRequest.CreateInstance(merchPackRequestId, merchPackRequestData);
             
-            if (await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
+            if (await stockGrpcService.GetMerchPackItemsAvailability(merchPackRequest, token) 
+                && await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
             {
-                //var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType); for queued employees
                 merchPackRequest.SetStatusIssued();
+                
+                if (Equals(request.Status, Status.Created))
+                {
+                    
+                }
+                else
+                {
+                 //var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType); for queued employees                   
+                }
+                
                 //await SendMessage(employee, merchPackRequest, token); Add kafka
             }
             else
             {
                 merchPackRequest.SetStatusQuequed();
+                
                 var hrNotificationEvent = new MerchEndedEvent(employee.HrEmail, request.MerchPackType);
             }
             
             await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
             
             return merchPackRequest.Status;
+        }
+
+        private async Task<Employee> GetEmployee(ReserveMerchPackCommand request, CancellationToken token)
+        {
+            var employee = await employeeRepository.GetByEmailAsync(request.EmployeeEmail, token);
+
+            if (employee is null)
+            {
+                var employeeData = new Employee(
+                    new FullName(request.EmployeeFullName),
+                    new Email(request.EmployeeEmail),
+                    new Email(request.HrEmail),
+                    request.EmployeeClothingSize);
+
+                var employeeId = await employeeRepository.CreateAsync(employeeData, token);
+
+                employee = Employee.CreateInstance(employeeId, employee);
+            }
+
+            return employee;
         }
     }

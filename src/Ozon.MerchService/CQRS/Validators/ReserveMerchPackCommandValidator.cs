@@ -18,11 +18,8 @@ public class ReserveMerchPackCommandValidator : AbstractValidator<ReserveMerchPa
         RuleFor(command => command.HrEmail)
             .NotEmpty().EmailAddress();
 
-        RuleFor(command => command.EmployeeFirstName)
-            .NotEmpty().Length(2,50);
-
-        RuleFor(command => command.EmployeeLastName)
-            .NotEmpty().Length(2,50);
+        RuleFor(command => command.EmployeeFullName)
+            .NotEmpty().Length(4,100);
 
         RuleFor(command => command.EventType)
             .Must(BeValidEventTypeValue);

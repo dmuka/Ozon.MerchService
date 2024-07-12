@@ -1,6 +1,7 @@
 using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
+using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
 namespace Ozon.MerchService.Domain.Events.Domain;
 
@@ -13,4 +14,5 @@ public class EmployeeNeededMerchEvent(NotificationEvent notificationEvent) : INo
     public EmployeeEventType EventType { get; private set; } = notificationEvent.EventType;
     public MerchType MerchType { get; private set; } = ((MerchDeliveryEventPayload)notificationEvent.Payload).MerchType;
     public ClothingSize ClothingSize { get; private set; } = ((MerchDeliveryEventPayload)notificationEvent.Payload).ClothingSize;
+    public RequestType RequestType { get; set; }
 }
