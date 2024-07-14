@@ -2,6 +2,7 @@ using CSharpCourse.Core.Lib.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.HttpModels;
@@ -15,13 +16,15 @@ public class MerchController(IMerchService merchService, IMediator mediator) : C
 {
     [HttpGet]
     [Route("received")]
-    public async Task<ActionResult<List<MerchPack>>> GetReceivedMerch(
+    public async Task<ActionResult<IEnumerable<MerchPack>>> GetReceivedMerch(
         ReceivedMerchRequest receivedMerchRequest, 
         CancellationToken cancellationToken)
     {
-        var packs = await merchService.GetReceivedMerchAsync(receivedMerchRequest.EmployeeId, cancellationToken);
+        var query = new GetReceivedMerchPacksQuery(receivedMerchRequest.EmployeeId);
 
-        return Ok(packs);
+        var result = await mediator.Send(query, cancellationToken);
+        
+        return Ok(result);
     }
     
     [HttpGet]
