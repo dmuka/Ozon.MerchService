@@ -31,4 +31,29 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
 
         return entities;
     }
+    
+    public async Task<IEnumerable<MerchPack>> GetByMerchPacksByEmployeeIdAsync(long employeeId, CancellationToken cancellationToken)
+    {
+        IEnumerable<MerchPack> merchPacks;
+
+        var tableName = GetTableName();
+
+        var query = $"SELECT {GetColumnsNames()} FROM {tableName} WHERE employee_id={employeeId}";
+
+        try
+        {
+            var connection = await GetConnection(cancellationToken);
+            
+            var requests = await connection.QueryAsync<MerchPackRequest>(query);
+
+            merchPacks = requests.Select(request =>
+                new MerchPack(request.MerchPackType, request.Employee.ClothingSize));
+        }
+        catch (Exception ex)
+        {
+            throw new RepositoryOperationException();
+        }
+
+        return merchPacks;
+    }
 }
