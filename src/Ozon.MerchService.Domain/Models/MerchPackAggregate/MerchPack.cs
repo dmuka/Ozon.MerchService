@@ -37,34 +37,37 @@ public class MerchPack : Item, IAggregationRoot
 
     private static List<MerchItem> StarterPackItems { get; } =
     [
-        new MerchItem(1, 1000000,"Cap"),
-        new MerchItem(5, 1000005, "Bottle")
+        new MerchItem(1, 1000000, ItemType.TShirtAfterProbation, "TShirtAfterProbation"),
+        new MerchItem(5, 1000005, ItemType.SweatshirtAfterProbation,"SweatshirtAfterProbation")
     ];
 
     private static List<MerchItem> WelcomePackItems { get; } =
     [
-        new MerchItem(2, 1000002, "Backpack"),
-        new MerchItem(6, 1000006, "Mug")
+        new MerchItem(1, 1000000, ItemType.TShirtStarter, "TShirtStarter"),
+        new MerchItem(5, 1000005, ItemType.NotepadStarter,"NotepadStarter"),
+        new MerchItem(5, 1000005, ItemType.PenStarter,"PenStarter"),
+        new MerchItem(5, 1000005, ItemType.SocksStarter,"SocksStarter")
     ];
 
     private static List<MerchItem> ConferenceListenerPackItems { get; } =
     [
-        new MerchItem (3, 1000003, "Pen"),
-        new MerchItem (4, 1000004, "Notebook")
+        new MerchItem(1, 1000000, ItemType.NotepadConferenceListener, "NotepadConferenceListener"),
+        new MerchItem(5, 1000005, ItemType.PenConferenceListener,"PenConferenceListener")
     ];
 
     private static List<MerchItem> ConferenceSpeakerPackItems { get; } =
     [
-        new MerchItem (3, 1000003, "Pen"),
-        new MerchItem (4, 1000004, "Notebook"),
-        new MerchItem (7, 1000007, "Marker")
+        new MerchItem(1, 1000000, ItemType.NotepadConferenceSpeaker, "NotepadConferenceSpeaker"),
+        new MerchItem(5, 1000005, ItemType.PenConferenceSpeaker,"PenConferenceSpeaker")
     ];
 
     private static List<MerchItem> VeteranPackItems { get; } =
     [
-        new MerchItem (8, 1000008, "Laptop"),
-        new MerchItem (9, 1000009, "Mouse"),
-        new MerchItem (10, 1000010, "Keyboard")
+        new MerchItem(1, 1000000, ItemType.TShirtVeteran, "TShirtVeteran"),
+        new MerchItem(5, 1000005, ItemType.NotepadVeteran,"NotepadVeteran"),
+        new MerchItem(5, 1000005, ItemType.CardHolderVeteran,"CardHolderVeteran"),
+        new MerchItem(5, 1000005, ItemType.PenVeteran,"PenVeteran"),
+        new MerchItem(5, 1000005, ItemType.SweatshirtVeteran,"SweatshirtVeteran")
     ];
 
     #endregion
