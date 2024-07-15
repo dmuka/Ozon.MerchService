@@ -52,13 +52,15 @@ public class MerchPack : Item, IAggregationRoot
     private static List<MerchItem> ConferenceListenerPackItems { get; } =
     [
         new MerchItem(1, 1000000, ItemType.NotepadConferenceListener, "NotepadConferenceListener"),
-        new MerchItem(5, 1000005, ItemType.PenConferenceListener,"PenConferenceListener")
+        new MerchItem(5, 1000005, ItemType.PenConferenceListener,"PenConferenceListener"),
+        new MerchItem(5, 1000005, ItemType.TShirtСonferenceListener,"TShirtСonferenceListener")
     ];
 
     private static List<MerchItem> ConferenceSpeakerPackItems { get; } =
     [
         new MerchItem(1, 1000000, ItemType.NotepadConferenceSpeaker, "NotepadConferenceSpeaker"),
-        new MerchItem(5, 1000005, ItemType.PenConferenceSpeaker,"PenConferenceSpeaker")
+        new MerchItem(5, 1000005, ItemType.PenConferenceSpeaker,"PenConferenceSpeaker"),
+        new MerchItem(5, 1000005, ItemType.SweatshirtConferenceSpeaker,"SweatshirtConferenceSpeaker")
     ];
 
     private static List<MerchItem> VeteranPackItems { get; } =
