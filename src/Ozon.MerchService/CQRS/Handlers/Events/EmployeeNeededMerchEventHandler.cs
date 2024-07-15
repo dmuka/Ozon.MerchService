@@ -4,7 +4,7 @@ using Ozon.MerchService.Domain.Events.Domain;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
-namespace Ozon.MerchService.CQRS.Handlers;
+namespace Ozon.MerchService.CQRS.Handlers.Events;
 
 public class EmployeeNeededMerchEventHandler(IEmployeeRepository employeeRepository, IMediator mediator)
     : INotificationHandler<EmployeeNeededMerchEvent>
