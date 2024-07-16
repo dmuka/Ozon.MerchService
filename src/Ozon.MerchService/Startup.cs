@@ -16,7 +16,6 @@ public class Startup(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .AddSingleton<IMerchService, Services.Implementations.MerchService>()
             .Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)));
     }
     

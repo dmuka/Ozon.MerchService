@@ -12,7 +12,7 @@ namespace Ozon.MerchService.Controllers.v1;
 
 [ApiController]
 [Route("/api/merch")]
-public class MerchController(IMerchService merchService, IMediator mediator) : ControllerBase
+public class MerchController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [Route("received")]

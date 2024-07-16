@@ -21,6 +21,17 @@ public class MerchPackRequest : Entity<long>, IAggregationRoot
         Status = Status.Created;
         RequestType = requestType;
     }
+    
+    public MerchPackRequest(
+        MerchType merchPackType,
+        Employee employee, 
+        RequestType requestType)
+    {
+        MerchPackType = merchPackType;
+        Employee = employee;
+        Status = Status.Created;
+        RequestType = requestType;
+    }
 
     public MerchType MerchPackType { get; }
 
