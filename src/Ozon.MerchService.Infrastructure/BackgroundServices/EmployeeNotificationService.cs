@@ -15,7 +15,7 @@ public class EmployeeNotificationService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var topic = broker.Configuration.Topic;
+        var topic = broker.Configuration.EmployeeNotificationEventTopic;
         
         await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
     }

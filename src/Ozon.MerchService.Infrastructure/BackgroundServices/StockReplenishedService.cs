@@ -17,7 +17,7 @@ public class StockReplenishedService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var topic = broker.Configuration.Topic;
+        var topic = broker.Configuration.StockReplenishedEventTopic;
         
         await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
     }

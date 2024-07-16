@@ -10,7 +10,8 @@ public class KafkaConfiguration
     /// <summary>
     /// Merch service message topic
     /// </summary>
-    public string Topic { get; set; }
+    public string? EmployeeNotificationEventTopic { get; set; }
+    public string? StockReplenishedEventTopic { get; set; }
         
     /// <summary>
     /// Kafka servers addresses 

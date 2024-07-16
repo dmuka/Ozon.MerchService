@@ -1,5 +1,6 @@
 using Ozon.MerchService.Infrastructure.Configuration;
-using Ozon.MerchService.Services.Interfaces;
+using Ozon.MerchService.Infrastructure.Configuration.Extensions;
+using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
 
 namespace Ozon.MerchService;
 
@@ -16,7 +17,9 @@ public class Startup(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)));
+            .Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)))
+            .Configure<KafkaConfiguration>(configuration.GetSection(nameof(KafkaConfiguration)))
+            .AddKafkaServices(configuration);
     }
     
     /// <summary>

@@ -16,7 +16,7 @@ public class MessageBroker : IMessageBroker
         
         public KafkaConfiguration Configuration { get; }
         
-        private MessageBroker(IOptions<KafkaConfiguration> options, ILogger<MessageBroker> logger)
+        public MessageBroker(IOptions<KafkaConfiguration> options, ILogger<MessageBroker> logger)
         {
             Configuration = options.Value;
             _logger = logger;
