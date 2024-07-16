@@ -47,7 +47,7 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
             var requests = await connection.QueryAsync<MerchPackRequest>(query);
 
             merchPacks = requests.Select(request =>
-                new MerchPack(request.MerchPackType, request.Employee.ClothingSize));
+                new MerchPack(request.MerchPackType, request.MerchItems, request.Employee.ClothingSize));
         }
         catch (Exception ex)
         {

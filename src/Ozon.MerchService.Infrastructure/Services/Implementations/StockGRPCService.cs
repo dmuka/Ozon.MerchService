@@ -1,9 +1,11 @@
+using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.Infrastructure.Services.Interfaces;
 using Ozon.StockApi.Grpc;
 
 namespace Ozon.MerchService.Infrastructure.Services.Implementations;
 
-public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : StockApiGrpc.StockApiGrpcBase
+public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : IStockGrpcService
 {
     public async Task<bool> GetMerchPackItemsAvailability(MerchPackRequest merchPackRequest, CancellationToken token)
     {
@@ -17,6 +19,34 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : Sto
         var allItemsAvailable = response.Items.All(i => i.Quantity > 0);
         
         return allItemsAvailable;
+    }
+    
+    public void SetItemsSkusInRequest(
+        MerchPackRequest merchPackRequest, 
+        ClothingSize clothingSize, 
+        CancellationToken token)
+    {
+        foreach (var merchItem in merchPackRequest.MerchItems)
+        {
+            var id = merchItem.Type.Id;
+            
+            var model = new IntIdModel { Id = id };
+            
+            var items = stockClient.GetByItemType(model, null, null, token).Items;
+
+            if (items.Count > 1)
+            {
+                var item = items.FirstOrDefault(unit => unit.SizeId == (int)clothingSize);
+
+                if (item is null) throw new ArgumentException("No sku with such clothing size found.");
+                
+                merchItem.StockKeepingUnit = item.Sku;
+            }
+            else
+            {
+                merchItem.StockKeepingUnit = items.First().Sku;
+            }            
+        }
     }
 
     public async Task<bool> ReserveMerchPackItems(MerchPackRequest merchPackRequest, CancellationToken token)

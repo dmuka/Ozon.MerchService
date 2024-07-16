@@ -10,7 +10,7 @@ public class Initial_Create_tables : Migration {
            CREATE TABLE IF NOT EXISTS merchpacks(
                id bigserial primary key,
                name varchar(20) not null,
-               items text not null
+               items bigserial[] not null
            );");
         
         Execute.Sql(@"

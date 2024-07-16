@@ -34,8 +34,6 @@ public class MessageBroker : IMessageBroker
 
         public async Task ProduceAsync(string topic, string key, object value, CancellationToken token)
         {
-            
-            
             var producer = new ProducerBuilder<string, string>(_producerConfig).Build();
             
             var message = new Message<string, string>

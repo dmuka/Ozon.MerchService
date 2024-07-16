@@ -1,13 +1,11 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
-using Ozon.MerchService.Domain.Models.ValueObjects;
-using RequestedAt = Ozon.MerchService.Domain.Models.ValueObjects.RequestedAt;
 
 namespace Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
 public class MerchPack : Item, IAggregationRoot
 {
-    public MerchPack(MerchType merchPackType, ClothingSize clothingSize)
+    public MerchPack(MerchType merchPackType, IEnumerable<MerchItem> merchItems, ClothingSize clothingSize)
     {
         MerchPackType = merchPackType;
         _merchPackItems = MerchPackType switch

@@ -4,6 +4,7 @@ using Ozon.MerchService.Domain.Events.Integration;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
 using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
 namespace Ozon.MerchService.CQRS.Handlers;
@@ -11,7 +12,9 @@ namespace Ozon.MerchService.CQRS.Handlers;
     public class ReserveMerchPackCommandHandler(
             IEmployeeRepository employeeRepository,
             IMerchPackRequestRepository merchPackRequestRepository,
-            IStockGrpcService stockGrpcService) : IRequestHandler<ReserveMerchPackCommand, Status>
+            IMerchPacksRepository merchPacksRepository,
+            IStockGrpcService stockGrpcService,
+            IMessageBroker broker) : IRequestHandler<ReserveMerchPackCommand, Status>
     {
         private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
         
@@ -30,7 +33,9 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             var canReceiveMerchPack = employee.CanReceiveMerchPack(request.MerchPackType);
 
-            var merchPackRequestData = new MerchPackRequest(request.MerchPackType, employee, request.RequestType);
+            var merchPack = await merchPacksRepository.GetMerchPackByMerchType(request.MerchPackType, token);
+
+            var merchPackRequestData = new MerchPackRequest(request.MerchPackType, merchPack.Items, employee, request.RequestType);
 
             if (!canReceiveMerchPack)
             {
@@ -38,36 +43,53 @@ namespace Ozon.MerchService.CQRS.Handlers;
                 
                 return merchPackRequestData.Status;
             }
+            
+            stockGrpcService.SetItemsSkusInRequest(merchPackRequestData, request.EmployeeClothingSize, token);
 
             var merchPackRequestId = Equals(request.Status, Status.Created)
                 ? await merchPackRequestRepository.CreateAsync(merchPackRequestData, token)
                 : request.Id;
             var merchPackRequest = MerchPackRequest.CreateInstance(merchPackRequestId, merchPackRequestData);
             
+            if (!canReceiveMerchPack)
+            {
+                merchPackRequestData.SetStatusDeclined();
+                
+                await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
+                
+                return merchPackRequestData.Status;
+            }
+            
             if (await stockGrpcService.GetMerchPackItemsAvailability(merchPackRequest, token) 
                 && await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
             {
+                if (Equals(request.Status, Status.Quequed))
+                {
+                    var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType);
+
+                    await broker.ProduceAsync(
+                        "EmployeeNotificationEventTopic", 
+                        request.Id.ToString(), 
+                        employeeNotificationEvent, 
+                        token);
+                }
+                
                 merchPackRequest.SetStatusIssued();
-                
-                if (Equals(request.Status, Status.Created))
-                {
-                    
-                }
-                else
-                {
-                 //var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType); for queued employees                   
-                }
-                
-                //await SendMessage(employee, merchPackRequest, token); Add kafka
             }
             else
             {
                 merchPackRequest.SetStatusQuequed();
                 
                 var hrNotificationEvent = new MerchEndedEvent(employee.HrEmail, request.MerchPackType);
+
+                await broker.ProduceAsync(
+                    "EmployeeNotificationEventTopic", 
+                    request.Id.ToString(),
+                    hrNotificationEvent,
+                    token);
             }
             
-            await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
+            var affectedRows = await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
             
             return merchPackRequest.Status;
         }
