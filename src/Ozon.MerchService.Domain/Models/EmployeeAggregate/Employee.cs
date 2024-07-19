@@ -9,7 +9,7 @@ public class Employee(
     Email email,
     Email hrEmail,
     ClothingSize clothingSize)
-    : Entity<long>, IAggregationRoot
+    : Entity, IAggregationRoot
 {
     public FullName FullName { get; private set; } = fullName;
 

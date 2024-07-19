@@ -1,6 +1,6 @@
 namespace Ozon.MerchService.Domain.Models;
 
-public class Item : Entity<long>
+public class Item : Entity
 {
     public string Name { get; set; }
     public string Description { get; set; }

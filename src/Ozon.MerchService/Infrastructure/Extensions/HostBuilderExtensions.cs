@@ -1,12 +1,8 @@
 using System.Net;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Ozon.MerchService.Infrastructure.Configuration.ExceptionsFilters;
+using Ozon.MerchService.Infrastructure.ExceptionsFilters;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.Extensions;
+namespace Ozon.MerchService.Infrastructure.Extensions;
 
 /// <summary>
 /// Contain host builder extensions
@@ -22,14 +18,12 @@ public static class HostBuilderExtensions
     {
         builder.ConfigureServices(services =>
         {
-            services
-                .AddSwagger()
-                .AddStartupFilters()
-                .AddInfrastructureServices()
-                .AddControllers(options =>
-                {
-                    options.Filters.Add<GlobalExceptionFilter>();
-                });
+            MvcServiceCollectionExtensions.AddControllers(services
+                    .AddStartupFilters()
+                    .AddSwagger(), options =>
+                    {
+                        options.Filters.Add<GlobalExceptionFilter>();
+                    });
         });
 
         return builder;

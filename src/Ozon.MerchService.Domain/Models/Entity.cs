@@ -2,12 +2,11 @@ using MediatR;
 
 namespace Ozon.MerchService.Domain.Models;
 
-public abstract class Entity<TKey>
-    where TKey : IEquatable<TKey>
+public abstract class Entity
 {
     private int? _requestedHashCode;
 
-    public TKey Id { get; protected set; }
+    public long Id { get; protected set; }
 
     private readonly List<INotification> _domainEvents = [];
 
@@ -23,7 +22,7 @@ public abstract class Entity<TKey>
 
     public override bool Equals(object obj)
     {
-        if (obj is not Entity<TKey> entity) return false;
+        if (obj is not Entity entity) return false;
 
         if (ReferenceEquals(this, entity)) return true;
 
@@ -47,12 +46,12 @@ public abstract class Entity<TKey>
             return base.GetHashCode();
 
     }
-    public static bool operator ==(Entity<TKey> left, Entity<TKey> right)
+    public static bool operator ==(Entity left, Entity right)
     {
         return left?.Equals(right) ?? Equals(right, null);
     }
 
-    public static bool operator !=(Entity<TKey> left, Entity<TKey> right)
+    public static bool operator !=(Entity left, Entity right)
     {
         return !(left == right);
     }

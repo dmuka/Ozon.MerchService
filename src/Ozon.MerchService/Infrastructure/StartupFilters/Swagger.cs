@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-
-namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.StartupFilters;
 
 /// <summary>
 /// Swagger startup filter
 /// </summary>
-public class Swagger : IStartupFilter
+internal class Swagger : IStartupFilter
 {
     /// <summary>
     /// Add Swagger and SwaggerUI middlewares

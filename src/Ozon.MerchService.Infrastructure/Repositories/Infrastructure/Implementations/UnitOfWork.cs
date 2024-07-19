@@ -6,11 +6,10 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 
-    public class UnitOfWork<T>(
+    public class UnitOfWork(
         IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
         IPublisher publisher,
-        ITracker<T> tracker) : IUnitOfWork, IDisposable
-        where T : IEquatable<T>
+        ITracker tracker) : IUnitOfWork, IDisposable
     {
         public NpgsqlConnection? Connection { get; private set; }
         private NpgsqlTransaction? _npgsqlTransaction;

@@ -9,7 +9,7 @@ namespace Ozon.MerchService.Domain.DataContracts;
 /// <typeparam name="TEntity">Type of entity</typeparam>
 /// <typeparam name="TId">Entity id type</typeparam>
 public interface IRepository<TEntity, TId> 
-    where TEntity : Entity<TId>, IAggregationRoot 
+    where TEntity : Entity, IAggregationRoot 
     where TId : IEquatable<TId>
 {
     /// <summary>

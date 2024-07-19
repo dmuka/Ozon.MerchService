@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Http;
-
-namespace Ozon.MerchService.Infrastructure.Configuration.Middlewares;
+namespace Ozon.MerchService.Infrastructure.Middlewares;
 
 /// <summary>
-/// Middleware for live response
+/// Middleware for ready response
 /// </summary>
-public class LiveMiddleware(RequestDelegate next)
+public class ReadyMiddleware(RequestDelegate next)
 {
     /// <summary>
     /// Return 200 Ok status code in the response

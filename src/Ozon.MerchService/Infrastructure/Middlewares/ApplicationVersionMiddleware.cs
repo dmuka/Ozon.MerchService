@@ -1,8 +1,7 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Http;
-using Ozon.MerchService.Configuration.Constants;
+using Ozon.MerchService.Infrastructure.Constants;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.Middlewares;
+namespace Ozon.MerchService.Infrastructure.Middlewares;
 
 /// <summary>
 /// Middleware for application version information

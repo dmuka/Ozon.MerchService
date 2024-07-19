@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
+using Ozon.MerchService.Infrastructure.Constants;
+using Ozon.MerchService.Infrastructure.Middlewares;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.StartupFilters;
 
 /// <summary>
 /// Ready response startup filter
 /// </summary>
-public class ReadyResponse : IStartupFilter
+internal class ReadyResponse : IStartupFilter
 {
     /// <summary>
     /// Add ready middleware 

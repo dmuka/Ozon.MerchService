@@ -1,5 +1,6 @@
 using MediatR;
 using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Events.Integration;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
@@ -14,12 +15,15 @@ namespace Ozon.MerchService.CQRS.Handlers;
             IMerchPackRequestRepository merchPackRequestRepository,
             IMerchPacksRepository merchPacksRepository,
             IStockGrpcService stockGrpcService,
-            IMessageBroker broker) : IRequestHandler<ReserveMerchPackCommand, Status>
+            IMessageBroker broker,
+            IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, Status>
     {
         private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
         
         public async Task<Status> Handle(ReserveMerchPackCommand request, CancellationToken token)
         {
+            await unitOfWork.StartTransaction(token);
+            
             Employee employee;
             
             if (Equals(request.Status, Status.Created))
@@ -90,6 +94,8 @@ namespace Ozon.MerchService.CQRS.Handlers;
             }
             
             var affectedRows = await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
+
+            await unitOfWork.SaveChangesAsync(token);
             
             return merchPackRequest.Status;
         }

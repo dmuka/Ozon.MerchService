@@ -1,13 +1,11 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
+using Ozon.MerchService.Infrastructure.Middlewares;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.StartupFilters;
 
 /// <summary>
 /// Response logging startup filter
 /// </summary>
-public class ResponseLogging : IStartupFilter
+internal class ResponseLogging : IStartupFilter
 {
     /// <summary>
     /// Log response middleware 

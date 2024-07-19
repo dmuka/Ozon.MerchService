@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
+using Ozon.MerchService.Infrastructure.Constants;
+using Ozon.MerchService.Infrastructure.Middlewares;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.StartupFilters;
 
 /// <summary>
 /// Application version startup filter
 /// </summary>
-public class VersionInformation : IStartupFilter
+internal class VersionInformation : IStartupFilter
 {
     /// <summary>
     /// Return application version

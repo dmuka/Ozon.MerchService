@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Infrastructure.Configuration.Middlewares;
+using Ozon.MerchService.Infrastructure.Constants;
+using Ozon.MerchService.Infrastructure.Middlewares;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
+namespace Ozon.MerchService.Infrastructure.StartupFilters;
 
 /// <summary>
 /// Live response startup filter
 /// </summary>
-public class LiveResponse : IStartupFilter
+internal class LiveResponse : IStartupFilter
 {
     /// <summary>
     /// Add live middleware 

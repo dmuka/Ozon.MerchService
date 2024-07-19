@@ -1,4 +1,4 @@
-namespace Ozon.MerchService.Configuration.Constants;
+namespace Ozon.MerchService.Infrastructure.Constants;
 
 /// <summary>
 /// MIME content types constants

@@ -1,6 +1,8 @@
-using Ozon.MerchService.Infrastructure.Configuration;
-using Ozon.MerchService.Infrastructure.Configuration.Extensions;
-using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Ozon.MerchService.Infrastructure.Extensions;
+using Ozon.MerchService.Infrastructure.Constants;
 
 namespace Ozon.MerchService;
 
@@ -17,9 +19,22 @@ public class Startup(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)))
-            .Configure<KafkaConfiguration>(configuration.GetSection(nameof(KafkaConfiguration)))
+            .AddDbConnection(configuration)
+            .AddRepositories()
+            .AddHostedServices()
+            .AddAppServices()
+            .AddExternalServices(configuration)
             .AddKafkaServices(configuration);
+	        
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService(Names.DefaultApplicationName))
+            .WithTracing(tracing => tracing
+                .AddAspNetCoreInstrumentation()
+                .AddConsoleExporter()
+                .AddJaegerExporter())
+            .WithMetrics(metrics => metrics
+                .AddAspNetCoreInstrumentation()
+                .AddConsoleExporter());
     }
     
     /// <summary>

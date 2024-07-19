@@ -1,52 +1,52 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Npgsql;
-using Ozon.MerchService.Configuration.Constants;
-using Ozon.MerchService.Domain.Models.EmployeeAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Infrastructure.BackgroundServices;
-using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
-using Ozon.MerchService.Infrastructure.Configuration.OperationFilters;
-using Ozon.MerchService.Infrastructure.Configuration.StartupFilters;
-using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
-using Ozon.MerchService.Infrastructure.Repositories.Implementations;
+using Ozon.MerchService.Infrastructure.Configuration;
+using Ozon.MerchService.Infrastructure.Constants;
+using Ozon.MerchService.Infrastructure.OperationFilters;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
-using Ozon.MerchService.Infrastructure.Repositories.Postgres;
+using Ozon.MerchService.Infrastructure.Services.Implementations;
+using Ozon.MerchService.Infrastructure.Services.Interfaces;
+using Ozon.MerchService.Infrastructure.StartupFilters;
+using Ozon.MerchService.Services.Implementations;
+using Ozon.MerchService.Services.Interfaces;
+using NpgsqlConnectionFactory = Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations.NpgsqlConnectionFactory;
 
-namespace Ozon.MerchService.Infrastructure.Configuration.Extensions;
+namespace Ozon.MerchService.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    internal static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         services
-            .AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>()
             .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
-            .AddRepositories()
-            .AddHostedService<StockReplenishedService>()
-            .AddHostedService<EmployeeNotificationService>();
+            .AddScoped<IQueuedRequestsService, QueuedRequestsService>()
+            .AddScoped<IStockGrpcService, StockGrpcService>();
 
         return services;
     }
         
-    public static IServiceCollection AddKafkaServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDbConnection(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.Configure<KafkaConfiguration>(configuration);
-        services.AddSingleton<IMessageBroker, Infrastructure.MessageBroker.Implementations.MessageBroker>();
+        services.Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)));
+            
+        services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITracker, Tracker>();
 
         return services;
     }
-    
-    internal static IServiceCollection AddRepositories(this IServiceCollection services)
+        
+    public static IServiceCollection AddHostedServices(this IServiceCollection services)
     {
         services
-            .AddScoped<IMerchPacksRepository, MerchPacksRepository>()
-            .AddScoped<IMerchPackRequestRepository, MerchPackRequestsRepository>()
-            .AddScoped<IEmployeeRepository, EmployeesRepository>();
+            .AddHostedService<StockReplenishedService>()
+            .AddHostedService<EmployeeNotificationService>();
 
         return services;
     }
@@ -63,6 +63,14 @@ public static class ServiceCollectionExtensions
 
         return services;
         
+    }
+
+    public static IServiceCollection AddExternalServices(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddStockGrpcServiceClient(configuration);
+            
+        return services;
     }   
     
     internal static IServiceCollection AddSwagger(this IServiceCollection services)

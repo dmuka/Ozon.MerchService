@@ -4,15 +4,14 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 
-public class Tracker<T> : ITracker<T> 
-    where T : IEquatable<T>
+public class Tracker : ITracker 
 {
-    public IEnumerable<Entity<T>> TrackedEntities => _trackedEntities.ToArray();
+    public IEnumerable<Entity> TrackedEntities => _trackedEntities.ToArray();
 
-    public void Track(Entity<T> entity)
+    public void Track(Entity entity)
     {
         _trackedEntities.Add(entity);
     }
 
-    private readonly ConcurrentBag<Entity<T>> _trackedEntities = [];
+    private readonly ConcurrentBag<Entity> _trackedEntities = [];
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
@@ -7,7 +6,7 @@ using Ozon.MerchService.Domain.Models.ValueObjects;
 
 namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
-public class MerchPackRequest : Entity<long>, IAggregationRoot
+public class MerchPackRequest : Entity, IAggregationRoot
 {
     public MerchPackRequest(
         MerchType merchPackType,
