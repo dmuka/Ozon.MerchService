@@ -36,7 +36,11 @@ public static class HostBuilderExtensions
     {
         builder.ConfigureServices(services =>
         {
-            services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
+            services.AddGrpc(options =>
+            {
+                options.Interceptors.Add<LoggingInterceptor>();
+                options.Interceptors.Add<ExceptionInterceptor>();
+            });
         });
 
         return builder;
