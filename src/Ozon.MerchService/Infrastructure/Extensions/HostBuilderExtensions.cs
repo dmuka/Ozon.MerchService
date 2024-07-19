@@ -1,6 +1,11 @@
 using System.Net;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.OpenApi.Models;
+using Ozon.MerchService.Infrastructure.Constants;
 using Ozon.MerchService.Infrastructure.ExceptionsFilters;
+using Ozon.MerchService.Infrastructure.Interceptors;
+using Ozon.MerchService.Infrastructure.OperationFilters;
+using Ozon.MerchService.Infrastructure.StartupFilters;
 
 namespace Ozon.MerchService.Infrastructure.Extensions;
 
@@ -16,19 +21,118 @@ public static class HostBuilderExtensions
     /// <returns></returns>
     public static IHostBuilder AddInfrastructure(this IHostBuilder builder)
     {
+        return builder
+            .AddVersionEndpoint()
+            .AddReadyEndpoint()
+            .AddLiveEndpoint()
+            .AddStartupFilters()
+            .AddSwagger()
+            .AddGrpc()
+            .AddStartupFilters()
+            .AddGlobalExceptionFilter();
+    }
+
+    private static IHostBuilder AddGrpc(this IHostBuilder builder)
+    {
         builder.ConfigureServices(services =>
         {
-            MvcServiceCollectionExtensions.AddControllers(services
-                    .AddStartupFilters()
-                    .AddSwagger(), options =>
-                    {
-                        options.Filters.Add<GlobalExceptionFilter>();
-                    });
+            services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
         });
 
         return builder;
     }
 
+    private static IHostBuilder AddGlobalExceptionFilter(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+            });
+        });
+
+        return builder;
+    }
+    
+    private static IHostBuilder AddStartupFilters(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services
+                .AddSingleton<IStartupFilter, ResponseLogging>()
+                .AddSingleton<IStartupFilter, RequestLogging>();
+        });
+
+        return builder;
+    }
+
+    private static IHostBuilder AddVersionEndpoint(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services.AddSingleton<IStartupFilter, VersionInformation>();
+        });
+
+        return builder;
+    }
+
+    private static IHostBuilder AddReadyEndpoint(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services.AddSingleton<IStartupFilter, ReadyResponse>();
+        });
+
+        return builder;
+    }
+
+    private static IHostBuilder AddLiveEndpoint(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services.AddSingleton<IStartupFilter, LiveResponse>();
+        });
+
+        return builder;
+    }
+    
+    internal static IHostBuilder AddSwagger(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+                services
+                    .AddSingleton<IStartupFilter, Swagger>()
+                    .AddSwaggerGen(options =>
+                    {
+                        options.SwaggerDoc(
+                            Names.SwaggerDocVersion,
+                            new OpenApiInfo
+                            {
+                                Title = Names.GetApplicationName(),
+                                Version = Names.SwaggerDocVersion
+                            });
+                        options.CustomSchemaIds(selector => selector.FullName);
+
+                        var xmlFileName = GetXmlFileName();
+                        var xmlFilePath = GetXmlFilePath(xmlFileName);
+                    
+                        options.IncludeXmlComments(xmlFilePath);
+                        options.OperationFilter<AddSwaggerTestHeader>();
+                    }));
+
+        return builder;
+    }
+
+    private static string GetXmlFileName()
+    {
+        return Names.GetApplicationName();
+    }
+
+    private static string GetXmlFilePath(string xmlFileName)
+    {
+        return Path.Combine(AppContext.BaseDirectory, $"{xmlFileName}.xml");
+    }
+    
     private static IHostBuilder AddPorts(this IHostBuilder builder)
     {
         
