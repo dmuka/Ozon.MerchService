@@ -1,8 +1,4 @@
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Ozon.MerchService.Infrastructure.Extensions;
-using Ozon.MerchService.Infrastructure.Constants;
 
 namespace Ozon.MerchService;
 
@@ -24,17 +20,9 @@ public class Startup(IConfiguration configuration)
             .AddHostedServices()
             .AddAppServices()
             .AddExternalServices(configuration)
-            .AddKafkaServices(configuration);
-	        
-        services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService(Names.DefaultApplicationName))
-            .WithTracing(tracing => tracing
-                .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter()
-                .AddJaegerExporter())
-            .WithMetrics(metrics => metrics
-                .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter());
+            .AddKafkaServices(configuration)
+            .AddTelemetry(configuration)
+            .AddSwaggerGen();
     }
     
     /// <summary>
@@ -44,7 +32,15 @@ public class Startup(IConfiguration configuration)
     /// <param name="environment">Web host environment object</param>
     public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
     {
+        if (environment.IsDevelopment())
+        {
+            application.UseDeveloperExceptionPage();
+        }
+        
         application.UseRouting();
+        
+
+        application.UseSwagger().UseSwaggerUI();
         
         application.UseEndpoints(endpoints =>
         {

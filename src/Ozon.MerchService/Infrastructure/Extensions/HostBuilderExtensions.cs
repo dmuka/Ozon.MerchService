@@ -22,14 +22,14 @@ public static class HostBuilderExtensions
     public static IHostBuilder AddInfrastructure(this IHostBuilder builder)
     {
         return builder
+            .AddTracing()
             .AddVersionEndpoint()
             .AddReadyEndpoint()
             .AddLiveEndpoint()
-            .AddStartupFilters()
-            .AddSwagger()
             .AddGrpc()
             .AddStartupFilters()
-            .AddGlobalExceptionFilter();
+            .AddGlobalExceptionFilter()
+            .AddSwagger();
     }
 
     private static IHostBuilder AddGrpc(this IHostBuilder builder)
@@ -70,6 +70,17 @@ public static class HostBuilderExtensions
 
         return builder;
     }
+    
+    private static IHostBuilder AddTracing(this IHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services
+                .AddSingleton<IStartupFilter, Tracing>();
+        });
+
+        return builder;
+    }
 
     private static IHostBuilder AddVersionEndpoint(this IHostBuilder builder)
     {
@@ -103,26 +114,26 @@ public static class HostBuilderExtensions
     
     internal static IHostBuilder AddSwagger(this IHostBuilder builder)
     {
-        builder.ConfigureServices(services =>
-                services
-                    .AddSingleton<IStartupFilter, Swagger>()
-                    .AddSwaggerGen(options =>
-                    {
-                        options.SwaggerDoc(
-                            Names.SwaggerDocVersion,
-                            new OpenApiInfo
-                            {
-                                Title = Names.GetApplicationName(),
-                                Version = Names.SwaggerDocVersion
-                            });
-                        options.CustomSchemaIds(selector => selector.FullName);
-
-                        var xmlFileName = GetXmlFileName();
-                        var xmlFilePath = GetXmlFilePath(xmlFileName);
-                    
-                        options.IncludeXmlComments(xmlFilePath);
-                        options.OperationFilter<AddSwaggerTestHeader>();
-                    }));
+        // builder.ConfigureServices(services =>
+        //         services
+        //             .AddSwaggerGen(options =>
+        //             {
+        //                 options.SwaggerDoc(
+        //                     Names.SwaggerDocVersion,
+        //                     new OpenApiInfo
+        //                     {
+        //                         Title = Names.GetApplicationName(),
+        //                         Version = Names.SwaggerDocVersion
+        //                     });
+        //                 options.CustomSchemaIds(selector => selector.FullName);
+        //
+        //                 var xmlFileName = GetXmlFileName();
+        //                 var xmlFilePath = GetXmlFilePath(xmlFileName);
+        //             
+        //                 options.IncludeXmlComments(xmlFilePath);
+        //                 options.OperationFilter<AddSwaggerTestHeader>();
+        //             })
+        //             .AddSingleton<IStartupFilter, Swagger>());
 
         return builder;
     }

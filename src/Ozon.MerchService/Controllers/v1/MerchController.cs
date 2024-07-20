@@ -6,18 +6,17 @@ using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.HttpModels;
-using Ozon.MerchService.Services.Interfaces;
 
 namespace Ozon.MerchService.Controllers.v1;
 
 [ApiController]
-[Route("/api/merch")]
+[Route("v1/api/merch")]
 public class MerchController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [Route("received")]
     public async Task<ActionResult<IEnumerable<MerchPack>>> GetReceivedMerch(
-        ReceivedMerchRequest receivedMerchRequest, 
+        [FromQuery] ReceivedMerchRequest receivedMerchRequest, 
         CancellationToken cancellationToken)
     {
         var query = new GetReceivedMerchPacksQuery(receivedMerchRequest.EmployeeId);
@@ -27,10 +26,10 @@ public class MerchController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("reserve")]
     public async Task<ActionResult<MerchPack>> ReserveMerch(
-        ReserveMerchRequest reserveMerchRequest, 
+        [FromBody] ReserveMerchRequest reserveMerchRequest, 
         CancellationToken cancellationToken)
     {
         var command = new ReserveMerchPackCommand(

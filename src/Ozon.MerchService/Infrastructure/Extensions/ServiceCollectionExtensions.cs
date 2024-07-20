@@ -1,8 +1,12 @@
 using System.Reflection;
 using Npgsql;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Infrastructure.BackgroundServices;
 using Ozon.MerchService.Infrastructure.Configuration;
+using Ozon.MerchService.Infrastructure.Constants;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 using Ozon.MerchService.Infrastructure.Services.Implementations;
@@ -24,6 +28,27 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+    
+    public static IServiceCollection AddTelemetry(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService(Names.GetApplicationName()))
+            .WithTracing(tracing => tracing
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddConsoleExporter()
+                .AddSource("GetReceivedMerchPacksQueryHandler")
+                .AddJaegerExporter(options =>
+                {
+                    options.AgentHost = configuration["Jaeger:Host"];
+                    options.AgentPort = configuration.GetValue<int>("Jaeger:Port");
+                }))
+            .WithMetrics(metrics => metrics
+                .AddAspNetCoreInstrumentation()
+                .AddConsoleExporter());
+
+        return services;
+    }    
         
     public static IServiceCollection AddDbConnection(
         this IServiceCollection services,
