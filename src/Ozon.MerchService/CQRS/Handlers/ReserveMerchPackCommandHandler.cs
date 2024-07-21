@@ -67,7 +67,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
             if (await stockGrpcService.GetMerchPackItemsAvailability(merchPackRequest, token) 
                 && await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
             {
-                if (Equals(request.Status, Status.Quequed))
+                if (Equals(request.Status, Status.Queued))
                 {
                     var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType);
 

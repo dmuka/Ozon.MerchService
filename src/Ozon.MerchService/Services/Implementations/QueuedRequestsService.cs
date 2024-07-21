@@ -13,7 +13,7 @@ public class QueuedRequestsService(
 {
     public async Task RepeatReserve(IEnumerable<long> skuCollection, CancellationToken token)
     {
-        var queuedMerchPackRequests = await merchPackRequestRepository.GetByRequestStatusAsync(Status.Quequed, token);
+        var queuedMerchPackRequests = await merchPackRequestRepository.GetByRequestStatusAsync(Status.Queued, token);
 
         var replenishedMerchPackRequests = queuedMerchPackRequests
             .Where(request => request.MerchItems.Any(item => skuCollection.Contains(item.StockKeepingUnit)));

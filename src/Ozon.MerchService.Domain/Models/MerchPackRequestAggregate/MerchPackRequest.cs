@@ -78,12 +78,12 @@ public class MerchPackRequest : Entity, IAggregationRoot
             throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
         }
         
-        if (Status.Equals(Status.Quequed))
+        if (Status.Equals(Status.Queued))
         {
             throw new ArgumentException($"Merch {MerchPackType} already quequed ({Employee.FullName})");
         }
         
-        Status = Status.Quequed;
+        Status = Status.Queued;
     }
 
     public void SetStatusIssued()
