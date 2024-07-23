@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Ozon.MerchService.Infrastructure.Configuration;
@@ -17,15 +18,26 @@ public class NpgsqlConnectionFactory : IDbConnectionFactory<NpgsqlConnection>
     
     public async Task<NpgsqlConnection> Create(CancellationToken token)
     {
-        _connection ??= new NpgsqlConnection(_connectionString);
-        
-        await _connection.OpenAsync(token);
+        if (_connection != null)
+        {
+            return _connection;
+        }
 
+        _connection = new NpgsqlConnection(_connectionString);
+        await _connection.OpenAsync(token);
+        _connection.StateChange += (o, e) =>
+        {
+            if (e.CurrentState == ConnectionState.Closed)
+            {
+                _connection = null;
+            }
+        };
+        
         return _connection;
     }
 
     public async void Dispose()
     {
-        await _connection.DisposeAsync();
+        _connection?.Dispose();
     }
 }

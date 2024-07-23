@@ -1,4 +1,5 @@
 using MediatR;
+using Ozon.MerchService.Domain.DataContracts.Attributes;
 
 namespace Ozon.MerchService.Domain.Models;
 
@@ -10,6 +11,7 @@ public abstract class Entity
 
     private readonly List<INotification> _domainEvents = [];
 
+    [ColumnExclude]
     public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
 
     public void AddDomainEvent(INotification eventItem) => _domainEvents.Add(eventItem);

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using Ozon.MerchService.Domain.DataContracts.Attributes;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
@@ -62,7 +63,7 @@ public abstract class BaseRepository<T>()
     {
         var type = typeof(T);
         var columnsNames = string.Join(", ", type.GetProperties()
-            .Where(p => !excludeKey || !p.IsDefined(typeof(KeyAttribute)))
+            .Where(p => (!excludeKey || !p.IsDefined(typeof(KeyAttribute))) && !p.IsDefined(typeof(ColumnExcludeAttribute)))
             .Select(p =>
             {
                 var columnAttribute = p.GetCustomAttribute<ColumnAttribute>();

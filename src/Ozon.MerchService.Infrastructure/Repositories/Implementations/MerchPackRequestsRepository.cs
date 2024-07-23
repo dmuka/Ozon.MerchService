@@ -51,7 +51,7 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
         }
         catch (Exception ex)
         {
-            throw new RepositoryOperationException();
+            throw new RepositoryOperationException(ex.Message, ex);
         }
 
         return merchPacks;
