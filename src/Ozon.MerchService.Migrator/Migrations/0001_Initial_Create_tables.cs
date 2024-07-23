@@ -44,6 +44,12 @@ public class Initial_Create_tables : Migration {
                id int primary key,
                name varchar(3) not null
            );");
+        
+        Execute.Sql(@"
+           CREATE TABLE IF NOT EXISTS statuses(
+               id int primary key,
+               name varchar(8) not null
+           );");
     }
 
     public override void Down()
