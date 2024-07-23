@@ -1,0 +1,97 @@
+{
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.File", "Serilog.Sinks.Console" ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "Console"
+      },
+      {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo": [
+              {
+                "Name": "File",
+                "Args": {
+                  "path": "logs/requests-log-.txt",
+                  "rollingInterval": "Day",
+                  "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}"
+                }
+              }
+            ],
+            "Filter": [
+              {
+                "Name": "ByIncludingOnly",
+                "Args": {
+                  "expression": "StartsWith(SourceContext, 'Request')"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo": [
+              {
+                "Name": "File",
+                "Args": {
+                  "path": "logs/exceptions-log-.txt",
+                  "rollingInterval": "Day",
+                  "restrictedToMinimumLevel": "Error",
+                  "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}"
+                }
+              }
+            ],
+            "Filter": [
+              {
+                "Name": "ByIncludingOnly",
+                "Args": {
+                  "expression": "StartsWith(SourceContext, 'Exception')"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo": [
+              {
+                "Name": "File",
+                "Args": {
+                  "path": "logs/handlers-log-.txt",
+                  "rollingInterval": "Day",
+                  "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}"
+                }
+              }
+            ],
+            "Filter": [
+              {
+                "Name": "ByIncludingOnly",
+                "Args": {
+                  "expression": "StartsWith(SourceContext, 'Handler')"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+      "Application": "MerchService"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 using Ozon.MerchService.Infrastructure.Extensions;
+using Serilog;
 
 namespace Ozon.MerchService;
 
@@ -39,6 +40,7 @@ public class Startup(IConfiguration configuration)
         
         application.UseRouting();
         
+        application.UseSerilogRequestLogging();
 
         application.UseSwagger().UseSwaggerUI();
         

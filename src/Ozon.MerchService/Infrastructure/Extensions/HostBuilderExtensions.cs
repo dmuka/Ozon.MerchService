@@ -6,6 +6,7 @@ using Ozon.MerchService.Infrastructure.ExceptionsFilters;
 using Ozon.MerchService.Infrastructure.Interceptors;
 using Ozon.MerchService.Infrastructure.OperationFilters;
 using Ozon.MerchService.Infrastructure.StartupFilters;
+using Serilog;
 
 namespace Ozon.MerchService.Infrastructure.Extensions;
 
@@ -29,6 +30,7 @@ public static class HostBuilderExtensions
             .AddGrpc()
             .AddStartupFilters()
             .AddGlobalExceptionFilter()
+            .AddSerilog()
             .AddSwagger();
     }
 
@@ -81,6 +83,21 @@ public static class HostBuilderExtensions
 
         return builder;
     }
+    
+    private static IHostBuilder AddSerilog(this IHostBuilder builder)
+    {
+        var serilogConfig = new ConfigurationBuilder()
+            .AddJsonFile("serilog.json")
+            .Build();
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(serilogConfig)
+            .CreateLogger();
+        
+        builder.UseSerilog();
+
+        return builder;
+    }    
 
     private static IHostBuilder AddVersionEndpoint(this IHostBuilder builder)
     {
