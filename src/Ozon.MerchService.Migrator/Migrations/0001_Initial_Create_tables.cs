@@ -9,8 +9,8 @@ public class Initial_Create_tables : Migration {
         Execute.Sql(@"
            CREATE TABLE IF NOT EXISTS merchpacks(
                id bigserial primary key,
-               name varchar(20) not null,
-               items bigserial[] not null
+               name varchar(30) not null,
+               items bigint[] not null
            );");
         
         Execute.Sql(@"
@@ -25,10 +25,10 @@ public class Initial_Create_tables : Migration {
            CREATE TABLE IF NOT EXISTS merchpack_requests(
                id bigserial primary key,
                merchpack_id int not null,
-               employee_id bigserial  not null,
+               employee_id bigint  not null,
                hr_email varchar(50) not null,
-               request_type 
-               requested_at timestamptz default (now() at time zone 'utc'),
+               request_type bigint not null,
+               requested_at timestamptz default now(),
                issued  timestamptz default null,
                status int not null
            );");
@@ -59,5 +59,6 @@ public class Initial_Create_tables : Migration {
         Execute.Sql(@"DROP TABLE IF EXISTS merchpack_requests;");
         Execute.Sql(@"DROP TABLE IF EXISTS request_statuses;");
         Execute.Sql(@"DROP TABLE IF EXISTS clothing_sizes;");
+        Execute.Sql(@"DROP TABLE IF EXISTS statuses;");
     }
 }
