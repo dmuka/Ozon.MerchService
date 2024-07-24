@@ -5,6 +5,6 @@ namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
 public interface IMerchPackRequestRepository : IRepository<MerchPackRequest, long>
 {
-    Task<IEnumerable<MerchPackRequest>> GetByRequestStatusAsync(Status status, CancellationToken cancellationToken);
-    Task<IEnumerable<MerchPack>> GetByMerchPacksByEmployeeIdAsync(long employeeId, CancellationToken cancellationToken);
+    Task<IEnumerable<MerchPackRequest>> GetByRequestStatusAsync(RequestStatus requestStatus, CancellationToken cancellationToken);
+    Task<IEnumerable<MerchPackRequest>> GetAllByEmployeeIdAsync(long employeeId, CancellationToken cancellationToken);
 }

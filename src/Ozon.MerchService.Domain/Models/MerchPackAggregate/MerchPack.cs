@@ -8,15 +8,8 @@ public class MerchPack : Item, IAggregationRoot
     public MerchPack(MerchType merchPackType, IEnumerable<MerchItem> merchItems, ClothingSize clothingSize)
     {
         MerchPackType = merchPackType;
-        _merchPackItems = MerchPackType switch
-        {
-            MerchType.WelcomePack => WelcomePackItems,
-            MerchType.ProbationPeriodEndingPack => StarterPackItems,
-            MerchType.ConferenceListenerPack => ConferenceListenerPackItems,
-            MerchType.ConferenceSpeakerPack => ConferenceSpeakerPackItems,
-            MerchType.VeteranPack => VeteranPackItems,
-            _ => throw new ArgumentException("Wrong or unknown type of merch pack")
-        };
+
+        _merchPackItems = merchItems.ToList();
     }
 
     public MerchType MerchPackType { get; }

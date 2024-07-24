@@ -10,12 +10,12 @@ namespace Ozon.MerchService.CQRS.Commands;
 /// <summary>
 /// Reserve merch pack command
 /// </summary>
-public class ReserveMerchPackCommand : IRequest<Status>
+public class ReserveMerchPackCommand : IRequest<RequestStatus>
 {
     public ReserveMerchPackCommand(
         ReserveMerchRequest request, 
         EmployeeEventType eventType, 
-        Status status, 
+        RequestStatus requestStatus, 
         RequestType requestType)
     {
         EmployeeId = request.EmployeeId;
@@ -25,7 +25,7 @@ public class ReserveMerchPackCommand : IRequest<Status>
         HrEmail = request.HrEmail;
         EmployeeClothingSize = request.ClothingSize;
         MerchPackType = request.MerchPackType;
-        Status = status;
+        RequestStatus = requestStatus;
         RequestType = requestType;
     }
     
@@ -35,10 +35,10 @@ public class ReserveMerchPackCommand : IRequest<Status>
         EventType = eventType;
         EmployeeFullName = merchPackRequest.Employee.FullName.ToString();
         EmployeeEmail = merchPackRequest.Employee.Email.ToString();
-        HrEmail = merchPackRequest.Employee.HrEmail.ToString();
-        EmployeeClothingSize = merchPackRequest.Employee.ClothingSize;
+        HrEmail = merchPackRequest.HrEmail.ToString();
+        EmployeeClothingSize = merchPackRequest.ClothingSize;
         MerchPackType = merchPackRequest.MerchPackType;
-        Status = merchPackRequest.Status;
+        RequestStatus = merchPackRequest.RequestStatus;
         RequestType = merchPackRequest.RequestType;
     }
     
@@ -47,7 +47,7 @@ public class ReserveMerchPackCommand : IRequest<Status>
         Id = merchPackRequest.Id;
         Employee = merchPackRequest.Employee;
         MerchPackType = merchPackRequest.MerchPackType;
-        Status = merchPackRequest.Status;
+        RequestStatus = merchPackRequest.RequestStatus;
         RequestType = merchPackRequest.RequestType;
     }
 
@@ -86,7 +86,7 @@ public class ReserveMerchPackCommand : IRequest<Status>
     /// </summary>
     public MerchType MerchPackType { get; private set; }
     
-    public Status Status { get; private set; }
+    public RequestStatus RequestStatus { get; private set; }
 
     public RequestType RequestType { get; private set; }
 }

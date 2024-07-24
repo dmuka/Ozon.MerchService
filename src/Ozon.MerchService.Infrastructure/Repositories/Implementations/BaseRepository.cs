@@ -11,10 +11,7 @@ public abstract class BaseRepository<T>()
     {
         var type = typeof(T);
         var tableAttribute = type.GetCustomAttribute<TableAttribute>();
-        if (tableAttribute != null)
-            return tableAttribute.Name;
-
-        return type.Name;
+        return tableAttribute != null ? tableAttribute.Name : type.Name;
     }
 
     internal static string? GetKeyColumnName()

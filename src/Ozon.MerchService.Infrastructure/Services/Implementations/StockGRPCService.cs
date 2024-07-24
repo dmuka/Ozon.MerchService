@@ -9,7 +9,7 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
 {
     public async Task<bool> GetMerchPackItemsAvailability(MerchPackRequest merchPackRequest, CancellationToken token)
     {
-        var requestSkus = merchPackRequest.MerchItems.Select(item => item.StockKeepingUnit);
+        var requestSkus = merchPackRequest.MerchItems.Select(item => item.Sku.Value);
         
         var request = new SkusRequest();
         request.Skus.AddRange(requestSkus);
@@ -40,11 +40,11 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
 
                 if (item is null) throw new ArgumentException("No sku with such clothing size found.");
                 
-                merchItem.StockKeepingUnit = item.Sku;
+                merchItem.SetSku(item.Sku);
             }
             else
             {
-                merchItem.StockKeepingUnit = items.First().Sku;
+                merchItem.SetSku(items.First().Sku);
             }            
         }
     }
@@ -56,7 +56,7 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
         var skuQuantityItems = merchPackRequest.MerchItems
             .Select(item => new SkuQuantityItem
             {
-                Sku = item.StockKeepingUnit,
+                Sku = item.Sku.Value,
                 Quantity = 1
             });
             

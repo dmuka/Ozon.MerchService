@@ -13,22 +13,26 @@
       <Compile Remove="src\**" />
       <Compile Remove="tests\**" />
       <Compile Remove="Domain\Services.cs" />
+      <Compile Remove="logs\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="src\**" />
       <EmbeddedResource Remove="tests\**" />
+      <EmbeddedResource Remove="logs\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Remove="src\**" />
       <Content Remove="tests\**" />
+      <Content Remove="logs\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="src\**" />
       <None Remove="tests\**" />
       <None Remove="Dockerfile" />
+      <None Remove="logs\**" />
     </ItemGroup>
 
     <ItemGroup>

@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         services
             .AddScoped<IMerchPacksRepository, MerchPacksRepository>()
             .AddScoped<IMerchPackRequestRepository, MerchPackRequestsRepository>()

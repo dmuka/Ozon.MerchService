@@ -1,7 +1,7 @@
 using MediatR;
 using OpenTelemetry.Trace;
 using Ozon.MerchService.CQRS.Queries;
-using Ozon.MerchService.Domain.DataContracts;
+using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Helpers;
@@ -10,7 +10,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
 public class GetReceivedMerchPacksQueryHandler(
     IMerchPackRequestRepository merchPackRequestRepository, 
-    IUnitOfWork unitOfWork,
+    IEmployeeRepository employeeRepository,
     TracerProvider tracerProvider)
     : IRequestHandler<GetReceivedMerchPacksQuery, IEnumerable<MerchPack>>
 {
@@ -23,14 +23,13 @@ public class GetReceivedMerchPacksQueryHandler(
             {
                 { "item.id", request.EmployeeId }
             });
+
+        var employee = await employeeRepository.GetByIdAsync(request.EmployeeId, cancellationToken);
+
+        var merchPackRequests = await merchPackRequestRepository.GetAllByEmployeeIdAsync(employee.Id, cancellationToken);
         
-        await unitOfWork.StartTransaction(cancellationToken);
-
-        var merchPacks =
-            await merchPackRequestRepository.GetByMerchPacksByEmployeeIdAsync(request.EmployeeId,
-                cancellationToken);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        var merchPacks = merchPackRequests.Select(merchPackRequest =>
+            new MerchPack(merchPackRequest.MerchPackType, merchPackRequest.MerchItems, merchPackRequest.ClothingSize));
 
         return merchPacks;
     }

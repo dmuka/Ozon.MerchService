@@ -16,17 +16,17 @@ namespace Ozon.MerchService.CQRS.Handlers;
             IMerchPacksRepository merchPacksRepository,
             IStockGrpcService stockGrpcService,
             IMessageBroker broker,
-            IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, Status>
+            IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, RequestStatus>
     {
         private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
         
-        public async Task<Status> Handle(ReserveMerchPackCommand request, CancellationToken token)
+        public async Task<RequestStatus> Handle(ReserveMerchPackCommand request, CancellationToken token)
         {
             await unitOfWork.StartTransaction(token);
             
             Employee employee;
             
-            if (Equals(request.Status, Status.Created))
+            if (Equals(request.RequestStatus, RequestStatus.Created))
             {
                 employee = await GetEmployee(request, token);
             }
@@ -39,21 +39,21 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             var merchPack = await merchPacksRepository.GetMerchPackByMerchType(request.MerchPackType, token);
 
-            var merchPackRequestData = new MerchPackRequest(request.MerchPackType, merchPack.Items, employee, request.RequestType);
+            var merchPackRequestData = new MerchPackRequest(merchPack, merchPack.Items, employee, request.RequestType);
 
             if (!canReceiveMerchPack)
             {
                 merchPackRequestData.SetStatusDeclined();
                 
-                return merchPackRequestData.Status;
+                return merchPackRequestData.RequestStatus;
             }
             
             stockGrpcService.SetItemsSkusInRequest(merchPackRequestData, request.EmployeeClothingSize, token);
 
-            var merchPackRequestId = Equals(request.Status, Status.Created)
+            var merchPackRequestId = Equals(request.RequestStatus, RequestStatus.Created)
                 ? await merchPackRequestRepository.CreateAsync(merchPackRequestData, token)
                 : request.Id;
-            var merchPackRequest = MerchPackRequest.CreateInstance(merchPackRequestId, merchPackRequestData);
+            var merchPackRequest = merchPackRequestData;
             
             if (!canReceiveMerchPack)
             {
@@ -61,13 +61,13 @@ namespace Ozon.MerchService.CQRS.Handlers;
                 
                 await merchPackRequestRepository.UpdateAsync(merchPackRequest, token);
                 
-                return merchPackRequestData.Status;
+                return merchPackRequestData.RequestStatus;
             }
             
             if (await stockGrpcService.GetMerchPackItemsAvailability(merchPackRequest, token) 
                 && await stockGrpcService.ReserveMerchPackItems(merchPackRequest, token))
             {
-                if (Equals(request.Status, Status.Queued))
+                if (Equals(request.RequestStatus, RequestStatus.Queued))
                 {
                     var employeeNotificationEvent = new MerchReplenishedEvent(employee.Email, request.MerchPackType);
 
@@ -82,9 +82,9 @@ namespace Ozon.MerchService.CQRS.Handlers;
             }
             else
             {
-                merchPackRequest.SetStatusQuequed();
+                merchPackRequest.SetStatusQueued();
                 
-                var hrNotificationEvent = new MerchEndedEvent(employee.HrEmail, request.MerchPackType);
+                var hrNotificationEvent = new MerchEndedEvent(merchPackRequest.HrEmail, merchPackRequest.MerchPackType);
 
                 await broker.ProduceAsync(
                     "EmployeeNotificationEventTopic", 
@@ -97,25 +97,21 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             await unitOfWork.SaveChangesAsync(token);
             
-            return merchPackRequest.Status;
+            return merchPackRequest.RequestStatus;
         }
 
         private async Task<Employee> GetEmployee(ReserveMerchPackCommand request, CancellationToken token)
         {
             var employee = await employeeRepository.GetByEmailAsync(request.EmployeeEmail, token);
 
-            if (employee is null)
-            {
-                var employeeData = new Employee(
-                    new FullName(request.EmployeeFullName),
-                    new Email(request.EmployeeEmail),
-                    new Email(request.HrEmail),
-                    request.EmployeeClothingSize);
+            if (employee is not null) return employee;
+            var employeeData = new Employee(
+                new FullName(request.EmployeeFullName),
+                new Email(request.EmployeeEmail));
 
-                var employeeId = await employeeRepository.CreateAsync(employeeData, token);
+            var employeeId = await employeeRepository.CreateAsync(employeeData, token);
 
-                employee = Employee.CreateInstance(employeeId, employee);
-            }
+            employee = Employee.CreateInstance(employeeId, employee);
 
             return employee;
         }

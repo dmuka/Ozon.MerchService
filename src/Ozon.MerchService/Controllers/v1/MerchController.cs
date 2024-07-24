@@ -9,10 +9,20 @@ using Ozon.MerchService.HttpModels;
 
 namespace Ozon.MerchService.Controllers.v1;
 
+/// <summary>
+/// Merch controller
+/// </summary>
+/// <param name="mediator">Mediatr object for DI</param>
 [ApiController]
 [Route("v1/api/merch")]
 public class MerchController(IMediator mediator) : ControllerBase
 {
+    /// <summary>
+    /// Return merch packs received by employee
+    /// </summary>
+    /// <param name="receivedMerchRequest">Request object with employee id</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Collection with received merch packs or empty collection</returns>
     [HttpGet]
     [Route("received")]
     public async Task<ActionResult<IEnumerable<MerchPack>>> GetReceivedMerch(
@@ -26,6 +36,12 @@ public class MerchController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
     
+    /// <summary>
+    /// Reserve merch pack for employee
+    /// </summary>
+    /// <param name="reserveMerchRequest">Request object with employee id and merch pack type id</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Reserved merch pack object</returns>
     [HttpPost]
     [Route("reserve")]
     public async Task<ActionResult<MerchPack>> ReserveMerch(
@@ -35,7 +51,7 @@ public class MerchController(IMediator mediator) : ControllerBase
         var command = new ReserveMerchPackCommand(
             reserveMerchRequest,
             EmployeeEventType.MerchDelivery,
-            Status.Created,
+            RequestStatus.Created,
             RequestType.Manual);
 
         var result = await mediator.Send(command, cancellationToken);

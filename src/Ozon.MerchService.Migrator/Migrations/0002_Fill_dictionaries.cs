@@ -7,12 +7,20 @@ public class Fill_dictionaries : ForwardOnlyMigration {
     public override void Up()
     {    
         Execute.Sql(@"
-                INSERT INTO statuses (id, name)
+                INSERT INTO request_statuses (id, name)
                 VALUES 
                     (1, 'Created'),
                     (2, 'Declined'),
                     (3, 'Queued'),
                     (4, 'Issued')
+                ON CONFLICT DO NOTHING
+            ");
+        
+        Execute.Sql(@"
+                INSERT INTO request_types (id, name)
+                VALUES 
+                    (1, 'Manual'),
+                    (2, 'Auto')
                 ON CONFLICT DO NOTHING
             ");
         
