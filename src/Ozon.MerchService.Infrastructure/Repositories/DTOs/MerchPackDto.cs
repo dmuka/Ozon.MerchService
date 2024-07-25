@@ -4,5 +4,5 @@ public class MerchPackDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Items { get; set; }
+    public long[] Items { get; set; }
 }

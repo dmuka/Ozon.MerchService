@@ -5,5 +5,5 @@ namespace Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
 public interface IMerchPacksRepository : IRepository<MerchPack, long>
 {
-    Task<MerchPack> GetMerchPackByMerchType(MerchType merchType, CancellationToken cancellationToken);
+    Task<MerchPack> GetMerchPackById(int merchPackId, CancellationToken cancellationToken);
 }

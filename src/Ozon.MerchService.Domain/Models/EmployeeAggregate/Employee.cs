@@ -13,7 +13,7 @@ public class Employee(
 
     public Email Email { get; private set; } = email;
 
-    private List<MerchPackRequest> _merchPackRequests;
+    private List<MerchPackRequest> _merchPackRequests = new List<MerchPackRequest>();
     public IEnumerable<MerchPackRequest> MerchPacksRequests  => _merchPackRequests.AsReadOnly();
 
     public bool CanReceiveMerchPack(MerchType merchType)
@@ -40,10 +40,20 @@ public class Employee(
         return result;
     }
 
-    public static Employee CreateInstance(long id, Employee employee)
+    public static Employee CreateInstance(
+        long id, 
+        string fullName, 
+        string email)
     {
+        var employee = new Employee(new FullName(fullName), new Email(email));
+
         employee.Id = id;
 
         return employee;
+    }
+
+    public void AddMerchPackRequest(MerchPackRequest merchPackRequest)
+    {
+        _merchPackRequests.Add(merchPackRequest);
     }
 }

@@ -14,6 +14,13 @@ public class Initial_Create_tables : Migration {
            );");
         
         Execute.Sql(@"
+           CREATE TABLE IF NOT EXISTS merchpacks_items(
+               id int primary key,
+               item_type_id int not null,
+               item_type_name varchar(30) not null
+           );");
+        
+        Execute.Sql(@"
            CREATE TABLE IF NOT EXISTS employees(
                id bigserial primary key,
                full_name varchar(100) not null,
@@ -23,15 +30,15 @@ public class Initial_Create_tables : Migration {
         Execute.Sql(@"
            CREATE TABLE IF NOT EXISTS merchpack_requests(
                id bigserial primary key,
-               merchpack_id int not null,
+               merchpack_type_id int not null,
                merchpack_items json not null,
                employee_id bigint  not null,
-               clothing_size int not null,
+               clothing_size_id int not null,
                hr_email varchar(50) not null,
-               request_type bigint not null,
+               request_type_id bigint not null,
                requested_at timestamptz default now(),
                issued  timestamptz default null,
-               status int not null
+               request_status_id int not null
            );");
         
         Execute.Sql(@"
@@ -56,6 +63,7 @@ public class Initial_Create_tables : Migration {
     public override void Down()
     {
         Execute.Sql(@"DROP TABLE IF EXISTS merchpacks;");
+        Execute.Sql(@"DROP TABLE IF EXISTS merchpacks_items;");
         Execute.Sql(@"DROP TABLE IF EXISTS employees;");
         Execute.Sql(@"DROP TABLE IF EXISTS merchpack_requests;");
         Execute.Sql(@"DROP TABLE IF EXISTS request_statuses;");

@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
+using Ozon.MerchService.Domain.DataContracts.Attributes;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 
 namespace Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
+[Table("merchpacks")]
 public class MerchPack : Item, IAggregationRoot
 {
     public MerchPack(MerchType merchPackType, IEnumerable<MerchItem> merchItems, ClothingSize clothingSize)
@@ -12,6 +15,7 @@ public class MerchPack : Item, IAggregationRoot
         _merchPackItems = merchItems.ToList();
     }
 
+    [ColumnExclude]
     public MerchType MerchPackType { get; }
 
     private List<MerchItem> _merchPackItems;

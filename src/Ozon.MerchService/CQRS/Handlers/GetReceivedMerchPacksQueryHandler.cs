@@ -24,8 +24,10 @@ public class GetReceivedMerchPacksQueryHandler(
                 { "item.id", request.EmployeeId }
             });
 
-        var employee = await employeeRepository.GetByIdAsync(request.EmployeeId, cancellationToken);
+        var employee = await employeeRepository.GetByEmailAsync("request.EmployeeId", cancellationToken);
 
+        if (employee is null) return Array.Empty<MerchPack>();
+        
         var merchPackRequests = await merchPackRequestRepository.GetAllByEmployeeIdAsync(employee.Id, cancellationToken);
         
         var merchPacks = merchPackRequests.Select(merchPackRequest =>

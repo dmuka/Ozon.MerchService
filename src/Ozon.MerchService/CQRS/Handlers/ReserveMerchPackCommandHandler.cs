@@ -37,7 +37,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             var canReceiveMerchPack = employee.CanReceiveMerchPack(request.MerchPackType);
 
-            var merchPack = await merchPacksRepository.GetMerchPackByMerchType(request.MerchPackType, token);
+            var merchPack = await merchPacksRepository.GetMerchPackById((int)request.MerchPackType, token);
 
             var merchPackRequestData = new MerchPackRequest(merchPack, merchPack.Items, employee, request.RequestType);
 
@@ -111,7 +111,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             var employeeId = await employeeRepository.CreateAsync(employeeData, token);
 
-            employee = Employee.CreateInstance(employeeId, employee);
+            employee = Employee.CreateInstance(employeeId, request.EmployeeFullName, request.EmployeeEmail);
 
             return employee;
         }

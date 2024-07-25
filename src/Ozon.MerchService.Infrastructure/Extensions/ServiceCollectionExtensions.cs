@@ -8,6 +8,8 @@ using Ozon.MerchService.Infrastructure.Configuration;
 using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
 using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
 using Ozon.MerchService.Infrastructure.Repositories.Implementations;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
+using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 using Ozon.StockApi.Grpc;
 
 namespace Ozon.MerchService.Infrastructure.Extensions;
@@ -27,6 +29,7 @@ public static class ServiceCollectionExtensions
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         services
+            .AddScoped<IDapperQuery, DapperQuery>()
             .AddScoped<IMerchPacksRepository, MerchPacksRepository>()
             .AddScoped<IMerchPackRequestRepository, MerchPackRequestsRepository>()
             .AddScoped<IEmployeeRepository, EmployeesRepository>();

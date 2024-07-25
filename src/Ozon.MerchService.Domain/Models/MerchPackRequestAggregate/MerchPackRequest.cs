@@ -12,8 +12,8 @@ namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 public class MerchPackRequest : Entity, IAggregationRoot
 {
     public MerchPackRequest(
-        MerchPack merchPack,
         Employee employee,
+        MerchPack merchPack,
         ClothingSize clothingSize,
         Email hrEmail,
         RequestType requestType,
@@ -21,6 +21,8 @@ public class MerchPackRequest : Entity, IAggregationRoot
         DateTimeOffset issued,
         RequestStatus requestStatus)
     {
+        Employee = employee;
+        MerchPack = merchPack;
         MerchPackType = merchPack.MerchPackType;
         HrEmail = hrEmail;
         ClothingSize = clothingSize;
@@ -85,8 +87,9 @@ public class MerchPackRequest : Entity, IAggregationRoot
     // }
 
     public static MerchPackRequest CreateInstance(
+        long merchPackRequestId,
         MerchType merchPackType,
-        string merchPackItems,
+        MerchItem[] merchPackItems,
         long employeeId,
         string employeeFullName,
         string employeeEmail,
@@ -99,18 +102,22 @@ public class MerchPackRequest : Entity, IAggregationRoot
         int statusId,
         string statusName)
     {
-        var items = JsonSerializer.Deserialize<List<MerchItem>>(merchPackItems);
+        var items = merchPackItems;
         
         var merchPackRequest = new MerchPackRequest(
+            Employee.CreateInstance(employeeId, employeeFullName, employeeEmail),
             new MerchPack(merchPackType, items, clothingSize),
-            new Employee(new FullName(employeeFullName), new Email(employeeEmail)),
             clothingSize,
             new Email(hrEmail),
             new RequestType(requestTypeId, requestTypeName),
             requestedAt,
             issued,
             new RequestStatus(statusId, statusName)
-            );
+            )
+        {
+            Id = merchPackRequestId,
+            _merchPackItems = merchPackItems.ToList()
+        };
 
         return merchPackRequest;
     }

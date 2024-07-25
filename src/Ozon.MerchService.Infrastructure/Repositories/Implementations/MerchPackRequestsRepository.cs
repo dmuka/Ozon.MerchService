@@ -1,6 +1,8 @@
+using System.Text.Json;
 using CSharpCourse.Core.Lib.Enums;
 using Dapper;
 using Npgsql;
+using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Repositories.DTOs;
@@ -41,24 +43,24 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
         const string sqlQuery = """
                              SELECT
                                merchpack_requests.id,
-                               merchpack_requests.merchpack_id,
+                               merchpack_requests.merchpack_type_id,
                                merchpack_requests.merchpack_items,
                                merchpack_requests.employee_id,
-                               merchpack_requests.clothing_size,
+                               merchpack_requests.clothing_size_id,
                                merchpack_requests.hr_email,
-                               merchpack_requests.request_type,
+                               merchpack_requests.request_type_id,
                                merchpack_requests.requested_at,
                                merchpack_requests.issued,
-                               merchpack_requests.status,
+                               merchpack_requests.request_status_id,
                                clothing_sizes.name,
-                               employees.fullname,
+                               employees.full_name,
                                employees.email
                              FROM merchpack_requests 
-                             LEFT JOIN clothing_sizes ON clothing_sizes.id = merchpack_requests.clothing_size
-                             LEFT JOIN request_statuses ON request_statuses.id = merchpack_requests.status
-                             LEFT JOIN request_types ON request_types.id = merchpack_requests.request_type
+                             LEFT JOIN clothing_sizes ON clothing_sizes.id = merchpack_requests.clothing_size_id
+                             LEFT JOIN request_statuses ON request_statuses.id = merchpack_requests.request_status_id
+                             LEFT JOIN request_types ON request_types.id = merchpack_requests.request_type_id
                              LEFT JOIN employees ON employees.Id = merchpack_requests.employee_id
-                             LEFT JOIN merchpacks ON merchpacks.Id = merchpack_requests.merchpack_id
+                             LEFT JOIN merchpacks ON merchpacks.Id = merchpack_requests.merchpack_type_id
                              WHERE employee_id=@EmployeeId
                              """;
         
@@ -84,30 +86,13 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
                     commandDefinition,
                     (merchPackRequestDto, employeeDto, clothingSizeDto, merchPackDto, requestTypeDto, requestStatusDto) =>
                         MerchPackRequest.CreateInstance(
-                            merchPackRequestDto.MerchpackId switch
-                            {
-                                (int)MerchType.WelcomePack => MerchType.WelcomePack,
-                                (int)MerchType.ProbationPeriodEndingPack => MerchType.ProbationPeriodEndingPack,
-                                (int)MerchType.ConferenceListenerPack => MerchType.ConferenceListenerPack,
-                                (int)MerchType.ConferenceSpeakerPack => MerchType.ConferenceSpeakerPack,
-                                (int)MerchType.VeteranPack => MerchType.VeteranPack,
-                                _ => throw new ArgumentException("Unknown merch type value")
-                            },
-                            merchPackDto.Items,
+                            merchPackRequestDto.Id,
+                            GetMerchPackType(merchPackRequestDto.MerchpackTypeId),
+                            JsonSerializer.Deserialize<MerchItem[]>(merchPackRequestDto.MerchPackItems),
                             merchPackRequestDto.EmployeeId,
                             employeeDto.FullName,
                             employeeDto.Email,
-                            clothingSizeDto.Id switch
-                            {
-                                (int)ClothingSize.XS => ClothingSize.XS,
-                                (int)ClothingSize.S => ClothingSize.S,
-                                (int)ClothingSize.M => ClothingSize.M,
-                                (int)ClothingSize.L => ClothingSize.L,
-                                (int)ClothingSize.XL => ClothingSize.XL,
-                                (int)ClothingSize.XXL => ClothingSize.XXL,
-                                _ => throw new ArgumentException("Unknown clothing size value")
-                                    
-                            },
+                            GetClothingSize(clothingSizeDto.Id),
                             merchPackRequestDto.HrEmail,
                             requestTypeDto.Id,
                             requestTypeDto.Name,
@@ -123,5 +108,33 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
         {
             throw new RepositoryOperationException(ex.Message, ex);
         }
+    }
+
+    private static MerchType GetMerchPackType(int merchPackId)
+    {
+        return merchPackId switch
+        {
+            (int)MerchType.WelcomePack => MerchType.WelcomePack,
+            (int)MerchType.ProbationPeriodEndingPack => MerchType.ProbationPeriodEndingPack,
+            (int)MerchType.ConferenceListenerPack => MerchType.ConferenceListenerPack,
+            (int)MerchType.ConferenceSpeakerPack => MerchType.ConferenceSpeakerPack,
+            (int)MerchType.VeteranPack => MerchType.VeteranPack,
+            _ => throw new ArgumentException("Unknown merch type value")
+        };
+    }
+
+    private static ClothingSize GetClothingSize(int clothingSizeId)
+    {
+        return clothingSizeId switch
+        {
+            (int)ClothingSize.XS => ClothingSize.XS,
+            (int)ClothingSize.S => ClothingSize.S,
+            (int)ClothingSize.M => ClothingSize.M,
+            (int)ClothingSize.L => ClothingSize.L,
+            (int)ClothingSize.XL => ClothingSize.XL,
+            (int)ClothingSize.XXL => ClothingSize.XXL,
+            _ => throw new ArgumentException("Unknown clothing size value")
+                                    
+        };
     }
 }
