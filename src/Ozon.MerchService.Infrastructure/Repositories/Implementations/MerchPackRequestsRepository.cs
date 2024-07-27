@@ -109,32 +109,4 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
             throw new RepositoryOperationException(ex.Message, ex);
         }
     }
-
-    private static MerchType GetMerchPackType(int merchPackId)
-    {
-        return merchPackId switch
-        {
-            (int)MerchType.WelcomePack => MerchType.WelcomePack,
-            (int)MerchType.ProbationPeriodEndingPack => MerchType.ProbationPeriodEndingPack,
-            (int)MerchType.ConferenceListenerPack => MerchType.ConferenceListenerPack,
-            (int)MerchType.ConferenceSpeakerPack => MerchType.ConferenceSpeakerPack,
-            (int)MerchType.VeteranPack => MerchType.VeteranPack,
-            _ => throw new ArgumentException("Unknown merch type value")
-        };
-    }
-
-    private static ClothingSize GetClothingSize(int clothingSizeId)
-    {
-        return clothingSizeId switch
-        {
-            (int)ClothingSize.XS => ClothingSize.XS,
-            (int)ClothingSize.S => ClothingSize.S,
-            (int)ClothingSize.M => ClothingSize.M,
-            (int)ClothingSize.L => ClothingSize.L,
-            (int)ClothingSize.XL => ClothingSize.XL,
-            (int)ClothingSize.XXL => ClothingSize.XXL,
-            _ => throw new ArgumentException("Unknown clothing size value")
-                                    
-        };
-    }
 }

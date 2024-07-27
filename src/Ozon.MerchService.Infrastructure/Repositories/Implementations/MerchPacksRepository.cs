@@ -1,4 +1,4 @@
-using CSharpCourse.Core.Lib.Enums;
+using System.Text.Json;
 using Dapper;
 using Npgsql;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
@@ -9,29 +9,55 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
-public class MerchPacksRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory)
+public class MerchPacksRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory, IDapperQuery query)
     : Repository<MerchPack, long>(connectionFactory), IMerchPacksRepository
 {
+    private const int Timeout = 5;
+    
     public async Task<MerchPack> GetMerchPackById(int merchPackId, CancellationToken cancellationToken)
     {
-        var tableName = GetTableName();
-
-        var query = $"SELECT {GetColumnsNames()} FROM {tableName} WHERE id={merchPackId}";
+        const string sqlQuery = """
+                                SELECT
+                                  merchpacks.id,
+                                  merchpacks.name,
+                                  merchpacks.items
+                                FROM merchpacks
+                                WHERE id=@MerchPackId
+                                """;
+        
+        var parameters = new
+        {
+            MerchPackId = merchPackId
+        };        
+            
+        var commandDefinition = new CommandDefinition(
+            sqlQuery,
+            parameters: parameters,
+            commandTimeout: Timeout,
+            cancellationToken: cancellationToken);
 
         try
         {
             var connection = await GetConnection(cancellationToken);
             
-            var merchPackDto = await connection.QuerySingleAsync<MerchPackDto>(query);
+            return await query.Call(async () =>
+            {
+                var merchPackDto = await connection
+                    .QuerySingleOrDefaultAsync<MerchPackDto>(commandDefinition);
 
-            var merchPack = MerchPack.CreateInstance(merchPackDto.Id,
-                new MerchPack(MerchType.VeteranPack, new MerchItem[] { }, ClothingSize.L));
+                var items = JsonSerializer.Deserialize<MerchItemDto[]>(merchPackDto.Items) ?? [];
+                
+                var merchPackItems = items.Select(item =>
+                    new MerchItem(0, new ItemType(item.ItemTypeId, item.ItemTypeName)));
 
-            return merchPack;
+                var result = new MerchPack(GetMerchPackType(merchPackId), merchPackItems);
+
+                return result;
+            });
         }
         catch (Exception ex)
         {
-            throw new RepositoryOperationException();
+            throw new RepositoryOperationException(ex.Message, ex);
         }
     }
 }

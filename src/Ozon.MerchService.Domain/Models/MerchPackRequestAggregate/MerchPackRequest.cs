@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
@@ -106,7 +105,7 @@ public class MerchPackRequest : Entity, IAggregationRoot
         
         var merchPackRequest = new MerchPackRequest(
             Employee.CreateInstance(employeeId, employeeFullName, employeeEmail),
-            new MerchPack(merchPackType, items, clothingSize),
+            new MerchPack(merchPackType, items),
             clothingSize,
             new Email(hrEmail),
             new RequestType(requestTypeId, requestTypeName),
@@ -122,12 +121,12 @@ public class MerchPackRequest : Entity, IAggregationRoot
         return merchPackRequest;
     }
 
-    public bool CheckMerchItemsReserveOnStock()
-    {
-        var result = MerchItems.All(item => item.Reserved.Value);
-
-        return result;
-    }
+    // public bool CheckMerchItemsReserveOnStock()
+    // {
+    //     var result = MerchItems.All(item => item.Reserved.Value);
+    //
+    //     return result;
+    // }
 
     public void SetStatusDeclined()
     {

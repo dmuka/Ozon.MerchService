@@ -56,4 +56,9 @@ public class Employee(
     {
         _merchPackRequests.Add(merchPackRequest);
     }
+
+    public void SetMerchPackRequests(List<MerchPackRequest> merchPacksRequests)
+    {
+        _merchPackRequests = merchPacksRequests;
+    }
 }

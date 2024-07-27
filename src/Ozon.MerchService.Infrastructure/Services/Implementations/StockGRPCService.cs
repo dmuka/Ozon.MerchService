@@ -28,7 +28,7 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
     {
         foreach (var merchItem in merchPackRequest.MerchItems)
         {
-            var id = merchItem.Type.Id;
+            var id = merchItem.Type.ItemTypeId;
             
             var model = new IntIdModel { Id = id };
             

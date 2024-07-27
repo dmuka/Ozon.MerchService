@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.DataContracts.Attributes;
+using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
@@ -97,5 +99,33 @@ public abstract class BaseRepository<T>()
             return properties?.FirstOrDefault()?.Name ?? null;
 
         return null;
+    }
+
+    internal static MerchType GetMerchPackType(int merchPackId)
+    {
+        return merchPackId switch
+        {
+            (int)MerchType.WelcomePack => MerchType.WelcomePack,
+            (int)MerchType.ProbationPeriodEndingPack => MerchType.ProbationPeriodEndingPack,
+            (int)MerchType.ConferenceListenerPack => MerchType.ConferenceListenerPack,
+            (int)MerchType.ConferenceSpeakerPack => MerchType.ConferenceSpeakerPack,
+            (int)MerchType.VeteranPack => MerchType.VeteranPack,
+            _ => throw new ArgumentException("Unknown merch type value")
+        };
+    }
+
+    internal static ClothingSize GetClothingSize(int clothingSizeId)
+    {
+        return clothingSizeId switch
+        {
+            (int)ClothingSize.XS => ClothingSize.XS,
+            (int)ClothingSize.S => ClothingSize.S,
+            (int)ClothingSize.M => ClothingSize.M,
+            (int)ClothingSize.L => ClothingSize.L,
+            (int)ClothingSize.XL => ClothingSize.XL,
+            (int)ClothingSize.XXL => ClothingSize.XXL,
+            _ => throw new ArgumentException("Unknown clothing size value")
+                                    
+        };
     }
 }

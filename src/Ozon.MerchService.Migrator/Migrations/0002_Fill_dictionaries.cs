@@ -39,11 +39,11 @@ public class Fill_dictionaries : ForwardOnlyMigration {
         Execute.Sql(@"
                 INSERT INTO merchpacks (id, name, items)
                 VALUES 
-                    (1, 'WelcomePack', ARRAY[1, 2, 3, 4]),
-                    (2, 'ProbationPeriodEndingPack', ARRAY[5, 6]),
-                    (3, 'ConferenceListenerPack', ARRAY[10, 11, 12]),
-                    (4, 'ConferenceSpeakerPack', ARRAY[7, 8, 9]),
-                    (5, 'VeteranPack', ARRAY[13, 14, 15, 16, 17])
+                    (10, 'WelcomePack', '[{""ItemTypeId"" : 1, ""ItemTypeName"" : ""TShirtStarter""}, {""ItemTypeId"" : 2, ""ItemTypeName"" : ""NotepadStarter""}, {""ItemTypeId"" : 3, ""ItemTypeName"" : ""PenStarter""}, {""ItemTypeId"" : 4, ""ItemTypeName"" : ""SocksStarter""}]'),
+                    (20, 'ProbationPeriodEndingPack', '[{""ItemTypeId"" : 5, ""ItemTypeName"" : ""TShirtAfterProbation""}, {""ItemTypeId"" : 6, ""ItemTypeName"" : ""SweatshirtAfterProbation""}]'),
+                    (30, 'ConferenceListenerPack', '[{""ItemTypeId"" : 10, ""ItemTypeName"" : ""TShirtСonferenceListener""}, {""ItemTypeId"" : 11, ""ItemTypeName"" : ""NotepadСonferenceListener""}, {""ItemTypeId"" : 12, ""ItemTypeName"" : ""PenСonferenceListener""}]'),
+                    (40, 'ConferenceSpeakerPack', '[{""ItemTypeId"" : 7, ""ItemTypeName"" : ""SweatshirtСonferenceSpeaker""}, {""ItemTypeId"" : 8, ""ItemTypeName"" : ""NotepadСonferenceSpeaker""}, {""ItemTypeId"" : 9, ""ItemTypeName"" : ""PenСonferenceSpeaker""}]'),
+                    (50, 'VeteranPack', '[{""ItemTypeId"" : 13, ""ItemTypeName"" : ""TShirtVeteran""}, {""ItemTypeId"" : 14, ""ItemTypeName"" : ""SweatshirtVeteran""}, {""ItemTypeId"" : 15, ""ItemTypeName"" : ""NotepadVeteran""}, {""ItemTypeId"" : 16, ""ItemTypeName"" : ""PenVeteran""}, {""ItemTypeId"" : 17, ""ItemTypeName"" : ""CardholderVeteran""}]')
                 ON CONFLICT DO NOTHING
             ");
         
@@ -57,34 +57,10 @@ public class Fill_dictionaries : ForwardOnlyMigration {
         Execute.Sql(@"
                 INSERT INTO merchpack_requests (id, merchpack_type_id, merchpack_items, employee_id, clothing_size_id, hr_email, request_type_id, requested_at, issued, request_status_id)
                 VALUES 
-                    (1, 10, '[{""ItemType"" : 1, ""Sku"" : 3}, {""ItemType"" : 2, ""Sku"" : 41}, {""ItemType"" : 3, ""Sku"" : 42}, {""ItemType"" : 4, ""Sku"" : 43}]', 1, 3, 'hr@email.com', 2, now() at time zone 'utc', now() at time zone 'utc', 4), 
-                    (2, 20, '[{""ItemType"" : 5, ""Sku"" : 10}, {""ItemType"" : 6, ""Sku"" : 16}]', 1, 4, 'hr1@email.com', 2, now() at time zone 'utc', now() at time zone 'utc', 1), 
-                    (3, 30, '[{""ItemType"" : 10, ""Sku"" : 27}, {""ItemType"" : 11, ""Sku"" : 46}, {""ItemType"" : 12, ""Sku"" : 47}]', 1, 3, 'hr2@email.com', 1, now() at time zone 'utc', now() at time zone 'utc', 3), 
-                    (4, 40, '[{""ItemType"" : 7, ""Sku"" : 21}, {""ItemType"" : 8, ""Sku"" : 44}, {""ItemType"" : 9, ""Sku"" : 45}]', 1, 3, 'hr@email.com', 1, now() at time zone 'utc', now() at time zone 'utc', 4)
-                ON CONFLICT DO NOTHING
-            ");
-        
-        Execute.Sql(@"
-                INSERT INTO merchpacks_items (id, item_type_id, item_type_name)
-                VALUES 
-                    (1, 1, 'TShirtStarter'),
-                    (2, 2, 'NotepadStarter'),
-                    (3, 3, 'PenStarter'),
-                    (4, 4, 'SocksStarter'), 
-                    (5, 5, 'TShirtAfterProbation'), 
-                    (6, 6, 'SweatshirtAfterProbation'), 
-                    (7, 10, 'TShirtСonferenceListener'), 
-                    (8, 11, 'NotepadСonferenceListener'), 
-                    (9, 12, 'PenСonferenceListener'), 
-                    (10, 7, 'SweatshirtСonferenceSpeaker'), 
-                    (11, 8, 'NotepadСonferenceSpeaker'), 
-                    (12, 9, 'PenСonferenceSpeaker'),
-                    (13, 13, 'TShirtVeteran'),
-                    (14, 14, 'SweatshirtVeteran'),
-                    (15, 15, 'NotepadVeteran'),
-                    (16, 16, 'PenVeteran'),
-                    (17, 17, 'CardHolderVeteran') 
-                    
+                    (1, 10, '[{""ItemTypeId"" : 1, ""ItemTypeName"" : ""TShirtStarter"", ""Sku"" : 3}, {""ItemTypeId"" : 2, ""ItemTypeName"" : ""NotepadStarter"", ""Sku"" : 41}, {""ItemTypeId"" : 3, ""ItemTypeName"" : ""PenStarter"", ""Sku"" : 42}, {""ItemTypeId"" : 4, ""ItemTypeName"" : ""SocksStarter"", ""Sku"" : 43}]', 1, 3, 'hr@email.com', 2, now() at time zone 'utc', now() at time zone 'utc', 4), 
+                    (2, 20, '[{""ItemTypeId"" : 5, ""ItemTypeName"" : ""TShirtAfterProbation"", ""Sku"" : 10}, {""ItemTypeId"" : 6, ""ItemTypeName"" : ""SweatshirtAfterProbation"", ""Sku"" : 16}]', 1, 4, 'hr1@email.com', 2, now() at time zone 'utc', now() at time zone 'utc', 1), 
+                    (3, 30, '[{""ItemTypeId"" : 10, ""ItemTypeName"" : ""TShirtСonferenceListener"", ""Sku"" : 27}, {""ItemTypeId"" : 11, ""ItemTypeName"" : ""NotepadСonferenceListener"", ""Sku"" : 46}, {""ItemTypeId"" : 12, ""ItemTypeName"" : ""PenСonferenceListener"", ""Sku"" : 47}]', 1, 3, 'hr2@email.com', 1, now() at time zone 'utc', now() at time zone 'utc', 3), 
+                    (4, 40, '[{""ItemTypeId"" : 7, ""ItemTypeName"" : ""SweatshirtСonferenceSpeaker"", ""Sku"" : 21}, {""ItemTypeId"" : 8, ""ItemTypeName"" : ""NotepadСonferenceSpeaker"", ""Sku"" : 44}, {""ItemTypeId"" : 9, ""ItemTypeName"" : ""PenСonferenceSpeaker"", ""Sku"" : 45}]', 1, 3, 'hr@email.com', 1, now() at time zone 'utc', now() at time zone 'utc', 4)
                 ON CONFLICT DO NOTHING
             ");
     }

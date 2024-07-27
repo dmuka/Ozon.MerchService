@@ -70,13 +70,15 @@ public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connecti
                         commandDefinition,
                         (employeeDto, merchPackRequestDto, clothingSizeDto, requestStatusDto, requestTypeDto) =>
                         {
-                            var merchItems =
-                                JsonSerializer.Deserialize<MerchItemDto[]>(merchPackRequestDto.MerchPackItems)
-                                    .Select(item => new MerchItem(1, item.Sku, new ItemType(1, ""), "")).ToArray();
+                            var merchItemDtos =
+                                (JsonSerializer.Deserialize<MerchItemDto[]>(merchPackRequestDto.MerchPackItems) ?? []);
+
+                            var merchItems = merchItemDtos.Select(dto =>
+                                new MerchItem(dto.Sku, new ItemType(dto.ItemTypeId, dto.ItemTypeName))).ToArray();
                             
                             var merchPackRequest = MerchPackRequest.CreateInstance(
                                 merchPackRequestDto.Id,
-                                GetMerchPackType(merchPackRequestDto.MerchpackTypeId, merchPackRequestDto),
+                                GetMerchPackType(merchPackRequestDto.MerchpackTypeId),
                                 merchItems,
                                 merchPackRequestDto.EmployeeId,
                                 employeeDto.FullName,
@@ -106,8 +108,10 @@ public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connecti
                     {
                         var employee = group.First();
                 
-                        // employee.MerchPackRequests = group
-                        //     .Select(employeeDto => employeeDto.MerchPackRequests.Single()).ToList();
+                        var merchPacksRequests = group
+                             .Select(employeeDto => employeeDto.MerchPacksRequests.Single()).ToList();
+                        
+                        employee.SetMerchPackRequests(merchPacksRequests);
                         
                         return employee;
                     }).First();
@@ -119,33 +123,5 @@ public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connecti
         {
             throw new RepositoryOperationException(ex.Message, ex);
         }
-    }
-
-    private static MerchType GetMerchPackType(int merchPackId, MerchPackRequestDto merchPackDto)
-    {
-        return merchPackId switch
-        {
-            (int)MerchType.WelcomePack => MerchType.WelcomePack,
-            (int)MerchType.ProbationPeriodEndingPack => MerchType.ProbationPeriodEndingPack,
-            (int)MerchType.ConferenceListenerPack => MerchType.ConferenceListenerPack,
-            (int)MerchType.ConferenceSpeakerPack => MerchType.ConferenceSpeakerPack,
-            (int)MerchType.VeteranPack => MerchType.VeteranPack,
-            _ => throw new ArgumentException("Unknown merch type value")
-        };
-    }
-
-    private static ClothingSize GetClothingSize(int clothingSizeId)
-    {
-        return clothingSizeId switch
-        {
-            (int)ClothingSize.XS => ClothingSize.XS,
-            (int)ClothingSize.S => ClothingSize.S,
-            (int)ClothingSize.M => ClothingSize.M,
-            (int)ClothingSize.L => ClothingSize.L,
-            (int)ClothingSize.XL => ClothingSize.XL,
-            (int)ClothingSize.XXL => ClothingSize.XXL,
-            _ => throw new ArgumentException("Unknown clothing size value")
-                                    
-        };
     }
 }

@@ -31,7 +31,7 @@ public class GetReceivedMerchPacksQueryHandler(
         var merchPackRequests = await merchPackRequestRepository.GetAllByEmployeeIdAsync(employee.Id, cancellationToken);
         
         var merchPacks = merchPackRequests.Select(merchPackRequest =>
-            new MerchPack(merchPackRequest.MerchPackType, merchPackRequest.MerchItems, merchPackRequest.ClothingSize));
+            new MerchPack(merchPackRequest.MerchPackType, merchPackRequest.MerchItems));
 
         return merchPacks;
     }

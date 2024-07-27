@@ -2,21 +2,10 @@ using Ozon.MerchService.Domain.Models.ValueObjects;
 
 namespace Ozon.MerchService.Domain.Models.MerchItemAggregate;
 
-public class MerchItem : Item, IAggregationRoot
+public class MerchItem(long sku, ItemType type) : IAggregationRoot
 {
-    public MerchItem(long id, long sku, ItemType type, string name)
-    {
-        Id = id;
-        Sku = new Sku(sku);
-        Type = type;
-        Name = name;
-    }
-    
-    public ItemType Type { get; private set; }
-    public Sku Sku { get; private set; }
-
-    public RequestedAt RequestedAt { get; } = new();
-    public Reserved Reserved { get; } = null;
+    public ItemType Type { get; private set; } = type;
+    public Sku Sku { get; private set; } = new(sku);
 
     public void SetSku(long sku)
     {
