@@ -24,13 +24,13 @@ public class GetReceivedMerchPacksQueryHandler(
                 { "item.id", request.EmployeeId }
             });
 
-        var employee = await employeeRepository.GetByEmailAsync("request.EmployeeId", cancellationToken);
+        var employee = await employeeRepository.GetByEmailAsync(request.EmployeeEmail, cancellationToken);
 
         if (employee is null) return Array.Empty<MerchPack>();
         
-        var merchPackRequests = await merchPackRequestRepository.GetAllByEmployeeIdAsync(employee.Id, cancellationToken);
+        //var merchPackRequests = await merchPackRequestRepository.GetAllByEmployeeIdAsync(employee.Id, cancellationToken);
         
-        var merchPacks = merchPackRequests.Select(merchPackRequest =>
+        var merchPacks = employee.MerchPacksRequests.Select(merchPackRequest =>
             new MerchPack(merchPackRequest.MerchPackType, merchPackRequest.MerchItems));
 
         return merchPacks;

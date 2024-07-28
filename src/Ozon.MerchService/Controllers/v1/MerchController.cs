@@ -29,7 +29,7 @@ public class MerchController(IMediator mediator) : ControllerBase
         [FromQuery] ReceivedMerchRequest receivedMerchRequest, 
         CancellationToken cancellationToken)
     {
-        var query = new GetReceivedMerchPacksQuery(receivedMerchRequest.EmployeeId);
+        var query = new GetReceivedMerchPacksQuery(receivedMerchRequest.EmployeeId, receivedMerchRequest.EmployeeEmail);
 
         var result = await mediator.Send(query, cancellationToken);
         

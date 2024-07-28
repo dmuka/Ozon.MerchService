@@ -3,12 +3,8 @@ using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
 namespace Ozon.MerchService.CQRS.Queries;
 
-public class GetReceivedMerchPacksQuery : IRequest<IEnumerable<MerchPack>>
+public class GetReceivedMerchPacksQuery(long employeeId, string employeeEmail) : IRequest<IEnumerable<MerchPack>>
 {
-    public GetReceivedMerchPacksQuery(long employeeId)
-    {
-        EmployeeId = employeeId;
-    }
-    
-    public long EmployeeId { get; set; }
+    public long EmployeeId { get; set; } = employeeId;
+    public string EmployeeEmail { get; set; } = employeeEmail;
 }

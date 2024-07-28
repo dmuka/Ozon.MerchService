@@ -67,7 +67,8 @@ public static class HostBuilderExtensions
         {
             services
                 .AddSingleton<IStartupFilter, ResponseLogging>()
-                .AddSingleton<IStartupFilter, RequestLogging>();
+                .AddSingleton<IStartupFilter, RequestLogging>()
+                .AddSingleton<IStartupFilter, ExceptionHandling>();
         });
 
         return builder;

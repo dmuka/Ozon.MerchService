@@ -48,7 +48,7 @@ public class MerchPacksRepository(IDbConnectionFactory<NpgsqlConnection> connect
                 var items = JsonSerializer.Deserialize<MerchItemDto[]>(merchPackDto.Items) ?? [];
                 
                 var merchPackItems = items.Select(item =>
-                    new MerchItem(0, new ItemType(item.ItemTypeId, item.ItemTypeName)));
+                    new MerchItem(default, new ItemType(item.ItemTypeId, item.ItemTypeName)));
 
                 var result = new MerchPack(GetMerchPackType(merchPackId), merchPackItems);
 
