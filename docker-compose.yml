@@ -63,7 +63,64 @@
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - ozon-network     
+      - ozon-network
+
+  mongo:
+    image: mongo:7.0.12
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - ozon-network
+
+  elasticsearch:
+    image: elasticsearch:7.14.2
+    container_name: elasticsearch
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - ozon-network
+  
+  kibana:
+    image: kibana:7.14.2
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://localhost:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - ozon-network
+
+  graylog:
+    image: graylog/graylog:6.0.4
+    environment:
+      - GRAYLOG_PASSWORD_SECRET=DextFExLrQEQybLINupLwTsSxBOykiSfQcGM6MRJFlfhJiHP3OJmxHIdKAVgg0Z3jQFjilisQ403KZkZ8tJhYLIffwErDHmi
+      - GRAYLOG_ROOT_PASSWORD_SHA2=43ff2fa097c98ca4b9890919503a35f72c41098daf36bc132cb990f715f24ec3
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - mongo
+      - elasticsearch
+    ports:
+      - "9000:9000"
+      - "12201:12201/udp"
+    volumes:
+      - graylog_data:/usr/share/graylog/data
+    networks:
+      - ozon-network
 
 networks:
   ozon-network:
@@ -71,4 +128,10 @@ networks:
 
 volumes:
   merch_db:
+    driver: local
+  mongo_data:
+    driver: local
+  es_data:
+    driver: local
+  graylog_data:
     driver: local

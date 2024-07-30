@@ -1,6 +1,6 @@
 {
   "Serilog": {
-    "Using": [ "Serilog.Sinks.File", "Serilog.Sinks.Console" ],
+    "Using": [ "Serilog.Sinks.File", "Serilog.Sinks.Console", "Serilog.Sinks.Graylog" ],
     "MinimumLevel": {
       "Default": "Information",
       "Override": {
@@ -11,6 +11,14 @@
     "WriteTo": [
       {
         "Name": "Console"
+      },
+      {
+        "Name": "Graylog",
+        "Args": {
+          "hostnameOrAddress": "127.0.0.1",
+          "port": 12201,
+          "transportType": "Udp"
+        }
       },
       {
         "Name": "Logger",
