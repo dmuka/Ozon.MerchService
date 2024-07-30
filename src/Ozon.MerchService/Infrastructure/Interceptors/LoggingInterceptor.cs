@@ -19,11 +19,13 @@ public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : Intercepto
     {
         try
         {
-            logger.LogInformation($"gRPC request {context.Method}:");
+            var method = context.Method;
+            
+            logger.LogInformation("gRPC request {method}:", method);
             
             var requestJson = JsonSerializer.Serialize(request, _defaultSerializationOptions);
             
-            logger.LogInformation(requestJson);
+            logger.LogInformation("Json: {requestJson}", requestJson);
         }
         catch (Exception exception)
         {
