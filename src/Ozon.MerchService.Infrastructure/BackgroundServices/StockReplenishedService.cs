@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Confluent.Kafka;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,31 @@ public class StockReplenishedService(
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
+            try
+            {
+                {
+                    await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error consuming topic {Topic}", topic);
+
+                if (ex is KafkaException kafkaException &&
+                    kafkaException.Error.Code == ErrorCode.UnknownTopicOrPart)
+                {
+                    logger.LogError("Topic {Topic} is not available. Retrying in 5 seconds...", topic);
+
+                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                }
+                else
+                {
+                    logger.LogError("Unexpected error: {Message}. Stopping execution.", ex.Message);
+                    
+                    break; // or continue, based on current error handling policy
+                }
+            }
         }
     }
 
