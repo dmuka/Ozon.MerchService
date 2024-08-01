@@ -17,7 +17,10 @@ public class EmployeeNotificationService(
     {
         var topic = broker.Configuration.EmployeeNotificationEventTopic;
         
-        await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
+        }
     }
 
     private async Task PublishEvent(string serializedMessage, CancellationToken token)

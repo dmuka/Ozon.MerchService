@@ -18,8 +18,11 @@ public class StockReplenishedService(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var topic = broker.Configuration.StockReplenishedEventTopic;
-        
-        await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
+
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
+        }
     }
 
     private async Task PublishEvent(string serializedMessage, CancellationToken token)
