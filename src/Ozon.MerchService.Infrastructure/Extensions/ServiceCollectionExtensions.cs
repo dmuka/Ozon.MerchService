@@ -16,27 +16,44 @@ namespace Ozon.MerchService.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Add kafka configuration and service
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Set of key-value application configuration properties</param>
+    /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddKafkaServices(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .Configure<KafkaConfiguration>(configuration.GetSection(nameof(KafkaConfiguration)))
-            .AddSingleton<IMessageBroker, Infrastructure.MessageBroker.Implementations.MessageBroker>();
+            .AddSingleton<IMessageBroker, MessageBroker.Implementations.MessageBroker>();
 
         return services;
     }
 
+    /// <summary>
+    /// Add repositories and orm
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         services
-            .AddScoped<IDapperQuery, DapperQuery>()
-            .AddScoped<IMerchPacksRepository, MerchPacksRepository>()
-            .AddScoped<IMerchPackRequestRepository, MerchPackRequestsRepository>()
-            .AddScoped<IEmployeeRepository, EmployeesRepository>();
+            .AddTransient<IDapperQuery, DapperQuery>()
+            .AddTransient<IMerchPacksRepository, MerchPacksRepository>()
+            .AddTransient<IMerchPackRequestRepository, MerchPackRequestsRepository>()
+            .AddTransient<IEmployeeRepository, EmployeesRepository>();
 
         return services;
     }
         
+    /// <summary>
+    /// Add stock grpc service client
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Set of key-value application configuration properties</param>
+    /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddStockGrpcServiceClient(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionAddress = configuration
@@ -46,7 +63,7 @@ public static class ServiceCollectionExtensions
         if (string.IsNullOrWhiteSpace(connectionAddress))
             connectionAddress = configuration.Get<StockGrpcServiceConfiguration>().ServerAddress;
 
-        services.AddScoped<StockApiGrpc.StockApiGrpcClient>(opt =>
+        services.AddTransient<StockApiGrpc.StockApiGrpcClient>(opt =>
         {
             var channel = GrpcChannel.ForAddress(connectionAddress);
             

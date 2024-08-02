@@ -48,7 +48,9 @@ public abstract class BaseRepository<T>()
     {
         var type = typeof(T);
         var columns = string.Join(", ", type.GetProperties()
-            .Where(p => !excludeKey || !p.IsDefined(typeof(KeyAttribute)))
+            .Where(p => !excludeKey || 
+                        !p.IsDefined(typeof(KeyAttribute)) && 
+                        !p.IsDefined(typeof(NotMappedAttribute)))
             .Select(p =>
             {
                 var columnAttribute = p.GetCustomAttribute<ColumnAttribute>();
@@ -75,7 +77,9 @@ public abstract class BaseRepository<T>()
     internal string GetPropertyValues(bool excludeKey = false)
     {
         var properties = typeof(T).GetProperties()
-            .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+            .Where(p => !excludeKey || 
+                        !p.IsDefined(typeof(KeyAttribute)) && 
+                        !p.IsDefined(typeof(NotMappedAttribute)));
 
         var values = string.Join(", ", properties.Select(p => $"@{p.Name}"));
 

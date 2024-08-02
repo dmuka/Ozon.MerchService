@@ -26,7 +26,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
             
             Employee employee;
             
-            if (Equals(request.RequestStatus, RequestStatus.Created))
+            if (Equals(request.RequestStatus, RequestStatus.Created) && request.Employee is null)
             {
                 employee = await GetEmployee(request, token);
             }

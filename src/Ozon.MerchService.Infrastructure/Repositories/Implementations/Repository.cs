@@ -19,7 +19,7 @@ public class Repository<T, TId>(IDbConnectionFactory<NpgsqlConnection> connectio
 where T : IAggregationRoot
 where TId : IEquatable<TId>
 {
-    public async Task<TId> CreateAsync(T entity, CancellationToken cancellationToken)
+    public async Task<TId> CreateAsync(T entity, CancellationToken cancellationToken, object parameters = null)
     {
         TId entityId;
         
@@ -34,7 +34,7 @@ where TId : IEquatable<TId>
 
             var connection = await GetConnection(cancellationToken);
 
-            entityId = await connection.QuerySingleAsync<TId>(query);
+            entityId = await connection.QuerySingleAsync<TId>(query, parameters);
         }
         catch (Exception ex)
         {

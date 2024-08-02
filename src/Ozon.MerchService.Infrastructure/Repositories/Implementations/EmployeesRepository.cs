@@ -114,7 +114,7 @@ public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connecti
                         employee.SetMerchPackRequests(merchPacksRequests);
                         
                         return employee;
-                    }).First();
+                    }).FirstOrDefault();
 
                 return result;
             });

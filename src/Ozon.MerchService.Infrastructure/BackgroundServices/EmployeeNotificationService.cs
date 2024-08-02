@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Confluent.Kafka;
+using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,34 +21,7 @@ public class EmployeeNotificationService(
     {
         var topic = broker.Configuration.EmployeeNotificationEventTopic;
         
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                {
-                    await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error consuming topic {Topic}", topic);
-
-                if (ex is KafkaException kafkaException &&
-                    kafkaException.Error.Code == ErrorCode.UnknownTopicOrPart)
-                {
-                    logger.LogError("Topic {Topic} is not available. Retrying in 5 seconds...", topic);
-
-                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
-                }
-                else
-                {
-                    logger.LogError("Unexpected error: {Message}. Stopping execution.", ex.Message);
-                    
-                    break; // or continue, based on current error handling policy
-                }
-            }
-        }
+        await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
     }
 
     private async Task PublishEvent(string serializedMessage, CancellationToken token)
@@ -55,7 +29,9 @@ public class EmployeeNotificationService(
         var message = JsonSerializer.Deserialize<NotificationEvent>(serializedMessage);
         
         if (message is null) return;
+
+        var @event = new EmployeeNeededMerchEvent(message);
         
-        await mediator.Publish(new EmployeeNeededMerchEvent(message), token);
+        await mediator.Publish(@event, token);
     }
 }

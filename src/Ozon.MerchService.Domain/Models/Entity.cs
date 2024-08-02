@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MediatR;
 using Ozon.MerchService.Domain.DataContracts.Attributes;
 
@@ -7,11 +9,12 @@ public abstract class Entity
 {
     private int? _requestedHashCode;
 
+    [Key]
     public long Id { get; protected set; }
 
     private readonly List<INotification> _domainEvents = [];
 
-    [ColumnExclude]
+    [NotMapped]
     public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
 
     public void AddDomainEvent(INotification eventItem) => _domainEvents.Add(eventItem);

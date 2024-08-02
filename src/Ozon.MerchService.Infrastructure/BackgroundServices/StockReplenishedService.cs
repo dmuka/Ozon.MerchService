@@ -19,35 +19,8 @@ public class StockReplenishedService(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var topic = broker.Configuration.StockReplenishedEventTopic;
-
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                {
-                    await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error consuming topic {Topic}", topic);
-
-                if (ex is KafkaException kafkaException &&
-                    kafkaException.Error.Code == ErrorCode.UnknownTopicOrPart)
-                {
-                    logger.LogError("Topic {Topic} is not available. Retrying in 5 seconds...", topic);
-
-                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
-                }
-                else
-                {
-                    logger.LogError("Unexpected error: {Message}. Stopping execution.", ex.Message);
-                    
-                    break; // or continue, based on current error handling policy
-                }
-            }
-        }
+        
+        await broker.ConsumeAsync(topic, scopeFactory, PublishEvent, stoppingToken);
     }
 
     private async Task PublishEvent(string serializedMessage, CancellationToken token)

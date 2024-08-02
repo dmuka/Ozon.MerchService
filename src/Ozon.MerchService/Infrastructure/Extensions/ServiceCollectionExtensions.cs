@@ -1,4 +1,5 @@
 using System.Reflection;
+using MediatR;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -7,6 +8,7 @@ using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Infrastructure.BackgroundServices;
 using Ozon.MerchService.Infrastructure.Configuration;
 using Ozon.MerchService.Infrastructure.Constants;
+using Ozon.MerchService.Infrastructure.Mediatr;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 using Ozon.MerchService.Infrastructure.Services.Implementations;
@@ -17,18 +19,35 @@ using NpgsqlConnectionFactory = Ozon.MerchService.Infrastructure.Repositories.In
 
 namespace Ozon.MerchService.Infrastructure.Extensions;
 
+/// <summary>
+/// Service collection extensions
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     internal static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         services
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
+            .AddMediatR(mediatrServiceConfiguration =>
+            {
+                mediatrServiceConfiguration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                mediatrServiceConfiguration.Lifetime = ServiceLifetime.Transient;
+
+                mediatrServiceConfiguration.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                mediatrServiceConfiguration.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+            })
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ScopedBehavior<,>))
             .AddScoped<IQueuedRequestsService, QueuedRequestsService>()
-            .AddScoped<IStockGrpcService, StockGrpcService>();
+            .AddTransient<IStockGrpcService, StockGrpcService>();
 
         return services;
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Set of key-value application configuration properties</param>
+    /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddTelemetry(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOpenTelemetry()
@@ -36,7 +55,7 @@ public static class ServiceCollectionExtensions
             .WithTracing(tracing => tracing
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
-                .AddConsoleExporter()
+                //.AddConsoleExporter()
                 .AddSource("GetReceivedMerchPacksQueryHandler")
                 .AddJaegerExporter(options =>
                 {
@@ -44,25 +63,34 @@ public static class ServiceCollectionExtensions
                     options.AgentPort = configuration.GetValue<int>("Jaeger:Port");
                 }))
             .WithMetrics(metrics => metrics
-                .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter());
+                .AddAspNetCoreInstrumentation());
+                //.AddConsoleExporter());
 
         return services;
     }    
         
-    public static IServiceCollection AddDbConnection(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    /// <summary>
+    /// Add db connection services
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Set of key-value application configuration properties</param>
+    /// <returns>Collection of service descriptors</returns>
+    public static IServiceCollection AddDbConnection(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)));
             
-        services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<ITracker, Tracker>();
+        services.AddTransient<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<ITracker, Tracker>();
 
         return services;
     }
         
+    /// <summary>
+    /// Add hosted services
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddHostedServices(this IServiceCollection services)
     {
         services
@@ -72,6 +100,12 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Add external services
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Set of key-value application configuration properties</param>
+    /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddExternalServices(this IServiceCollection services,
         IConfiguration configuration)
     {

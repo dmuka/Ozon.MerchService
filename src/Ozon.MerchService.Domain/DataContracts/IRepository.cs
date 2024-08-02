@@ -18,7 +18,7 @@ public interface IRepository<TEntity, TId>
     /// <param name="item">New item</param>
     /// <param name="token">Cancellation token <see cref="CancellationToken"/></param>
     /// <returns>Created item id</returns>
-    Task<TId> CreateAsync(TEntity item, CancellationToken token);
+    Task<TId> CreateAsync(TEntity item, CancellationToken token, object parameters = null);
     
     /// <summary>
     /// Get item by id

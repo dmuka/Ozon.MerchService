@@ -1,19 +1,23 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
 namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
 
+[Table("employees")]
 public class Employee(
     FullName fullName,
     Email email)
     : Entity, IAggregationRoot
 {
+    [Column("full_name")]
     public FullName FullName { get; private set; } = fullName;
 
     public Email Email { get; private set; } = email;
 
     private List<MerchPackRequest> _merchPackRequests = new List<MerchPackRequest>();
+    [NotMapped]   
     public IEnumerable<MerchPackRequest> MerchPacksRequests  => _merchPackRequests.AsReadOnly();
 
     public bool CanReceiveMerchPack(MerchType merchType)

@@ -8,9 +8,9 @@ using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 namespace Ozon.MerchService.CQRS.Handlers.Events;
 
 public class EmployeeNeededMerchEventHandler(
-    IEmployeeRepository employeeRepository, 
-    IMediator mediator, 
-    IUnitOfWork unitOfWork)
+    IMediator mediator,  
+    IUnitOfWork unitOfWork,
+    IEmployeeRepository employeeRepository)
     : INotificationHandler<EmployeeNeededMerchEvent>
 {
     public async Task Handle(EmployeeNeededMerchEvent employeeNeededMerchEvent, CancellationToken cancellationToken)
@@ -19,6 +19,16 @@ public class EmployeeNeededMerchEventHandler(
         
         var employee = await employeeRepository.GetByEmailAsync(employeeNeededMerchEvent.EmployeeEmail, cancellationToken);
 
+        if (employee is null)
+        {
+            var empl = new Employee(new FullName(employeeNeededMerchEvent.EmployeeName),
+                new Email(employeeNeededMerchEvent.EmployeeEmail));
+            
+            var employeeId = await employeeRepository.CreateAsync(empl, cancellationToken, new { FullName = empl.FullName.Value, Email = empl.Email.Value });
+            
+            employee = Employee.CreateInstance(employeeId, empl.FullName.Value, empl.Email.Value);
+        }
+        
         var merchPackRequest = new MerchPackRequest(
             employeeNeededMerchEvent.MerchType,
             employee,

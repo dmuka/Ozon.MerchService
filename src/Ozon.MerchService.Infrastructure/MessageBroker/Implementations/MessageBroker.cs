@@ -10,11 +10,11 @@ namespace Ozon.MerchService.Infrastructure.MessageBroker.Implementations;
 
 public class MessageBroker : IMessageBroker
 {
-        private readonly ConsumerConfig _consumerConfig;
-        private readonly ProducerConfig _producerConfig;
-        private readonly ILogger<MessageBroker> _logger;
-        
-        public KafkaConfiguration Configuration { get; }
+    private readonly ConsumerConfig _consumerConfig;
+    private readonly ProducerConfig _producerConfig;
+    private readonly ILogger<MessageBroker> _logger;
+    
+    public KafkaConfiguration Configuration { get; }
         
         public MessageBroker(IOptions<KafkaConfiguration> options, ILogger<MessageBroker> logger)
         {
@@ -52,31 +52,64 @@ public class MessageBroker : IMessageBroker
         {
             using var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build();
             consumer.Subscribe(topic);
+            
             try
             {
                 while (!token.IsCancellationRequested)
                 {
-                    using var scope = scopeFactory.CreateScope();
+                    //using var scope = scopeFactory.CreateScope();
+                    
                     try
                     {
                         await Task.Yield();
+                        
                         var consumeResult = consumer.Consume(token);
-                        if (consumeResult is null)
+                        if (consumeResult is null) 
+                        {
+                            _logger.LogWarning("Consume result is null.");
                             continue;
+                        }
+                        
+                        _logger.LogInformation("Consumed message: {Message}", consumeResult.Message.Value);
 
                         await processMessage(consumeResult.Message.Value, token);
+                        
+                        consumer.Commit();
+                        _logger.LogInformation("Committed offset: {Offset}", consumeResult.Offset);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError("Consume topic {name} error: {error}", topic, ex.Message);
+                        if (ex is OperationCanceledException)
+                        {
+                            _logger.LogInformation("Operation canceled. Exiting consume loop.");
+                            
+                            break;
+                        }
+
+                        if (ex is KafkaException kafkaException)
+                        {
+                            if (kafkaException.Error.Code == ErrorCode.UnknownTopicOrPart)
+                            {
+                                _logger.LogError("Consume topic {Topic} error: {Error}. Retrying in 5 seconds...", topic, kafkaException.Error.Reason);
+                                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                            }
+                            else
+                            {
+                                _logger.LogError("Kafka error: {Message}. Retrying in 5 seconds...", kafkaException.Error.Reason);
+                                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogError("Unexpected error: {Message}. Continuing execution.", ex.Message);
+                            await Task.Delay(TimeSpan.FromSeconds(5), token);
+                        }
                     }
                 }
             }
             finally
             {
-                consumer.Commit();
                 consumer.Close();
             }
         }
-
 }
