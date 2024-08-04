@@ -12,7 +12,7 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
 public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory, IDapperQuery query)
-    : Repository<MerchPackRequest, long>(connectionFactory), IMerchPackRequestRepository
+    : Repository(connectionFactory), IMerchPackRequestRepository
 {
     private const int Timeout = 5;
     
@@ -20,9 +20,9 @@ public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> 
     {
         IEnumerable<MerchPackRequest> entities;
 
-        var tableName = GetTableName();
+        var tableName = GetTableName<MerchPackRequest>();
 
-        var query = $"SELECT {GetColumnsNames()} FROM {tableName} WHERE status={requestStatus}";
+        var query = $"SELECT {GetColumnsNames<MerchPackRequest>()} FROM {tableName} WHERE status={requestStatus}";
 
         try
         {

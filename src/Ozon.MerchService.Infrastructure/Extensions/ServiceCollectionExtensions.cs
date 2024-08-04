@@ -2,6 +2,7 @@ using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
@@ -44,7 +45,8 @@ public static class ServiceCollectionExtensions
             .AddTransient<IDapperQuery, DapperQuery>()
             .AddTransient<IMerchPacksRepository, MerchPacksRepository>()
             .AddTransient<IMerchPackRequestRepository, MerchPackRequestsRepository>()
-            .AddTransient<IEmployeeRepository, EmployeesRepository>();
+            .AddTransient<IEmployeeRepository, EmployeesRepository>()
+            .AddTransient<IRepository, Repository>();
 
         return services;
     }

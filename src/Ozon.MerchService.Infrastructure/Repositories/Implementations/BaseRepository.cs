@@ -3,20 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.DataContracts.Attributes;
-using Ozon.MerchService.Infrastructure.Repositories.DTOs;
+using Ozon.MerchService.Infrastructure.Repositories.Attributes;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
-public abstract class BaseRepository<T>() 
+public abstract class BaseRepository() 
 {
-    internal string GetTableName()
+    internal string GetTableName<T>()
     {
         var type = typeof(T);
         var tableAttribute = type.GetCustomAttribute<TableAttribute>();
         return tableAttribute != null ? tableAttribute.Name : type.Name;
     }
 
-    internal static string? GetKeyColumnName()
+    internal static string? GetKeyColumnName<T>()
     {
         var properties = typeof(T).GetProperties();
 
@@ -44,7 +44,7 @@ public abstract class BaseRepository<T>()
         return null;
     }
 
-    internal string GetColumns(bool excludeKey = false)
+    internal string GetColumns<T>(bool excludeKey = false)
     {
         var type = typeof(T);
         var columns = string.Join(", ", type.GetProperties()
@@ -60,7 +60,7 @@ public abstract class BaseRepository<T>()
         return columns;
     }
 
-    internal string GetColumnsNames(bool excludeKey = false)
+    internal string GetColumnsNames<T>(bool excludeKey = false)
     {
         var type = typeof(T);
         var columnsNames = string.Join(", ", type.GetProperties()
@@ -74,19 +74,19 @@ public abstract class BaseRepository<T>()
         return columnsNames;
     }
 
-    internal string GetPropertyValues(bool excludeKey = false)
+    internal string GetPropertyValues<T>(bool excludeKey = false)
     {
         var properties = typeof(T).GetProperties()
             .Where(p => !excludeKey || 
                         !p.IsDefined(typeof(KeyAttribute)) && 
                         !p.IsDefined(typeof(NotMappedAttribute)));
 
-        var values = string.Join(", ", properties.Select(p => $"@{p.Name}"));
+        var values = string.Join(", ", properties.Select(p => p.IsDefined(typeof(JsonAttribute)) ? $"CAST(@{p.Name} as json)" : $"@{p.Name}"));
 
         return values;
     }
 
-    internal IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
+    internal IEnumerable<PropertyInfo> GetProperties<T>(bool excludeKey = false)
     {
         var properties = typeof(T).GetProperties()
             .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
@@ -94,7 +94,7 @@ public abstract class BaseRepository<T>()
         return properties;
     }
 
-    internal string? GetKeyPropertyValue()
+    internal string? GetKeyPropertyValue<T>()
     {
         var properties = typeof(T).GetProperties()
             .Where(p => p.GetCustomAttribute<KeyAttribute>() != null).ToList();

@@ -9,16 +9,16 @@ public class ReserveMerchPackCommandValidator : AbstractValidator<ReserveMerchPa
 {
     public ReserveMerchPackCommandValidator()
     {
-        RuleFor(command => command.EmployeeId)
+        RuleFor(command => command.Employee.Id)
             .NotEmpty().GreaterThan(default(long));
 
-        RuleFor(command => command.EmployeeEmail)
+        RuleFor(command => command.Employee.Email.Value)
             .NotEmpty().EmailAddress();
 
-        RuleFor(command => command.HrEmail)
+        RuleFor(command => command.MerchPackRequest.HrEmail.Value)
             .NotEmpty().EmailAddress();
 
-        RuleFor(command => command.EmployeeFullName)
+        RuleFor(command => command.Employee.FullName.Value)
             .NotEmpty().Length(4,100);
 
         RuleFor(command => command.EventType)

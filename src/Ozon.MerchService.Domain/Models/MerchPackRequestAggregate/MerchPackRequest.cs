@@ -34,14 +34,15 @@ public class MerchPackRequest : Entity, IAggregationRoot
     public MerchPackRequest(
         MerchPack merchPack,
         ClothingSize clothingSize,
-        IEnumerable<MerchItem> merchItems,
-        Employee employee, 
+        Employee employee,
+        Email hrEmail,
         RequestType requestType)
     {
         MerchPackType = merchPack.MerchPackType;
         ClothingSize = clothingSize;
         _merchPackItems = merchPack.Items.ToList();
         Employee = employee;
+        HrEmail = hrEmail;
         RequestStatus = RequestStatus.Created;
         RequestType = requestType;
     }
@@ -49,13 +50,16 @@ public class MerchPackRequest : Entity, IAggregationRoot
     public MerchPackRequest(
         MerchType merchPackType,
         ClothingSize clothingSize,
-        Employee employee, 
-        RequestType requestType)
+        Employee employee,
+        Email hrEmail,
+        RequestType requestType,
+        RequestStatus requestStatus)
     {
         MerchPackType = merchPackType;
         ClothingSize = clothingSize;
         Employee = employee;
-        RequestStatus = RequestStatus.Created;
+        HrEmail = hrEmail;
+        RequestStatus = requestStatus;
         RequestType = requestType;
     }
 
@@ -63,7 +67,7 @@ public class MerchPackRequest : Entity, IAggregationRoot
     public MerchType MerchPackType { get; }
     private List<MerchItem> _merchPackItems;
 
-    public IEnumerable<MerchItem> MerchItems => _merchPackItems.AsReadOnly();
+    public IList<MerchItem> MerchItems => _merchPackItems.AsReadOnly();
     
     [NotMapped]
     public MerchPack MerchPack { get; }
@@ -105,11 +109,9 @@ public class MerchPackRequest : Entity, IAggregationRoot
         int statusId,
         string statusName)
     {
-        var items = merchPackItems;
-        
         var merchPackRequest = new MerchPackRequest(
-            Employee.CreateInstance(employeeId, employeeFullName, employeeEmail),
-            new MerchPack(merchPackType, items),
+            Employee.CreateInstance(employeeId, employeeFullName, string.Empty, employeeEmail),
+            new MerchPack(merchPackType, merchPackItems),
             clothingSize,
             new Email(hrEmail),
             new RequestType(requestTypeId, requestTypeName),

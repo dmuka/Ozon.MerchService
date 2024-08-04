@@ -46,12 +46,14 @@ public class Employee(
 
     public static Employee CreateInstance(
         long id, 
-        string fullName, 
+        string firstName,
+        string lastName,
         string email)
     {
-        var employee = new Employee(new FullName(fullName), new Email(email));
-
-        employee.Id = id;
+        var employee = new Employee(new FullName(firstName, lastName), new Email(email))
+        {
+            Id = id
+        };
 
         return employee;
     }

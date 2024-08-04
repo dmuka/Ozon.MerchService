@@ -12,7 +12,7 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
 public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory, IDapperQuery query) 
-    : Repository<Employee, long>(connectionFactory), IEmployeeRepository
+    : Repository(connectionFactory), IEmployeeRepository
 {
     private const int Timeout = 5;
 
@@ -95,6 +95,7 @@ public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connecti
                             var employee = Employee.CreateInstance(
                                 employeeDto.Id,
                                 employeeDto.FullName,
+                                string.Empty,
                                 employeeDto.Email);
                             
                            employee.AddMerchPackRequest(merchPackRequest);

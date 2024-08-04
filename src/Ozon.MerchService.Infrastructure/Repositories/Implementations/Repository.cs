@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using Dapper;
 using Npgsql;
+using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
@@ -15,20 +16,20 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 /// <param name="connectionFactory">Connection factory</param>
 /// <typeparam name="T">Entity type</typeparam>
 /// <typeparam name="TId">Entity id type</typeparam>
-public class Repository<T, TId>(IDbConnectionFactory<NpgsqlConnection> connectionFactory) : BaseRepository<T>
-where T : IAggregationRoot
-where TId : IEquatable<TId>
+public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory) 
+    : BaseRepository, IRepository
 {
-    public async Task<TId> CreateAsync(T entity, CancellationToken cancellationToken, object parameters = null)
+    public async Task<TId> CreateAsync<T, TId>(CancellationToken cancellationToken,  object parameters) 
+        where TId : IEquatable<TId>
     {
         TId entityId;
         
         try
         {
-            var tableName = GetTableName();
-            var keyColumnName = GetKeyColumnName();
-            var columns = GetColumns(excludeKey: true);
-            var properties = GetPropertyValues(excludeKey: true);
+            var tableName = GetTableName<T>();
+            var keyColumnName = GetKeyColumnName<T>();
+            var columns = GetColumns<T>(excludeKey: true);
+            var properties = GetPropertyValues<T>(excludeKey: true);
 
             var query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties}) RETURNING {keyColumnName}";
 
@@ -44,14 +45,15 @@ where TId : IEquatable<TId>
         return entityId;
     }
 
-    public async Task<T?> GetByIdAsync(TId entityId, CancellationToken cancellationToken)
+    public async Task<T?> GetByIdAsync<T, TId>(TId entityId, CancellationToken cancellationToken)
+        where TId : IEquatable<TId>
     {
         T? entity;
 
-        var tableName = GetTableName();
-        var keyColumnName = GetKeyColumnName();
+        var tableName = GetTableName<T>();
+        var keyColumnName = GetKeyColumnName<T>();
 
-        var query = $"SELECT {GetColumnsNames()} FROM {tableName} WHERE {keyColumnName}={entityId}";
+        var query = $"SELECT {GetColumnsNames<T>()} FROM {tableName} WHERE {keyColumnName}={entityId}";
 
         try
         {
@@ -67,13 +69,13 @@ where TId : IEquatable<TId>
         return entity;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<T>> GetAllAsync<T>(CancellationToken cancellationToken)
     {
         IEnumerable<T> entities;
 
-        var tableName = GetTableName();
+        var tableName = GetTableName<T>();
 
-        var query = $"SELECT {GetColumnsNames()} FROM {tableName}";
+        var query = $"SELECT {GetColumnsNames<T>()} FROM {tableName}";
 
         try
         {
@@ -89,21 +91,21 @@ where TId : IEquatable<TId>
         return entities;
     }
 
-    public async Task<int> UpdateAsync(T entity, CancellationToken cancellationToken)
+    public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken)
     {
         int rowsAffected;
 
         try
         {
-            var tableName = GetTableName();
-            var keyColumnName = GetKeyColumnName();
-            var keyColumnValue = GetKeyPropertyValue();
+            var tableName = GetTableName<T>();
+            var keyColumnName = GetKeyColumnName<T>();
+            var keyColumnValue = GetKeyPropertyValue<T>();
 
             var query = new StringBuilder(50);
 
             query.Append($"UPDATE {tableName} SET ");
 
-            var properties = GetProperties(true).ToArray();
+            var properties = GetProperties<T>(true).ToArray();
 
             for (var i = 0; i < properties.Length; i++)
             {
@@ -131,12 +133,13 @@ where TId : IEquatable<TId>
         return rowsAffected;
     }
 
-    public async Task<int> DeleteAsync(TId entityId, CancellationToken cancellationToken)
+    public async Task<int> DeleteAsync<T, TId>(TId entityId, CancellationToken cancellationToken)
+        where TId : IEquatable<TId>
     {
         int rowsAffected;
 
-        var tableName = GetTableName();
-        var keyColumnName = GetKeyColumnName();
+        var tableName = GetTableName<T>();
+        var keyColumnName = GetKeyColumnName<T>();
 
         var query = $"DELETE FROM {tableName} WHERE {keyColumnName}={entityId}";
 

@@ -10,7 +10,7 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
 public class MerchPacksRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory, IDapperQuery query)
-    : Repository<MerchPack, long>(connectionFactory), IMerchPacksRepository
+    : Repository(connectionFactory), IMerchPacksRepository
 {
     private const int Timeout = 5;
     
