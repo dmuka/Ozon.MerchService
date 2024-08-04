@@ -39,7 +39,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             var merchPack = await merchPacksRepository.GetMerchPackById((int)request.MerchPackType, token);
 
-            var merchPackRequestData = new MerchPackRequest(merchPack, merchPack.Items, employee, request.RequestType);
+            var merchPackRequestData = new MerchPackRequest(merchPack, request.EmployeeClothingSize, merchPack.Items, employee, request.RequestType);
 
             if (!canReceiveMerchPack)
             {

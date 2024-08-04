@@ -33,11 +33,13 @@ public class MerchPackRequest : Entity, IAggregationRoot
     
     public MerchPackRequest(
         MerchPack merchPack,
+        ClothingSize clothingSize,
         IEnumerable<MerchItem> merchItems,
         Employee employee, 
         RequestType requestType)
     {
         MerchPackType = merchPack.MerchPackType;
+        ClothingSize = clothingSize;
         _merchPackItems = merchPack.Items.ToList();
         Employee = employee;
         RequestStatus = RequestStatus.Created;
@@ -46,22 +48,24 @@ public class MerchPackRequest : Entity, IAggregationRoot
     
     public MerchPackRequest(
         MerchType merchPackType,
+        ClothingSize clothingSize,
         Employee employee, 
         RequestType requestType)
     {
         MerchPackType = merchPackType;
+        ClothingSize = clothingSize;
         Employee = employee;
         RequestStatus = RequestStatus.Created;
         RequestType = requestType;
     }
 
-    [Column("merchpack_id")]
+    [Column("merchpack_type_id")]
     public MerchType MerchPackType { get; }
-
     private List<MerchItem> _merchPackItems;
-    
+
     public IEnumerable<MerchItem> MerchItems => _merchPackItems.AsReadOnly();
     
+    [NotMapped]
     public MerchPack MerchPack { get; }
 
     public Employee Employee { get; }

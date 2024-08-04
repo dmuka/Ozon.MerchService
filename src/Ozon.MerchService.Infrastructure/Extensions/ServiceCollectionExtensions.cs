@@ -1,6 +1,7 @@
 using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
@@ -10,7 +11,7 @@ using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
 using Ozon.MerchService.Infrastructure.Repositories.Implementations;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
-using Ozon.StockApi.Grpc;
+using OzonEdu.StockApi.Grpc;
 
 namespace Ozon.MerchService.Infrastructure.Extensions;
 
@@ -65,7 +66,14 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<StockApiGrpc.StockApiGrpcClient>(opt =>
         {
-            var channel = GrpcChannel.ForAddress(connectionAddress);
+            var loggerFactory = LoggerFactory.Create(logging =>
+            {
+                logging.AddConsole();
+                logging.SetMinimumLevel(LogLevel.Debug);
+            });
+            
+            var channel = GrpcChannel.ForAddress(connectionAddress,
+                new GrpcChannelOptions { LoggerFactory = loggerFactory });
             
             return new StockApiGrpc.StockApiGrpcClient(channel);
         });

@@ -46,6 +46,7 @@ public class ReserveMerchPackCommand : IRequest<RequestStatus>
     {
         Id = merchPackRequest.Id;
         Employee = merchPackRequest.Employee;
+        EmployeeClothingSize = merchPackRequest.ClothingSize;
         MerchPackType = merchPackRequest.MerchPackType;
         RequestStatus = merchPackRequest.RequestStatus;
         RequestType = merchPackRequest.RequestType;

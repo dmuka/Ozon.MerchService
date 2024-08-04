@@ -31,6 +31,7 @@ public class EmployeeNeededMerchEventHandler(
         
         var merchPackRequest = new MerchPackRequest(
             employeeNeededMerchEvent.MerchType,
+            employeeNeededMerchEvent.ClothingSize,
             employee,
             employeeNeededMerchEvent.RequestType);
         

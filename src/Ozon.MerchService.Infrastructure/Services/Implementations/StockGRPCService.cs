@@ -1,7 +1,7 @@
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Services.Interfaces;
-using Ozon.StockApi.Grpc;
+using OzonEdu.StockApi.Grpc;
 
 namespace Ozon.MerchService.Infrastructure.Services.Implementations;
 
