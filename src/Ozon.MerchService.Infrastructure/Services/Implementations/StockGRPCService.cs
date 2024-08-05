@@ -80,7 +80,12 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
                 
         var response = await stockClient.GetStockItemsAvailabilityAsync(request, cancellationToken: token);
 
-        var allItemsAvailable = response.Items.All(i => i.Quantity > 0);
+        var allItemsAvailable = response.Items.All(requestItem =>
+        {
+            var merchItem = merchItems.First(merchItem => merchItem.Sku.Value == requestItem.Sku);
+
+            return requestItem.Quantity > merchItem.Quantity.Value;
+        });
         
         return allItemsAvailable;
     }
