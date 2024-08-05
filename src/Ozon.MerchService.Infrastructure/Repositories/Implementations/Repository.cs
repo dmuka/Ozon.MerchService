@@ -48,8 +48,6 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
     public async Task<T?> GetByIdAsync<T, TId>(TId entityId, CancellationToken cancellationToken)
         where TId : IEquatable<TId>
     {
-        T? entity;
-
         var tableName = GetTableName<T>();
         var keyColumnName = GetKeyColumnName<T>();
 
@@ -59,20 +57,18 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
         {
             var connection = await GetConnection(cancellationToken);
             
-            entity = await connection.QuerySingleOrDefaultAsync<T>(query);
+            var entity = await connection.QuerySingleOrDefaultAsync<T>(query);
+
+            return entity;
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
         }
-
-        return entity;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync<T>(CancellationToken cancellationToken)
     {
-        IEnumerable<T> entities;
-
         var tableName = GetTableName<T>();
 
         var query = $"SELECT {GetColumnsNames<T>()} FROM {tableName}";
@@ -81,20 +77,18 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
         {
             var connection = await GetConnection(cancellationToken);
 
-            entities = await connection.QueryAsync<T>(query);
+            var entities = await connection.QueryAsync<T>(query);
+
+            return entities;
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
         }
-
-        return entities;
     }
 
     public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken)
     {
-        int rowsAffected;
-
         try
         {
             var tableName = GetTableName<T>();
@@ -123,14 +117,14 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
             
             var connection = await GetConnection(cancellationToken);
 
-            rowsAffected = await connection.ExecuteAsync(query.ToString());
+            var rowsAffected = await connection.ExecuteAsync(query.ToString());
+
+            return rowsAffected;
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException();
         }
-
-        return rowsAffected;
     }
 
     public async Task<int> DeleteAsync<T, TId>(TId entityId, CancellationToken cancellationToken)
