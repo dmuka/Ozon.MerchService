@@ -8,7 +8,7 @@ public static class Tracing
         Tracer tracer, 
         string spanName, 
         SpanKind kind, 
-        IDictionary<string, object> attributes = null)
+        IDictionary<string, object>? attributes = null)
     {
         var span = tracer.StartActiveSpan(spanName, kind);
 

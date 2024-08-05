@@ -1,5 +1,4 @@
 using System.Text.Json;
-using CSharpCourse.Core.Lib.Enums;
 using Dapper;
 using Npgsql;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;

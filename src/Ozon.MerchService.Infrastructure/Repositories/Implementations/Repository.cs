@@ -39,7 +39,7 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
         }
         catch (Exception ex)
         {
-            throw new RepositoryOperationException();
+            throw new RepositoryOperationException(ex.Message, ex);
         }
         
         return entityId;
