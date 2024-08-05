@@ -29,16 +29,16 @@ public class Employee(
             or MerchType.ConferenceSpeakerPack)
         {
             var previousActiveMerchPacks = MerchPacksRequests
-                .Where(pack =>
-                    pack.MerchPackType == merchType 
-                    && Equals(pack.RequestStatus, RequestStatus.Issued) 
-                    && (DateTimeOffset.UtcNow - pack.Issued.Value).Value.Days <= 365);
+                .Where(request =>
+                    request.MerchPack.MerchPackType == merchType 
+                    && Equals(request.RequestStatus, RequestStatus.Issued) 
+                    && (DateTimeOffset.UtcNow - request.Issued.Value).Value.Days <= 365);
 
             result = !previousActiveMerchPacks.Any();
         }
         else
         {
-            result = MerchPacksRequests.All(pack => pack.MerchPackType != merchType);
+            result = MerchPacksRequests.All(request => request.MerchPack.MerchPackType != merchType);
         }
         
         return result;

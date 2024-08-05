@@ -16,7 +16,7 @@ public class QueuedRequestsService(
         var queuedMerchPackRequests = await merchPackRequestRepository.GetByRequestStatusAsync(RequestStatus.Queued, token);
 
         var replenishedMerchPackRequests = queuedMerchPackRequests
-            .Where(request => request.MerchItems.Any(item => skuCollection.Contains(item.Sku.Value)));
+            .Where(request => request.MerchPack.Items.Any(item => skuCollection.Contains(item.Sku.Value)));
         
         foreach (var request in replenishedMerchPackRequests)
         {

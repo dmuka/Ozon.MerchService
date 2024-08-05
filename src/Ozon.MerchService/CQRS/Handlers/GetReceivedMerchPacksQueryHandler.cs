@@ -29,7 +29,7 @@ public class GetReceivedMerchPacksQueryHandler(
         if (employee is null) return Array.Empty<MerchPack>();
         
         var merchPacks = employee.MerchPacksRequests.Select(merchPackRequest =>
-            new MerchPack(merchPackRequest.MerchPackType, merchPackRequest.MerchItems));
+            new MerchPack(merchPackRequest.MerchPack.MerchPackType, merchPackRequest.MerchPack.Items));
 
         return merchPacks;
     }

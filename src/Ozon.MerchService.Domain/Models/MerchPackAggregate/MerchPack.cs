@@ -18,8 +18,8 @@ public class MerchPack : Item, IAggregationRoot
     [ColumnExclude]
     public MerchType MerchPackType { get; }
 
-    private List<MerchItem> _merchPackItems;
-    public IEnumerable<MerchItem> Items => _merchPackItems.AsReadOnly();
+    private readonly List<MerchItem> _merchPackItems;
+    public IList<MerchItem> Items => _merchPackItems.AsReadOnly();
 
     public static MerchPack CreateInstance(long id, MerchPack merchPack)
     {

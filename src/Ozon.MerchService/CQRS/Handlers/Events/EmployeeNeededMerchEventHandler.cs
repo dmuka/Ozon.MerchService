@@ -1,16 +1,22 @@
+using System.Text.Json;
 using MediatR;
 using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Events.Domain;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.Infrastructure.Repositories.DTOs;
+using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
 namespace Ozon.MerchService.CQRS.Handlers.Events;
 
 public class EmployeeNeededMerchEventHandler(
     IMediator mediator,  
     IUnitOfWork unitOfWork,
+    IStockGrpcService stockGrpcService,
+    IRepository repository,
     IEmployeeRepository employeeRepository,
     IMerchPacksRepository merchPacksRepository)
     : INotificationHandler<EmployeeNeededMerchEvent>
@@ -30,17 +36,42 @@ public class EmployeeNeededMerchEventHandler(
             employee = Employee.CreateInstance(
                 employeeId, 
                 employeeNeededMerchEvent.EmployeeName, 
-                String.Empty, 
+                string.Empty, 
                 employeeNeededMerchEvent.EmployeeEmail);
         }
-        var merchPack = await merchPacksRepository.GetMerchPackById((int)employeeNeededMerchEvent.MerchType, cancellationToken);
+
+        var merchPackQuery =
+            new GetMerchPackQuery(employeeNeededMerchEvent.MerchType, employeeNeededMerchEvent.ClothingSize);
+
+        var merchPack = await mediator.Send(merchPackQuery, cancellationToken);
         
-        var merchPackRequest = new MerchPackRequest(
-            merchPack,
-            employeeNeededMerchEvent.ClothingSize,
+        var dto = new MerchPackRequestDto()
+        {
+            MerchpackTypeId = (int)employeeNeededMerchEvent.MerchType,
+            MerchPackItems = JsonSerializer.Serialize(merchPack.Items.Select(item => new
+            {
+                item.Type.ItemTypeId,
+                item.Type.ItemTypeName,
+                Sku = item.Sku.Value,
+                Quantity = item.Quantity.Value
+            })),
+            EmployeeId = employee.Id,
+            ClothingSizeId = (int)employeeNeededMerchEvent.ClothingSize,
+            HrEmail = employeeNeededMerchEvent.HrEmail,
+            RequestTypeId = employeeNeededMerchEvent.RequestType.Id,
+            RequestedAt = DateTimeOffset.UtcNow,
+            RequestStatusId = RequestStatus.Created.Id
+        };
+            
+        var merchPackRequestId = await repository.CreateAsync<MerchPackRequestDto, long>(cancellationToken, dto);
+        
+        var merchPackRequest = MerchPackRequest.CreateInstance(
+            merchPackRequestId,
             employee,
+            merchPack,
             new Email(employeeNeededMerchEvent.HrEmail),
-            employeeNeededMerchEvent.RequestType);
+            employeeNeededMerchEvent.ClothingSize,
+            RequestType.Auto);
         
         var command = new ReserveMerchPackCommand(merchPackRequest, employeeNeededMerchEvent.EventType);
             

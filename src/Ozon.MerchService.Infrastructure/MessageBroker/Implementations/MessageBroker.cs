@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
 using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
+using Exception = System.Exception;
 
 namespace Ozon.MerchService.Infrastructure.MessageBroker.Implementations;
 
@@ -41,8 +43,15 @@ public class MessageBroker : IMessageBroker
                 Key = key,
                 Value = JsonSerializer.Serialize(value)
             };
-            
-            await producer.ProduceAsync(topic, message, token);
+
+            try
+            {
+                await producer.ProduceAsync(topic, message, token);
+            }
+            catch (Exception exception)
+            {
+                throw new BrokerException($"Broker produce exception: {exception.Message}", exception);
+            }
         }
         
         public async Task ConsumeAsync(string topic, 
@@ -82,7 +91,6 @@ public class MessageBroker : IMessageBroker
                         if (ex is OperationCanceledException)
                         {
                             _logger.LogInformation("Operation canceled. Exiting consume loop.");
-                            
                             break;
                         }
 

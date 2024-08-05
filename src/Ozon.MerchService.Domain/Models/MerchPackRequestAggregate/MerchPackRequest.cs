@@ -17,34 +17,15 @@ public class MerchPackRequest : Entity, IAggregationRoot
         Email hrEmail,
         RequestType requestType,
         DateTimeOffset requestedAt,
-        DateTimeOffset issued,
         RequestStatus requestStatus)
     {
         Employee = employee;
         MerchPack = merchPack;
-        MerchPackType = merchPack.MerchPackType;
         HrEmail = hrEmail;
         ClothingSize = clothingSize;
         RequestType = requestType;
         RequestedAt = new RequestedAt(requestedAt);
-        Issued = new Issued(issued);
         RequestStatus = requestStatus;
-    }
-    
-    public MerchPackRequest(
-        MerchPack merchPack,
-        ClothingSize clothingSize,
-        Employee employee,
-        Email hrEmail,
-        RequestType requestType)
-    {
-        MerchPackType = merchPack.MerchPackType;
-        ClothingSize = clothingSize;
-        _merchPackItems = merchPack.Items.ToList();
-        Employee = employee;
-        HrEmail = hrEmail;
-        RequestStatus = RequestStatus.Created;
-        RequestType = requestType;
     }
     
     public MerchPackRequest(
@@ -65,33 +46,46 @@ public class MerchPackRequest : Entity, IAggregationRoot
 
     [Column("merchpack_type_id")]
     public MerchType MerchPackType { get; }
-    private List<MerchItem> _merchPackItems;
-
-    public IList<MerchItem> MerchItems => _merchPackItems.AsReadOnly();
     
     [NotMapped]
-    public MerchPack MerchPack { get; }
+    public MerchPack MerchPack { get; private set; }
 
-    public Employee Employee { get; }
+    public Employee Employee { get; private set; }
 
-    public Email HrEmail { get; }
+    public Email HrEmail { get; private set; }
     
-    public ClothingSize ClothingSize { get; }
+    public ClothingSize ClothingSize { get; private set; }
 
-    public RequestedAt RequestedAt { get; } = new();
+    public RequestedAt RequestedAt { get; private set; }
 
-    public Issued Issued { get; } = new();
+    public Issued Issued { get; }
 
     public RequestStatus RequestStatus { get; private set; }
     
     public RequestType RequestType { get; private set; }
 
-    // public static MerchPackRequest CreateInstance(long id, MerchPackRequest merchPackRequest)
-    // {
-    //     merchPackRequest.Id = id;
-    //
-    //     return merchPackRequest;
-    // }
+    public static MerchPackRequest CreateInstance(
+        long id, 
+        Employee employee, 
+        MerchPack merchPack,
+        Email hrEmail,
+        ClothingSize clothingSize,
+        RequestType requestType)
+    {
+        var request = new MerchPackRequest(
+            employee,
+            merchPack,
+            clothingSize,
+            hrEmail,
+            requestType,
+            DateTimeOffset.UtcNow,
+            RequestStatus.Created)
+        {
+            Id = id
+        };
+
+        return request;
+    }
 
     public static MerchPackRequest CreateInstance(
         long merchPackRequestId,
@@ -116,29 +110,20 @@ public class MerchPackRequest : Entity, IAggregationRoot
             new Email(hrEmail),
             new RequestType(requestTypeId, requestTypeName),
             requestedAt,
-            issued,
             new RequestStatus(statusId, statusName)
             )
         {
-            Id = merchPackRequestId,
-            _merchPackItems = merchPackItems.ToList()
+            Id = merchPackRequestId
         };
 
         return merchPackRequest;
     }
 
-    // public bool CheckMerchItemsReserveOnStock()
-    // {
-    //     var result = MerchItems.All(item => item.Reserved.Value);
-    //
-    //     return result;
-    // }
-
     public void SetStatusDeclined()
     {
         if (RequestStatus.Equals(RequestStatus.Issued))
         {
-            throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
+            throw new ArgumentException($"Merch {MerchPack.MerchPackType} already issued {Issued} to {Employee.FullName}");
         }
         
         RequestStatus = RequestStatus.Declined;
@@ -148,12 +133,12 @@ public class MerchPackRequest : Entity, IAggregationRoot
     {
         if (RequestStatus.Equals(RequestStatus.Issued))
         {
-            throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
+            throw new ArgumentException($"Merch {MerchPack.MerchPackType} already issued {Issued} to {Employee.FullName}");
         }
         
         if (RequestStatus.Equals(RequestStatus.Queued))
         {
-            throw new ArgumentException($"Merch {MerchPackType} already quequed ({Employee.FullName})");
+            throw new ArgumentException($"Merch {MerchPack.MerchPackType} already quequed ({Employee.FullName})");
         }
         
         RequestStatus = RequestStatus.Queued;
@@ -163,12 +148,12 @@ public class MerchPackRequest : Entity, IAggregationRoot
     {
         if (RequestStatus.Equals(RequestStatus.Issued))
         {
-            throw new ArgumentException($"Merch {MerchPackType} already issued {Issued} to {Employee.FullName}");
+            throw new ArgumentException($"Merch {MerchPack.MerchPackType} already issued {Issued} to {Employee.FullName}");
         }
         
         if (RequestStatus.Equals(RequestStatus.Declined))
         {
-            throw new ArgumentException($"Merch {MerchPackType} declined to {Employee.FullName}");
+            throw new ArgumentException($"Merch {MerchPack.MerchPackType} declined to {Employee.FullName}");
         }
         
         RequestStatus = RequestStatus.Issued;

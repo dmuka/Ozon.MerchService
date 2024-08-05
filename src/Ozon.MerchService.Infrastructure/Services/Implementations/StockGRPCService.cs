@@ -11,15 +11,15 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
     /// <summary>
     /// Set sku values in merch pack items of the request
     /// </summary>
-    /// <param name="merchPackRequest">Merch pack request</param>
+    /// <param name="merchItems">Merch pack items</param>
     /// <param name="clothingSize">Employee clothing size</param>
     /// <param name="token">Cancellation token</param>
     public void SetItemsSkusInRequest(
-        MerchPackRequest merchPackRequest, 
+        IList<MerchItem> merchItems, 
         ClothingSize clothingSize, 
         CancellationToken token)
     {
-        foreach (var merchItem in merchPackRequest.MerchItems)
+        foreach (var merchItem in merchItems)
         {
             var id = merchItem.Type.ItemTypeId;
             

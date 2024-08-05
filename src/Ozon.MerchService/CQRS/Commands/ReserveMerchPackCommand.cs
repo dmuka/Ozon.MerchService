@@ -10,7 +10,7 @@ namespace Ozon.MerchService.CQRS.Commands;
 /// <summary>
 /// Reserve merch pack command
 /// </summary>
-public class ReserveMerchPackCommand : IRequest<RequestStatus>
+public class ReserveMerchPackCommand : IRequest<(RequestStatus status, int affectedRows)>
 {
     public ReserveMerchPackCommand(
         ReserveMerchRequest request, 

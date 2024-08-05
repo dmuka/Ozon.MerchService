@@ -7,5 +7,5 @@ namespace Ozon.MerchService.Infrastructure.Services.Interfaces;
 public interface IStockGrpcService
 {
     Task<bool> TryReserveMerchPackItems(IList<MerchItem> merchItems, CancellationToken token);
-    void SetItemsSkusInRequest(MerchPackRequest merchPackRequest, ClothingSize clothingSize, CancellationToken token);
+    void SetItemsSkusInRequest(IList<MerchItem> merchItems, ClothingSize clothingSize, CancellationToken token);
 }
