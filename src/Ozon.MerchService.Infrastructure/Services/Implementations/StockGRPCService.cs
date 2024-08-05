@@ -8,6 +8,12 @@ namespace Ozon.MerchService.Infrastructure.Services.Implementations;
 
 public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : IStockGrpcService
 {
+    /// <summary>
+    /// Set sku values in merch pack items of the request
+    /// </summary>
+    /// <param name="merchPackRequest">Merch pack request</param>
+    /// <param name="clothingSize">Employee clothing size</param>
+    /// <param name="token">Cancellation token</param>
     public void SetItemsSkusInRequest(
         MerchPackRequest merchPackRequest, 
         ClothingSize clothingSize, 
@@ -36,6 +42,12 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
         }
     }
 
+    /// <summary>
+    /// Reserve merch pack items if they are available on stock
+    /// </summary>
+    /// <param name="merchItems">Merch pack items collection</param>
+    /// <param name="token">Cancellation token</param>
+    /// <returns>True if reserve, false - otherwise</returns>
     public async Task<bool> TryReserveMerchPackItems(IList<MerchItem> merchItems, CancellationToken token)
     {
         if (!await GetMerchPackItemsAvailability(merchItems, token))
@@ -49,7 +61,7 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
             .Select(item => new SkuQuantityItem
             {
                 Sku = item.Sku.Value,
-                Quantity = 1
+                Quantity = item.Quantity.Value
             });
             
         request.Items.AddRange(skuQuantityItems);

@@ -74,7 +74,7 @@ public class EmployeesRepository(IDbConnectionFactory<NpgsqlConnection> connecti
                                 (JsonSerializer.Deserialize<MerchItemDto[]>(merchPackRequestDto.MerchPackItems) ?? []);
 
                             var merchItems = merchItemDtos.Select(dto =>
-                                new MerchItem(dto.Sku, new ItemType(dto.ItemTypeId, dto.ItemTypeName))).ToArray();
+                                new MerchItem(dto.Sku, new ItemType(dto.ItemTypeId, dto.ItemTypeName), dto.Quantity)).ToArray();
                             
                             var merchPackRequest = MerchPackRequest.CreateInstance(
                                 merchPackRequestDto.Id,
