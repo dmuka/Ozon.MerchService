@@ -1,10 +1,11 @@
-using System.Reflection;
 using MediatR;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Ozon.MerchService.CQRS.Handlers.Events;
 using Ozon.MerchService.Domain.DataContracts;
+using Ozon.MerchService.Domain.Events.Domain;
 using Ozon.MerchService.Infrastructure.BackgroundServices;
 using Ozon.MerchService.Infrastructure.Configuration;
 using Ozon.MerchService.Infrastructure.Constants;
@@ -13,6 +14,7 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementatio
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 using Ozon.MerchService.Infrastructure.Services.Implementations;
 using Ozon.MerchService.Infrastructure.Services.Interfaces;
+using Ozon.MerchService.Mapper;
 using Ozon.MerchService.Services.Implementations;
 using Ozon.MerchService.Services.Interfaces;
 using NpgsqlConnectionFactory = Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implementations.NpgsqlConnectionFactory;
@@ -29,15 +31,16 @@ public static class ServiceCollectionExtensions
         services
             .AddMediatR(mediatrServiceConfiguration =>
             {
-                mediatrServiceConfiguration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-                mediatrServiceConfiguration.Lifetime = ServiceLifetime.Transient;
+                mediatrServiceConfiguration.RegisterServicesFromAssemblyContaining(typeof(Program));
 
                 mediatrServiceConfiguration.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 mediatrServiceConfiguration.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+                mediatrServiceConfiguration.AddOpenBehavior(typeof(ScopedBehavior<,>));
             })
-            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ScopedBehavior<,>))
+            .AddAutoMapper(typeof(MerchServiceMapperProfile).Assembly)
+            //.AddScoped(typeof(IPipelineBehavior<,>), typeof(ScopedBehavior<,>))
             .AddScoped<IQueuedRequestsService, QueuedRequestsService>()
-            .AddTransient<IStockGrpcService, StockGrpcService>();
+            .AddScoped<IStockGrpcService, StockGrpcService>();
 
         return services;
     }
@@ -79,9 +82,9 @@ public static class ServiceCollectionExtensions
     {
         services.Configure<DbConnectionOptions>(configuration.GetSection(nameof(DbConnectionOptions)));
             
-        services.AddTransient<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
-        services.AddTransient<IUnitOfWork, UnitOfWork>();
-        services.AddTransient<ITracker, Tracker>();
+        services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITracker, Tracker>();
 
         return services;
     }

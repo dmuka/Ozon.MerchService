@@ -25,7 +25,7 @@ public class MerchPackRequestDto
     [Column("requested_at")]
     public DateTimeOffset RequestedAt { get; set; }
     [Column("issued")]
-    public DateTimeOffset Issued { get; set; }
+    public DateTimeOffset? Issued { get; set; }
     [Column("request_status_id")]
     public int RequestStatusId { get; set; }
 }

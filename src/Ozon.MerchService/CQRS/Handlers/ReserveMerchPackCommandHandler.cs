@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Ozon.MerchService.CQRS.Commands;
@@ -8,6 +9,7 @@ using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
 using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
+using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
 namespace Ozon.MerchService.CQRS.Handlers;
@@ -16,6 +18,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
             IMerchPackRequestRepository merchPackRequestRepository,
             IStockGrpcService stockGrpcService,
             IMessageBroker broker,
+            IMapper mapper,
             IOptions<KafkaConfiguration> kafkaConfig,
             IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, (RequestStatus status, int affectedRows)>
     {
@@ -30,8 +33,10 @@ namespace Ozon.MerchService.CQRS.Handlers;
             if (!canReceiveMerchPack)
             {
                 request.MerchPackRequest.SetStatusDeclined();
+
+                var declinedDto = mapper.Map<MerchPackRequestDto>(request.MerchPackRequest);
                 
-                var affRows = await merchPackRequestRepository.UpdateAsync(request.MerchPackRequest, token);
+                var affRows = await merchPackRequestRepository.UpdateAsync(declinedDto, token);
                 
                 return (request.MerchPackRequest.RequestStatus, affRows);
             }
@@ -65,7 +70,9 @@ namespace Ozon.MerchService.CQRS.Handlers;
                     token);
             }
             
-            var affectedRows = await merchPackRequestRepository.UpdateAsync(request.MerchPackRequest, token);
+            var dto = mapper.Map<MerchPackRequestDto>(request.MerchPackRequest);
+            
+            var affectedRows = await merchPackRequestRepository.UpdateAsync(dto, token);
 
             await unitOfWork.SaveChangesAsync(token);
             

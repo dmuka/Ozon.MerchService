@@ -53,15 +53,5 @@ public class Fill_dictionaries : ForwardOnlyMigration {
                     (1, 'First Last', 'employee@email.com')
                 ON CONFLICT DO NOTHING
             ");
-        
-        Execute.Sql(@"
-                INSERT INTO merchpack_requests (id, merchpack_type_id, merchpack_items, employee_id, clothing_size_id, hr_email, request_type_id, requested_at, issued, request_status_id)
-                VALUES 
-                    (1, 10, '[{""ItemTypeId"" : 1, ""ItemTypeName"" : ""TShirtStarter"", ""Sku"" : 3}, {""ItemTypeId"" : 2, ""ItemTypeName"" : ""NotepadStarter"", ""Sku"" : 41}, {""ItemTypeId"" : 3, ""ItemTypeName"" : ""PenStarter"", ""Sku"" : 42}, {""ItemTypeId"" : 4, ""ItemTypeName"" : ""SocksStarter"", ""Sku"" : 43}]', 1, 3, 'hr@email.com', 2, now() at time zone 'utc', now() at time zone 'utc', 4), 
-                    (2, 20, '[{""ItemTypeId"" : 5, ""ItemTypeName"" : ""TShirtAfterProbation"", ""Sku"" : 10}, {""ItemTypeId"" : 6, ""ItemTypeName"" : ""SweatshirtAfterProbation"", ""Sku"" : 16}]', 1, 4, 'hr1@email.com', 2, now() at time zone 'utc', now() at time zone 'utc', 1), 
-                    (3, 30, '[{""ItemTypeId"" : 10, ""ItemTypeName"" : ""TShirtСonferenceListener"", ""Sku"" : 27}, {""ItemTypeId"" : 11, ""ItemTypeName"" : ""NotepadСonferenceListener"", ""Sku"" : 46}, {""ItemTypeId"" : 12, ""ItemTypeName"" : ""PenСonferenceListener"", ""Sku"" : 47}]', 1, 3, 'hr2@email.com', 1, now() at time zone 'utc', now() at time zone 'utc', 3), 
-                    (4, 40, '[{""ItemTypeId"" : 7, ""ItemTypeName"" : ""SweatshirtСonferenceSpeaker"", ""Sku"" : 21}, {""ItemTypeId"" : 8, ""ItemTypeName"" : ""NotepadСonferenceSpeaker"", ""Sku"" : 44}, {""ItemTypeId"" : 9, ""ItemTypeName"" : ""PenСonferenceSpeaker"", ""Sku"" : 45}]', 1, 3, 'hr@email.com', 1, now() at time zone 'utc', now() at time zone 'utc', 4)
-                ON CONFLICT DO NOTHING
-            ");
     }
 }

@@ -1,10 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.OpenApi.Models;
 using Ozon.MerchService.Infrastructure.Constants;
 using Ozon.MerchService.Infrastructure.ExceptionsFilters;
 using Ozon.MerchService.Infrastructure.Interceptors;
-using Ozon.MerchService.Infrastructure.OperationFilters;
 using Ozon.MerchService.Infrastructure.StartupFilters;
 using Serilog;
 

@@ -42,11 +42,11 @@ public static class ServiceCollectionExtensions
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         services
-            .AddTransient<IDapperQuery, DapperQuery>()
-            .AddTransient<IMerchPacksRepository, MerchPacksRepository>()
-            .AddTransient<IMerchPackRequestRepository, MerchPackRequestsRepository>()
-            .AddTransient<IEmployeeRepository, EmployeesRepository>()
-            .AddTransient<IRepository, Repository>();
+            .AddScoped<IDapperQuery, DapperQuery>()
+            .AddScoped<IMerchPacksRepository, MerchPacksRepository>()
+            .AddScoped<IMerchPackRequestRepository, MerchPackRequestsRepository>()
+            .AddScoped<IEmployeeRepository, EmployeesRepository>()
+            .AddScoped<IRepository, Repository>();
 
         return services;
     }
@@ -66,7 +66,7 @@ public static class ServiceCollectionExtensions
         if (string.IsNullOrWhiteSpace(connectionAddress))
             connectionAddress = configuration.Get<StockGrpcServiceConfiguration>().ServerAddress;
 
-        services.AddTransient<StockApiGrpc.StockApiGrpcClient>(opt =>
+        services.AddScoped<StockApiGrpc.StockApiGrpcClient>(opt =>
         {
             var loggerFactory = LoggerFactory.Create(logging =>
             {

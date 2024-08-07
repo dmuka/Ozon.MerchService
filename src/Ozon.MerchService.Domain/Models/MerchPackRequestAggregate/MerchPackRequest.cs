@@ -99,7 +99,7 @@ public class MerchPackRequest : Entity, IAggregationRoot
         int requestTypeId,
         string requestTypeName,
         DateTimeOffset requestedAt,
-        DateTimeOffset issued,
+        DateTimeOffset? issued,
         int statusId,
         string statusName)
     {

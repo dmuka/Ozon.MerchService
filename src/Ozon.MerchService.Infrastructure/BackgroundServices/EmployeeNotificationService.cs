@@ -1,6 +1,4 @@
 using System.Text.Json;
-using Confluent.Kafka;
-using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +12,7 @@ namespace Ozon.MerchService.Infrastructure.BackgroundServices;
 public class EmployeeNotificationService(
     IServiceScopeFactory scopeFactory,
     ILogger<StockReplenishedService> logger,
-    IMediator mediator,
+    //IMediator mediator,
     IMessageBroker broker) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -31,6 +29,8 @@ public class EmployeeNotificationService(
         if (message is null) return;
 
         var @event = new EmployeeNeededMerchEvent(message);
+
+        var mediator = scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IMediator>();
         
         await mediator.Publish(@event, token);
     }

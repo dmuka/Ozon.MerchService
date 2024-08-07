@@ -15,10 +15,8 @@ namespace Ozon.MerchService.CQRS.Handlers.Events;
 public class EmployeeNeededMerchEventHandler(
     IMediator mediator,  
     IUnitOfWork unitOfWork,
-    IStockGrpcService stockGrpcService,
     IRepository repository,
-    IEmployeeRepository employeeRepository,
-    IMerchPacksRepository merchPacksRepository)
+    IEmployeeRepository employeeRepository)
     : INotificationHandler<EmployeeNeededMerchEvent>
 {
     public async Task Handle(EmployeeNeededMerchEvent employeeNeededMerchEvent, CancellationToken cancellationToken)
@@ -45,23 +43,7 @@ public class EmployeeNeededMerchEventHandler(
 
         var merchPack = await mediator.Send(merchPackQuery, cancellationToken);
         
-        var dto = new MerchPackRequestDto()
-        {
-            MerchpackTypeId = (int)employeeNeededMerchEvent.MerchType,
-            MerchPackItems = JsonSerializer.Serialize(merchPack.Items.Select(item => new
-            {
-                item.Type.ItemTypeId,
-                item.Type.ItemTypeName,
-                Sku = item.Sku.Value,
-                Quantity = item.Quantity.Value
-            })),
-            EmployeeId = employee.Id,
-            ClothingSizeId = (int)employeeNeededMerchEvent.ClothingSize,
-            HrEmail = employeeNeededMerchEvent.HrEmail,
-            RequestTypeId = employeeNeededMerchEvent.RequestType.Id,
-            RequestedAt = DateTimeOffset.UtcNow,
-            RequestStatusId = RequestStatus.Created.Id
-        };
+        var dto = GetDto(employeeNeededMerchEvent, merchPack, employee);
             
         var merchPackRequestId = await repository.CreateAsync<MerchPackRequestDto, long>(cancellationToken, dto);
         
@@ -78,5 +60,29 @@ public class EmployeeNeededMerchEventHandler(
         await mediator.Send(command, cancellationToken);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private MerchPackRequestDto GetDto(EmployeeNeededMerchEvent evnt, MerchPack merchPack, Employee employee)
+    {
+        var dto = new MerchPackRequestDto()
+        {
+            MerchpackTypeId = (int)evnt.MerchType,
+            MerchPackItems = JsonSerializer.Serialize(merchPack.Items.Select(item => new
+            {
+                item.Type.ItemTypeId,
+                item.Type.ItemTypeName,
+                Sku = item.Sku.Value,
+                Quantity = item.Quantity.Value
+            })),
+            EmployeeId = employee.Id,
+            ClothingSizeId = (int)evnt.ClothingSize,
+            HrEmail = evnt.HrEmail,
+            RequestTypeId = evnt.RequestType.Id,
+            RequestedAt = DateTimeOffset.UtcNow,
+            RequestStatusId = RequestStatus.Created.Id,
+            Issued = null
+        };
+
+        return dto;
     }
 }

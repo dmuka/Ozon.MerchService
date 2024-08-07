@@ -66,9 +66,17 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
             
         request.Items.AddRange(skuQuantityItems);
 
-        var response = await stockClient.GiveOutItemsAsync(request, cancellationToken: token);
+        try
+        {
+            var response = await stockClient.GiveOutItemsAsync(request, null, null, cancellationToken: token);
 
-        return response.Result == GiveOutItemsResponse.Types.Result.Successful;
+            return response.Result == GiveOutItemsResponse.Types.Result.Successful;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
     
     private async Task<bool> GetMerchPackItemsAvailability(IList<MerchItem> merchItems, CancellationToken token)
@@ -80,11 +88,11 @@ public class StockGrpcService(StockApiGrpc.StockApiGrpcClient stockClient) : ISt
                 
         var response = await stockClient.GetStockItemsAvailabilityAsync(request, cancellationToken: token);
 
-        var allItemsAvailable = response.Items.All(requestItem =>
+        var allItemsAvailable = response.Items.All(stockItem =>
         {
-            var merchItem = merchItems.First(merchItem => merchItem.Sku.Value == requestItem.Sku);
+            var merchItem = merchItems.First(merchItem => merchItem.Sku.Value == stockItem.Sku);
 
-            return requestItem.Quantity > merchItem.Quantity.Value;
+            return stockItem.Quantity >= merchItem.Quantity.Value;
         });
         
         return allItemsAvailable;

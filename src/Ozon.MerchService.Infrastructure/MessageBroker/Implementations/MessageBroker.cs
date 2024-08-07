@@ -66,23 +66,21 @@ public class MessageBroker : IMessageBroker
             {
                 while (!token.IsCancellationRequested)
                 {
-                    //using var scope = scopeFactory.CreateScope();
-                    
                     try
                     {
                         await Task.Yield();
                         
                         var consumeResult = consumer.Consume(token);
-                        if (consumeResult is null) 
+                        if (consumeResult is null)
                         {
                             _logger.LogWarning("Consume result is null.");
                             continue;
                         }
-                        
+
                         _logger.LogInformation("Consumed message: {Message}", consumeResult.Message.Value);
 
                         await processMessage(consumeResult.Message.Value, token);
-                        
+
                         consumer.Commit();
                         _logger.LogInformation("Committed offset: {Offset}", consumeResult.Offset);
                     }
@@ -98,12 +96,14 @@ public class MessageBroker : IMessageBroker
                         {
                             if (kafkaException.Error.Code == ErrorCode.UnknownTopicOrPart)
                             {
-                                _logger.LogError("Consume topic {Topic} error: {Error}. Retrying in 5 seconds...", topic, kafkaException.Error.Reason);
+                                _logger.LogError("Consume topic {Topic} error: {Error}. Retrying in 5 seconds...",
+                                    topic, kafkaException.Error.Reason);
                                 await Task.Delay(TimeSpan.FromSeconds(5), token);
                             }
                             else
                             {
-                                _logger.LogError("Kafka error: {Message}. Retrying in 5 seconds...", kafkaException.Error.Reason);
+                                _logger.LogError("Kafka error: {Message}. Retrying in 5 seconds...",
+                                    kafkaException.Error.Reason);
                                 await Task.Delay(TimeSpan.FromSeconds(5), token);
                             }
                         }

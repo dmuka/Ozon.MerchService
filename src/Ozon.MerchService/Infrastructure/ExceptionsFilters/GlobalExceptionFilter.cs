@@ -11,7 +11,7 @@ public class GlobalExceptionFilter : ExceptionFilterAttribute
     /// <summary>
     /// Add information about unhandled exception
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="context">Exception context</param>
     public override void OnException(ExceptionContext context)
     {
         var result = new
