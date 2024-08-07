@@ -36,7 +36,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
                 var declinedDto = mapper.Map<MerchPackRequestDto>(request.MerchPackRequest);
                 
-                var affRows = await merchPackRequestRepository.UpdateAsync(declinedDto, token);
+                var affRows = await merchPackRequestRepository.UpdateAsync(declinedDto, token, new { declinedDto.Id });
                 
                 return (request.MerchPackRequest.RequestStatus, affRows);
             }
@@ -72,7 +72,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
             
             var dto = mapper.Map<MerchPackRequestDto>(request.MerchPackRequest);
             
-            var affectedRows = await merchPackRequestRepository.UpdateAsync(dto, token);
+            var affectedRows = await merchPackRequestRepository.UpdateAsync(dto, token, new { dto.Id });
 
             await unitOfWork.SaveChangesAsync(token);
             

@@ -109,7 +109,7 @@ public class MessageBroker : IMessageBroker
                         }
                         else
                         {
-                            _logger.LogError("Unexpected error: {Message}. Continuing execution.", ex.Message);
+                            _logger.LogError("Unexpected error: {ex} {Message} Continuing execution.", ex.InnerException, ex.StackTrace);
                             await Task.Delay(TimeSpan.FromSeconds(5), token);
                         }
                     }

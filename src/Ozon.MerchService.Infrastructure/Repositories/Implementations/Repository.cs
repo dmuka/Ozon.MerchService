@@ -19,7 +19,7 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory) 
     : BaseRepository, IRepository
 {
-    public async Task<TId> CreateAsync<T, TId>(CancellationToken cancellationToken,  object parameters) 
+    public async Task<TId> CreateAsync<T, TId>(CancellationToken cancellationToken, object parameters) 
         where TId : IEquatable<TId>
     {
         TId entityId;
@@ -87,7 +87,7 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
         }
     }
 
-    public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken)
+    public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken, object parameters)
     {
         try
         {
@@ -105,19 +105,39 @@ public class Repository(IDbConnectionFactory<NpgsqlConnection> connectionFactory
             {
                 var columnAttribute = properties[i].GetCustomAttribute<ColumnAttribute>();
 
-                var columnValue = properties[i].GetValue(entity);
+                object? columnValue = null;
+                
+                if (properties[i].PropertyType == typeof(string))
+                {
+                    columnValue = "'" + properties[i].GetValue(entity) + "'";
+                }
+                else if (properties[i].PropertyType == typeof(DateTimeOffset))
+                {
+                    columnValue = $"CAST('{properties[i].GetValue(entity)}' AS timestamptz)";
+                }
+                else if (properties[i].PropertyType == typeof(DateTimeOffset?))
+                {
+                    var value = properties[i].GetValue(entity);
+                    
+                    columnValue = value is null ? "null" : $"CAST('{value}' AS timestamptz)";
+                }
+                else
+                {
+                    columnValue = properties[i].GetValue(entity);
+                }
+                
                 var columnName = columnAttribute?.Name;
-
-                query.Append($"{columnName}=@{columnValue},");
+                
+                query.Append($"{columnName}={columnValue},");//query.Append($"{columnName}=@{columnValue},");
             }
 
             query.Remove(query.Length - 1, 1);
 
-            query.Append($" WHERE {keyColumnName} = @{keyColumnValue}");
+            query.Append($" WHERE {keyColumnName} = @{keyColumnValue}"); //query.Append($" WHERE {keyColumnName} = @{keyColumnValue}");
             
             var connection = await GetConnection(cancellationToken);
 
-            var rowsAffected = await connection.ExecuteAsync(query.ToString());
+            var rowsAffected = await connection.ExecuteAsync(query.ToString(), parameters);
 
             return rowsAffected;
         }

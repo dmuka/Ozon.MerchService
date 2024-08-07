@@ -22,8 +22,8 @@ public class MerchServiceMapperProfile : Profile
             .ForMember(destination => destination.MerchPackItems, options => options.MapFrom(source => GetMerchPackItemsJson(source.MerchPack.Items)))
             .ForMember(destination => destination.HrEmail, options => options.MapFrom(source => source.HrEmail.Value))
             .ForMember(destination => destination.ClothingSizeId, options => options.MapFrom(source => (int)source.ClothingSize))
-            .ForMember(destination => destination.RequestedAt, options => options.MapFrom(source => source.RequestedAt))
-            .ForMember(destination => destination.Issued, options => options.MapFrom(source => source.Issued))
+            .ForMember(destination => destination.RequestedAt, options => options.MapFrom(source => source.RequestedAt.Value))
+            .ForMember(destination => destination.Issued, options => options.MapFrom(source => source.Issued.Value))
             .ForMember(destination => destination.RequestStatusId, options => options.MapFrom(source => source.RequestStatus.Id))
             .ForMember(destination => destination.RequestTypeId, options => options.MapFrom(source => source.RequestType.Id));
     }
