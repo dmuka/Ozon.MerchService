@@ -1,14 +1,8 @@
-using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.Options;
 using Ozon.MerchService.CQRS.Commands;
 using Ozon.MerchService.Domain.DataContracts;
-using Ozon.MerchService.Domain.Events.Integration;
-using Ozon.MerchService.Domain.Models.Extensions;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
-using Ozon.MerchService.Infrastructure.Configuration.MessageBroker;
-using Ozon.MerchService.Infrastructure.MessageBroker.Interfaces;
 using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
@@ -17,9 +11,6 @@ namespace Ozon.MerchService.CQRS.Handlers;
     public class ReserveMerchPackCommandHandler(
             IMerchPackRequestRepository merchPackRequestRepository,
             IStockGrpcService stockGrpcService,
-            IMessageBroker broker,
-            IMapper mapper,
-            IOptions<KafkaConfiguration> kafkaConfig,
             IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, (RequestStatus status, int affectedRows)>
     {
         private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
@@ -33,46 +24,27 @@ namespace Ozon.MerchService.CQRS.Handlers;
             if (!canReceiveMerchPack)
             {
                 request.MerchPackRequest.SetStatusDeclined();
-
-                var declinedDto = mapper.Map<MerchPackRequestDto>(request.MerchPackRequest);
                 
-                var affRows = await merchPackRequestRepository.UpdateAsync(declinedDto, token, new { declinedDto.Id });
+                var affRows = await merchPackRequestRepository
+                    .UpdateAsync<MerchPackRequest, MerchPackRequestDto>(request.MerchPackRequest, token);
                 
                 return (request.MerchPackRequest.RequestStatus, affRows);
             }
-            
-            if (await stockGrpcService.TryReserveMerchPackItems(request.MerchPackRequest.MerchPack.Items, token))
-            {
-                if (request.MerchPackRequest.RequestStatus.Is(RequestStatus.Queued))
-                {
-                    var employeeNotificationEvent = new MerchReplenishedEvent(
-                        request.MerchPackRequest.Employee.Email, request.MerchPackRequest.MerchPack.MerchPackType);
 
-                    await broker.ProduceAsync(
-                        kafkaConfig.Value.EmployeeNotificationEventTopic, 
-                        request.MerchPackRequest.Id.ToString(), 
-                        employeeNotificationEvent, 
-                        token);
-                }
-                
-                request.MerchPackRequest.SetStatusIssued();
+            var merchPackAvailable =
+                await stockGrpcService.TryReserveMerchPackItems(request.MerchPackRequest.MerchPack.Items, token);
+            
+            if (merchPackAvailable)
+            {
+                request.MerchPackRequest.ReserveMerchPack();
             }
             else
             {
-                request.MerchPackRequest.SetStatusQueued();
-                
-                var hrNotificationEvent = new MerchEndedEvent(request.MerchPackRequest.HrEmail, request.MerchPackRequest.MerchPack.MerchPackType);
-
-                await broker.ProduceAsync(
-                    kafkaConfig.Value.EmployeeNotificationEventTopic, 
-                    request.MerchPackRequest.Id.ToString(),
-                    hrNotificationEvent,
-                    token);
+                request.MerchPackRequest.QueueMerchPack();
             }
             
-            var dto = mapper.Map<MerchPackRequestDto>(request.MerchPackRequest);
-            
-            var affectedRows = await merchPackRequestRepository.UpdateAsync(dto, token, new { dto.Id });
+            var affectedRows = await merchPackRequestRepository
+                .UpdateAsync<MerchPackRequest, MerchPackRequestDto>(request.MerchPackRequest, token);
 
             await unitOfWork.SaveChangesAsync(token);
             

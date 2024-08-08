@@ -16,7 +16,16 @@ public class DapperQuery(ITracker tracker) : IDapperQuery
     public async Task<T> Call<T>(Func<Task<T>> function) where T : Entity
     {
         var result = await function();
-        tracker.Track(result);
+        if (result is not null) tracker.Track(result);
+            
+        return result;
+    }
+
+    public async Task<int> CallAction<T>(T entity, Func<Task<int>> function) where T : Entity
+    {
+        var result = await function();
+        
+        tracker.Track(entity);
             
         return result;
     }

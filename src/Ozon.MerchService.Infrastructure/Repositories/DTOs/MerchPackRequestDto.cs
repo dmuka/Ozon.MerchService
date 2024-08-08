@@ -1,14 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Attributes;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 [Table("merchpack_requests")]
-public class MerchPackRequestDto
+public class MerchPackRequestDto : BaseEntity
 {
-    [Key]
-    public int Id { get; set; }
     [Column("merchpack_type_id")]
     public int MerchpackTypeId { get; set; }
     [Json]

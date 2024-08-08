@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
+using Ozon.MerchService.Domain.Events.Integration;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
+using Ozon.MerchService.Domain.Models.Extensions;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.ValueObjects;
@@ -117,6 +119,37 @@ public class MerchPackRequest : Entity, IAggregationRoot
         };
 
         return merchPackRequest;
+    }
+
+    public void ReserveMerchPack()
+    {
+        if (RequestStatus.Is(RequestStatus.Issued))
+        {
+            AddMerchPackIsReadyIntegrationEvent();
+        }
+                
+        SetStatusIssued();
+    }    
+    
+    public void QueueMerchPack()
+    {
+        AddMerchEndedIntegrationEvent();
+                     
+        SetStatusIssued();
+    }
+
+    public void AddMerchPackIsReadyIntegrationEvent()
+    {
+        var @event = new MerchPackIsReadyIntegrationEvent(Employee.Email, MerchPack.MerchPackType);
+        
+        AddDomainEvent(@event);
+    }
+
+    public void AddMerchEndedIntegrationEvent()
+    {
+        var @event = new MerchEndedEvent(HrEmail, MerchPack.MerchPackType);
+        
+        AddDomainEvent(@event);
     }
 
     public void SetStatusDeclined()

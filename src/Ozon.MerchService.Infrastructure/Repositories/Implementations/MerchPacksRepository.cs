@@ -1,4 +1,5 @@
 using System.Text.Json;
+using AutoMapper;
 using Dapper;
 using Npgsql;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
@@ -9,9 +10,13 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
-public class MerchPacksRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory, IDapperQuery query)
-    : Repository(connectionFactory), IMerchPacksRepository
+public class MerchPacksRepository(
+    IDbConnectionFactory<NpgsqlConnection> connectionFactory, 
+    IDapperQuery query,
+    IMapper mapper)
+    : Repository(connectionFactory, query, mapper), IMerchPacksRepository
 {
+    private readonly IDapperQuery _query = query;
     private const int Timeout = 5;
     
     public async Task<MerchPack> GetMerchPackById(int merchPackId, CancellationToken cancellationToken)
@@ -40,7 +45,7 @@ public class MerchPacksRepository(IDbConnectionFactory<NpgsqlConnection> connect
         {
             var connection = await GetConnection(cancellationToken);
             
-            return await query.Call(async () =>
+            return await _query.Call(async () =>
             {
                 var merchPackDto = await connection
                     .QuerySingleOrDefaultAsync<MerchPackDto>(commandDefinition);

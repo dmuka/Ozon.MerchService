@@ -46,6 +46,8 @@ public class EmployeeNeededMerchEventHandler(
         var dto = GetDto(employeeNeededMerchEvent, merchPack, employee);
             
         var merchPackRequestId = await repository.CreateAsync<MerchPackRequestDto, long>(cancellationToken, dto);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         var merchPackRequest = MerchPackRequest.CreateInstance(
             merchPackRequestId,
@@ -58,8 +60,6 @@ public class EmployeeNeededMerchEventHandler(
         var command = new ReserveMerchPackCommand(merchPackRequest, employeeNeededMerchEvent.EventType);
             
         await mediator.Send(command, cancellationToken);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private MerchPackRequestDto GetDto(EmployeeNeededMerchEvent evnt, MerchPack merchPack, Employee employee)

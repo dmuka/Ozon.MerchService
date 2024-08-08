@@ -15,11 +15,6 @@ public interface IUnitOfWork
     ValueTask StartTransaction(CancellationToken token);
     
     /// <summary>
-    /// Npgsql connection, that created after transaction creation
-    /// </summary>
-    NpgsqlConnection Connection { get; }
-    
-    /// <summary>
     /// Save all changes in transaction to database
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>

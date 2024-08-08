@@ -11,7 +11,6 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implement
         IPublisher publisher,
         ITracker tracker) : IUnitOfWork, IDisposable
     {
-        public NpgsqlConnection? Connection { get; private set; }
         private NpgsqlTransaction? _npgsqlTransaction;
         
         private readonly IDbConnectionFactory<NpgsqlConnection>? _dbConnectionFactory = dbConnectionFactory;
@@ -20,9 +19,9 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implement
         {
             if (!(_npgsqlTransaction is null && _dbConnectionFactory is not null)) return;
             
-            Connection = await _dbConnectionFactory.Create(token);
+            var connection = await _dbConnectionFactory.Create(token);
             
-            _npgsqlTransaction = await Connection.BeginTransactionAsync(token);
+            _npgsqlTransaction = await connection.BeginTransactionAsync(token);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
@@ -52,6 +51,8 @@ namespace Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Implement
             await Task.WhenAll(tasks);
 
             await _npgsqlTransaction.CommitAsync(cancellationToken);
+            await _npgsqlTransaction.DisposeAsync();
+            _npgsqlTransaction = null;
         }
 
         void IDisposable.Dispose()

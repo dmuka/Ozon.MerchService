@@ -1,4 +1,5 @@
 using System.Text.Json;
+using AutoMapper;
 using CSharpCourse.Core.Lib.Enums;
 using Dapper;
 using Npgsql;
@@ -11,8 +12,11 @@ using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
-public class MerchPackRequestsRepository(IDbConnectionFactory<NpgsqlConnection> connectionFactory, IDapperQuery query)
-    : Repository(connectionFactory), IMerchPackRequestRepository
+public class MerchPackRequestsRepository(
+    IDbConnectionFactory<NpgsqlConnection> connectionFactory, 
+    IDapperQuery query,
+    IMapper mapper)
+    : Repository(connectionFactory, query, mapper), IMerchPackRequestRepository
 {
     private const int Timeout = 5;
     
