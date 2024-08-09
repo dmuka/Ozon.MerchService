@@ -24,6 +24,7 @@ public class Startup(IConfiguration configuration)
             .AddKafkaServices(configuration)
             .AddTelemetry(configuration)
             .AddSwaggerGen();
+        
         foreach (var service in services)
         {
             Console.WriteLine($"Service: {service.ServiceType.Name}, Lifetime: {service.Lifetime}");

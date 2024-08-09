@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Confluent.Kafka;
 using FluentValidation;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
 
@@ -13,13 +14,37 @@ namespace Ozon.MerchService.Infrastructure.Middlewares;
             {
                 await next(context);
             }
+            catch (OperationCanceledException operationCanceledException)
+            {
+                await HandleException(context, operationCanceledException.Message, (int)HttpStatusCode.NoContent);
+            }
             catch (ValidationException validationException)
             {
                 await HandleException(context, validationException.Message, (int)HttpStatusCode.BadRequest);
             }
             catch (RepositoryOperationException repositoryOperationException)
             {
-                await HandleException(context, repositoryOperationException.Message, (int)repositoryOperationException.InnerException.HResult);
+                await HandleException(context, repositoryOperationException.Message,
+                    (int)repositoryOperationException.InnerException.HResult);
+            }
+            catch (ConsumeException consumeException)
+            {
+                if (consumeException.Error.Code == ErrorCode.UnknownTopicOrPart)
+                {
+                    await HandleException(context, $"Consume topic error (reason - {consumeException.Error.Reason}):" + consumeException.Message, (int)HttpStatusCode.ServiceUnavailable);
+                }
+                else
+                {
+                    await HandleException(context, $"Consume error (reason - {consumeException.Error.Reason}):" + consumeException.Message, (int)HttpStatusCode.ServiceUnavailable);
+                }
+            }
+            catch (BrokerException brokerException)
+            {
+                await HandleException(context, $"Produce error :" + brokerException.Message, (int)HttpStatusCode.ServiceUnavailable);
+            }
+            catch (KafkaException kafkaException)
+            {
+                await HandleException(context, $"Kafka error (reason - {kafkaException.Error.Reason}):" + kafkaException.Message, (int)HttpStatusCode.ServiceUnavailable);
             }
             catch (Exception exception)
             {

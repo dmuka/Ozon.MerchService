@@ -26,7 +26,14 @@ public class MessageBroker : IMessageBroker
             _consumerConfig = new ConsumerConfig
             {
                 GroupId = Configuration.GroupId,
-                BootstrapServers = Configuration.BootstrapServers
+                BootstrapServers = Configuration.BootstrapServers,
+                AutoOffsetReset = Configuration.AutoOffsetReset switch
+                {
+                    "latest" => AutoOffsetReset.Latest,
+                    "earliest" => AutoOffsetReset.Earliest,
+                    _ => AutoOffsetReset.Error
+                },
+                EnableAutoCommit = Configuration.EnableAutoCommit == "true"
             };
             _producerConfig = new ProducerConfig
             {
@@ -59,65 +66,55 @@ public class MessageBroker : IMessageBroker
             Func<string, CancellationToken, Task> processMessage,
             CancellationToken token)
         {
-            using var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build();
-            consumer.Subscribe(topic);
-            
-            try
+            while (!token.IsCancellationRequested)
             {
-                while (!token.IsCancellationRequested)
+                using var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build();
+                consumer.Subscribe(topic);
+
+                try
                 {
-                    try
+                    while (!token.IsCancellationRequested)
                     {
-                        await Task.Yield();
-                        
-                        var consumeResult = consumer.Consume(token);
-                        if (consumeResult is null)
+                        try
                         {
-                            _logger.LogWarning("Consume result is null.");
-                            continue;
-                        }
+                            await Task.Yield();
 
-                        _logger.LogInformation("Consumed message: {Message}", consumeResult.Message.Value);
-
-                        await processMessage(consumeResult.Message.Value, token);
-
-                        consumer.Commit();
-                        _logger.LogInformation("Committed offset: {Offset}", consumeResult.Offset);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is OperationCanceledException)
-                        {
-                            _logger.LogInformation("Operation canceled. Exiting consume loop.");
-                            break;
-                        }
-
-                        if (ex is KafkaException kafkaException)
-                        {
-                            if (kafkaException.Error.Code == ErrorCode.UnknownTopicOrPart)
+                            var consumeResult = consumer.Consume(token);
+                            if (consumeResult is null)
                             {
-                                _logger.LogError("Consume topic {Topic} error: {Error}. Retrying in 5 seconds...",
-                                    topic, kafkaException.Error.Reason);
-                                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                                _logger.LogWarning("Consume result is null.");
+                                continue;
                             }
-                            else
-                            {
-                                _logger.LogError("Kafka error: {Message}. Retrying in 5 seconds...",
-                                    kafkaException.Error.Reason);
-                                await Task.Delay(TimeSpan.FromSeconds(5), token);
-                            }
+
+                            _logger.LogInformation("Consumed message: {Message}", consumeResult.Message.Value);
+
+                            await processMessage(consumeResult.Message.Value, token);
+
+                            consumer.Commit();
+                            _logger.LogInformation("Committed offset: {Offset}", consumeResult.Offset);
                         }
-                        else
+                        catch (ConsumeException consumeException)
                         {
-                            _logger.LogError("Unexpected error: {ex} {Message} Continuing execution.", ex.InnerException, ex.StackTrace);
-                            await Task.Delay(TimeSpan.FromSeconds(5), token);
+                            throw new BrokerException(consumeException.Message, consumeException);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError("Error while get consume. Message {Message}", ex.Message);
+                            //Environment.Exit(1);
+                        }
+                        finally
+                        {
+                            consumer.Close();
                         }
                     }
                 }
-            }
-            finally
-            {
-                consumer.Close();
+                catch (Exception ex)
+                {
+                    _logger.LogError("Error while get consume. Message {Message}", ex.Message);
+                }
+
+                _logger.LogInformation("Pausing before consume {topic} topic retry...", topic);
+                await Task.Delay(TimeSpan.FromSeconds(5), token);
             }
         }
 }

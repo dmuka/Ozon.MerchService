@@ -13,4 +13,4 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             {
                 webBuilder.UseStartup<Startup>();
             })
-        .AddInfrastructure();;
+        .AddInfrastructure();

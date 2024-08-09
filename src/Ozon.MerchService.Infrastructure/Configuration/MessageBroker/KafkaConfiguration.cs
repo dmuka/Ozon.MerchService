@@ -8,13 +8,16 @@ public class KafkaConfiguration
     public string GroupId { get; set; }
         
     /// <summary>
+    /// Kafka servers addresses 
+    /// </summary>
+    public string BootstrapServers { get; set; }
+
+    public string AutoOffsetReset { get; set; }
+    public string EnableAutoCommit { get; set; } 
+
+    /// <summary>
     /// Merch service message topic
     /// </summary>
     public string? EmployeeNotificationEventTopic { get; set; }
     public string? StockReplenishedEventTopic { get; set; }
-        
-    /// <summary>
-    /// Kafka servers addresses 
-    /// </summary>
-    public string BootstrapServers { get; set; }
 }
