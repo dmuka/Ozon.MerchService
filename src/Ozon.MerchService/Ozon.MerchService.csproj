@@ -66,4 +66,8 @@
       <ProjectReference Include="..\Ozon.MerchService.Migrator\Ozon.MerchService.Migrator.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\css\" />
+    </ItemGroup>
+
 </Project>

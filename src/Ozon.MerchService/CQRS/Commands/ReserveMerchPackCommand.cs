@@ -1,42 +1,42 @@
 using CSharpCourse.Core.Lib.Enums;
 using MediatR;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
+using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
-using Ozon.MerchService.HttpModels;
 
 namespace Ozon.MerchService.CQRS.Commands;
 
 /// <summary>
 /// Reserve merch pack command
 /// </summary>
-public class ReserveMerchPackCommand : IRequest<(RequestStatus status, int affectedRows)>
+public class ReserveMerchPackCommand : IRequest<RequestStatus>
 {
-    public ReserveMerchPackCommand(
-        ReserveMerchRequest request, 
-        EmployeeEventType eventType, 
-        RequestStatus requestStatus, 
-        RequestType requestType)
-    {
-        EventType = eventType;
-        Employee = Employee.CreateInstance(
-            request.EmployeeId, 
-            request.EmployeeFirstName, 
-            request.EmployeeLastName, 
-            request.EmployeeEmail);
-        MerchPackRequest = new MerchPackRequest(
-            request.MerchPackType, 
-            request.ClothingSize, 
-            Employee, 
-            new Email(request.HrEmail),
-            requestType, 
-            requestStatus);
-    }
-    
-    public ReserveMerchPackCommand(MerchPackRequest merchPackRequest, EmployeeEventType eventType)
+    public ReserveMerchPackCommand(MerchPackRequest merchPackRequest, EmployeeEventType? eventType)
     {
         EventType = eventType;
         MerchPackRequest = merchPackRequest;
+    }
+    
+    public ReserveMerchPackCommand(
+        string employeeFirstName,
+        string employeeLastName,
+        string employeeEmail,
+        string hrEmail,
+        string hrName,
+        MerchType merchPackType,
+        ClothingSize clothingSize)
+    {
+        Employee = new Employee( new FullName(employeeFirstName, employeeLastName), new Email(employeeEmail));
+        MerchPackRequest = new MerchPackRequest(
+            Employee, 
+            new MerchPack(merchPackType, Array.Empty<MerchItem>()),
+            clothingSize,
+            new Email(hrEmail),
+            RequestType.Manual,
+            DateTimeOffset.UtcNow,
+            RequestStatus.Created
+            );
     }
     
     public ReserveMerchPackCommand(MerchPackRequest merchPackRequest)

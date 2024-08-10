@@ -31,6 +31,7 @@ public class Employee(
             var previousActiveMerchPacks = MerchPacksRequests
                 .Where(request =>
                     request.MerchPack.MerchPackType == merchType 
+                    && request.Issued.Value is not null
                     && Equals(request.RequestStatus, RequestStatus.Issued) 
                     && (DateTimeOffset.UtcNow - request.Issued.Value).Value.Days <= 365);
 

@@ -11,11 +11,11 @@ namespace Ozon.MerchService.CQRS.Handlers;
     public class ReserveMerchPackCommandHandler(
             IMerchPackRequestRepository merchPackRequestRepository,
             IStockGrpcService stockGrpcService,
-            IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, (RequestStatus status, int affectedRows)>
+            IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, RequestStatus>
     {
         private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
         
-        public async Task<(RequestStatus status, int affectedRows)> Handle(ReserveMerchPackCommand request, CancellationToken token)
+        public async Task<RequestStatus> Handle(ReserveMerchPackCommand request, CancellationToken token)
         {
             await unitOfWork.StartTransaction(token);
 
@@ -28,7 +28,9 @@ namespace Ozon.MerchService.CQRS.Handlers;
                 var affRows = await merchPackRequestRepository
                     .UpdateAsync<MerchPackRequest, MerchPackRequestDto>(request.MerchPackRequest, token);
                 
-                return (request.MerchPackRequest.RequestStatus, affRows);
+                await unitOfWork.SaveChangesAsync(token);
+                
+                return request.MerchPackRequest.RequestStatus;
             }
 
             var merchPackAvailable =
@@ -48,6 +50,6 @@ namespace Ozon.MerchService.CQRS.Handlers;
 
             await unitOfWork.SaveChangesAsync(token);
             
-            return (request.MerchPackRequest.RequestStatus, affectedRows);
+            return request.MerchPackRequest.RequestStatus;
         }
     }

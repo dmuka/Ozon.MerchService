@@ -14,6 +14,8 @@ public class ReserveMerchRequest
  
     public string HrEmail { get; set;  }
  
+    public string HrName { get; set;  }
+ 
     public MerchType MerchPackType { get; set; }
     public ClothingSize ClothingSize { get; set; }
 }

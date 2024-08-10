@@ -42,6 +42,8 @@ public class Startup(IConfiguration configuration)
         {
             application.UseDeveloperExceptionPage();
         }
+
+        application.UseStaticFiles();
         
         application.UseRouting();
         
@@ -51,8 +53,15 @@ public class Startup(IConfiguration configuration)
         
         application.UseEndpoints(endpoints =>
         {
-            endpoints.MapGet("/", () => "Bla bla bla");
+            endpoints.MapGet("/", async context =>
+            {
+                var htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "index.html");
+                context.Response.ContentType = "text/html";
+                await context.Response.SendFileAsync(htmlFilePath);
+            });
+            
             endpoints.MapControllers();
         });
+
     }
 }

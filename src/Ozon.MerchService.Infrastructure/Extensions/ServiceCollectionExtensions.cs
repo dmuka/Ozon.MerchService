@@ -80,7 +80,6 @@ public static class ServiceCollectionExtensions
             return new StockApiGrpc.StockApiGrpcClient(channel);
         });
 
-
         return services;
     }
 }

@@ -1,8 +1,8 @@
-using CSharpCourse.Core.Lib.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ozon.MerchService.CQRS.Commands;
 using Ozon.MerchService.CQRS.Queries;
+using Ozon.MerchService.Domain.Events.Domain;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.HttpModels;
@@ -45,14 +45,18 @@ public class MerchController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Route("reserve")]
     public async Task<ActionResult<MerchPack>> ReserveMerch(
-        [FromBody] ReserveMerchRequest reserveMerchRequest, 
+        [FromBody] ReserveMerchRequest request, 
         CancellationToken cancellationToken)
     {
-        var command = new ReserveMerchPackCommand(
-            reserveMerchRequest,
-            EmployeeEventType.MerchDelivery,
-            RequestStatus.Created,
-            RequestType.Manual);
+        var command = new CreateMerchPackRequestCommand(
+            request.EmployeeFirstName,
+            request.EmployeeLastName,
+            request.EmployeeEmail,
+            request.HrEmail,
+            request.HrName,
+            request.MerchPackType,
+            request.ClothingSize,
+            RequestType.Auto);
 
         var result = await mediator.Send(command, cancellationToken);
 
