@@ -2,8 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
-public class IId
+public abstract class BaseEntity
 {
     [Key]
-    public int Id { get; set; }
+    public long Id { get; set; }
+    public string Name { get; set; }
 }

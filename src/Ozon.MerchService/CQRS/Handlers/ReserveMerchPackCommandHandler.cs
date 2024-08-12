@@ -8,48 +8,56 @@ using Ozon.MerchService.Infrastructure.Services.Interfaces;
 
 namespace Ozon.MerchService.CQRS.Handlers;
 
+    /// <summary>
+    /// Handler for reserving merch pack
+    /// </summary>
+    /// <param name="merchPackRequestRepository">Repository of merch pack requests</param>
+    /// <param name="stockGrpcService">Stock grpc service</param>
+    /// <param name="unitOfWork">Unit of work</param>
     public class ReserveMerchPackCommandHandler(
             IMerchPackRequestRepository merchPackRequestRepository,
             IStockGrpcService stockGrpcService,
             IUnitOfWork unitOfWork) : IRequestHandler<ReserveMerchPackCommand, RequestStatus>
     {
-        private const string HandlerName = nameof(ReserveMerchPackCommandHandler);
-        
-        public async Task<RequestStatus> Handle(ReserveMerchPackCommand request, CancellationToken token)
+        /// <summary>
+        /// Handle for reserve merch pack command
+        /// </summary>
+        /// <param name="command">Reserve merch pack command</param>
+        /// <param name="token">Cancellation token</param>
+        /// <returns></returns>
+        public async Task<RequestStatus> Handle(ReserveMerchPackCommand command, CancellationToken token)
         {
             await unitOfWork.StartTransaction(token);
 
-            var canReceiveMerchPack = request.MerchPackRequest.Employee.CanReceiveMerchPack(request.MerchPackRequest.MerchPack.MerchPackType);
+            var canReceiveMerchPack = command.MerchPackRequest.Employee.CanReceiveMerchPack(command.MerchPackRequest.MerchPack.MerchPackType);
 
             if (!canReceiveMerchPack)
             {
-                request.MerchPackRequest.SetStatusDeclined();
+                command.MerchPackRequest.SetStatusDeclined();
                 
-                var affRows = await merchPackRequestRepository
-                    .UpdateAsync<MerchPackRequest, MerchPackRequestDto>(request.MerchPackRequest, token);
+                var affRows = await merchPackRequestRepository.UpdateAsync(command.MerchPackRequest, token);
                 
                 await unitOfWork.SaveChangesAsync(token);
                 
-                return request.MerchPackRequest.RequestStatus;
+                return command.MerchPackRequest.RequestStatus;
             }
 
             var merchPackAvailable =
-                await stockGrpcService.TryReserveMerchPackItems(request.MerchPackRequest.MerchPack.Items, token);
+                await stockGrpcService.TryReserveMerchPackItems(command.MerchPackRequest.MerchPack.Items, token);
             
             if (merchPackAvailable)
             {
-                request.MerchPackRequest.ReserveMerchPack();
+                command.MerchPackRequest.ReserveMerchPack();
             }
             else
             {
-                request.MerchPackRequest.QueueMerchPack();
+                command.MerchPackRequest.QueueMerchPack();
             }
             
-            var affectedRows = await merchPackRequestRepository
-                .UpdateAsync<MerchPackRequest, MerchPackRequestDto>(request.MerchPackRequest, token);
+            var affectedRows = await merchPackRequestRepository.UpdateAsync(command.MerchPackRequest, token);
 
             await unitOfWork.SaveChangesAsync(token);
             
-            return request.MerchPackRequest.RequestStatus;
+            return command.MerchPackRequest.RequestStatus;
         }
     }

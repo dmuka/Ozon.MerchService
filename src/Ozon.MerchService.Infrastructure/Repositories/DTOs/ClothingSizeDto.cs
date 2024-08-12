@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
-public class ClothingSizeDto
+public class ClothingSizeDto : BaseEntity
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    [Key]
+    public new int Id { get; set; }
 }

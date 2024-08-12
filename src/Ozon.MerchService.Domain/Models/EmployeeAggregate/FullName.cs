@@ -8,12 +8,12 @@ public class FullName : ValueObject, IRegexValid
     {
         if (!((IRegexValid)this).IsValid(firstName, NameConstants.RegexPattern))
         {
-            throw new ArgumentException($"Incorrect first name value: {firstName}", nameof(firstName));
+            throw new ArgumentException($"{nameof(FullName)}: Incorrect first name value: {firstName}", nameof(firstName));
         }
         
         if (!((IRegexValid)this).IsValid(firstName, NameConstants.RegexPattern))
         {
-            throw new ArgumentException($"Incorrect last name value: {lastName}", nameof(lastName));
+            throw new ArgumentException($"{nameof(FullName)}: Incorrect last name value: {lastName}", nameof(lastName));
         }
 
         Value = firstName + " " + lastName;

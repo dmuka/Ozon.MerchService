@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
-public class RequestTypeDto
+public class RequestTypeDto : BaseEntity
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    [Key]
+    public new int Id { get; set; }
 }

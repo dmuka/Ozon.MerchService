@@ -3,7 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.DataContracts.Attributes;
+using Ozon.MerchService.Domain.Models;
+using Ozon.MerchService.Domain.Models.EmployeeAggregate;
+using Ozon.MerchService.Domain.Models.MerchItemAggregate;
+using Ozon.MerchService.Domain.Models.MerchPackAggregate;
+using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Repositories.Attributes;
+using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.Infrastructure.Repositories.Implementations;
 
@@ -12,14 +18,73 @@ public abstract class BaseRepository()
     internal string GetTableName<T>()
     {
         var type = typeof(T);
+        
+        return GetTableNameByAttribute(type);
+    }
+    
+    internal string GetTableName(Type type)
+    {
+        return GetTableNameByAttribute(type);
+    }
+
+    private string GetTableNameByAttribute(Type type)
+    {
         var tableAttribute = type.GetCustomAttribute<TableAttribute>();
+        
         return tableAttribute != null ? tableAttribute.Name : type.Name;
+    }
+
+    internal long GetKnownDtoKeyColumnValue<TDto>(TDto dto)
+    {
+        var keyColumnValue = dto switch
+        {
+            MerchPackRequestDto dt => dt.Id,
+            ClothingSizeDto dt => dt.Id,
+            EmployeeDto dt => dt.Id,
+            MerchItemDto dt => dt.ItemTypeId,
+            _ => throw new InvalidOperationException($"Unsupported DTO type: {dto?.GetType().Name}")
+        };
+
+        return keyColumnValue;
+    }
+
+    internal Type GetDtoTypeByEntityType<T>() where T : Entity
+    {
+        var entityType = typeof(T);
+
+        if (EntityToDtoMap.TryGetValue(entityType, out var dtoType))
+        {
+            return dtoType;
+        }
+
+        throw new InvalidOperationException($"No DTO type mapping found for entity type {entityType.Name}");
+    }
+    
+    private static readonly Dictionary<Type, Type> EntityToDtoMap = new Dictionary<Type, Type>
+    {
+        { typeof(MerchPackRequest), typeof(MerchPackRequestDto) },
+        { typeof(ClothingSize), typeof(ClothingSizeDto) },
+        { typeof(Employee), typeof(EmployeeDto) },
+        { typeof(MerchItem), typeof(MerchItemDto) },
+        { typeof(MerchPack), typeof(MerchPackDto) }
+    };
+
+    internal static string? GetKeyColumnName(Type type)
+    {
+        var properties = type.GetProperties();
+
+        return GetKeyColumnName(properties);
     }
 
     internal static string? GetKeyColumnName<T>()
     {
         var properties = typeof(T).GetProperties();
 
+        return GetKeyColumnName(properties);
+    }
+
+    private static string? GetKeyColumnName(PropertyInfo[] properties)
+    {
         foreach (var property in properties)
         {
             var keyAttributes = property.GetCustomAttributes(typeof(KeyAttribute), true);
@@ -94,12 +159,31 @@ public abstract class BaseRepository()
         return properties;
     }
 
+    internal IEnumerable<PropertyInfo> GetProperties(Type type, bool excludeKey = false)
+    {
+        var properties = type.GetProperties()
+            .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+
+        return properties;
+    }
+
     internal string? GetKeyPropertyValue<T>()
     {
         var properties = typeof(T).GetProperties()
             .Where(p => p.GetCustomAttribute<KeyAttribute>() != null).ToList();
 
-        if (properties.Any())
+        if (properties.Count != 0)
+            return properties?.FirstOrDefault()?.Name ?? null;
+
+        return null;
+    }
+
+    internal string? GetKeyPropertyValue(Type type)
+    {
+        var properties = type.GetProperties()
+            .Where(p => p.GetCustomAttribute<KeyAttribute>() != null).ToList();
+
+        if (properties.Count != 0)
             return properties?.FirstOrDefault()?.Name ?? null;
 
         return null;

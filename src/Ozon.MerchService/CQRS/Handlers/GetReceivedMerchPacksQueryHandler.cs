@@ -3,28 +3,37 @@ using OpenTelemetry.Trace;
 using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Helpers;
 
 namespace Ozon.MerchService.CQRS.Handlers;
 
+/// <summary>
+/// Handler for received merch packs query
+/// </summary>
+/// <param name="employeeRepository">Repository of employees</param>
+/// <param name="tracerProvider">Tracer provider</param>
 public class GetReceivedMerchPacksQueryHandler(
-    IMerchPackRequestRepository merchPackRequestRepository, 
     IEmployeeRepository employeeRepository,
     TracerProvider tracerProvider)
     : IRequestHandler<GetReceivedMerchPacksQuery, IEnumerable<MerchPack>>
 {
-    public async Task<IEnumerable<MerchPack>> Handle(GetReceivedMerchPacksQuery request, CancellationToken cancellationToken)
+    /// <summary>
+    /// Handle for received merch packs query
+    /// </summary>
+    /// <param name="query">Received merch packs query</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
+    public async Task<IEnumerable<MerchPack>> Handle(GetReceivedMerchPacksQuery query, CancellationToken cancellationToken)
     {
         var tracer = tracerProvider.GetTracer("GetReceivedMerchPacksQueryHandler");
 
         using var span = Tracing.StartSpan(tracer, "HandleGetReceivedMerchPacksQuery", SpanKind.Internal,
             new Dictionary<string, object>
             {
-                { "item.id", request.EmployeeId }
+                { "item.id", query.EmployeeId }
             });
 
-        var employee = await employeeRepository.GetByEmailAsync(request.EmployeeEmail, cancellationToken);
+        var employee = await employeeRepository.GetByEmailAsync(query.EmployeeEmail, cancellationToken);
 
         if (employee is null) return Array.Empty<MerchPack>();
         

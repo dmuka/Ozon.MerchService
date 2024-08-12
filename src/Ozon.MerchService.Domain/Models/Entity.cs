@@ -5,13 +5,13 @@ using Ozon.MerchService.Domain.DataContracts.Attributes;
 
 namespace Ozon.MerchService.Domain.Models;
 
-public abstract class Entity : BaseEntity
+public abstract class Entity
 {
+    public long Id { get; protected set; }
     private int? _requestedHashCode;
 
     private readonly List<INotification> _domainEvents = [];
 
-    [NotMapped]
     public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
 
     public void AddDomainEvent(INotification eventItem) => _domainEvents.Add(eventItem);

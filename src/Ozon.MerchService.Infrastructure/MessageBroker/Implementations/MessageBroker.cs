@@ -102,10 +102,6 @@ public class MessageBroker : IMessageBroker
                             _logger.LogError("Error while get consume. Message {Message}", ex.Message);
                             //Environment.Exit(1);
                         }
-                        finally
-                        {
-                            consumer.Close();
-                        }
                     }
                 }
                 catch (Exception ex)

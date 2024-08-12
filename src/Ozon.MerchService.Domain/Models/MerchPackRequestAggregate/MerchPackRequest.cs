@@ -46,10 +46,8 @@ public class MerchPackRequest : Entity, IAggregationRoot
         RequestType = requestType;
     }
 
-    [Column("merchpack_type_id")]
     public MerchType MerchPackType { get; }
     
-    [NotMapped]
     public MerchPack MerchPack { get; private set; }
 
     public Employee Employee { get; private set; }

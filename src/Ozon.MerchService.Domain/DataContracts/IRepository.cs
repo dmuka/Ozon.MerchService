@@ -35,9 +35,8 @@ public interface IRepository
     /// <param name="itemToUpdate">Item to update</param>
     /// <param name="cancellationToken">Cancellation token  <see cref="CancellationToken"/></param>
     /// <returns>Affected rows count</returns>
-    Task<int> UpdateAsync<T, TDto>(T itemToUpdate, CancellationToken cancellationToken) 
-        where T : Entity
-        where TDto : BaseEntity;
+    Task<int> UpdateAsync<T>(T itemToUpdate, CancellationToken cancellationToken) 
+        where T : Entity;
     
     /// <summary>
     /// Delete item

@@ -6,7 +6,6 @@ using Dapper;
 using Npgsql;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models;
-using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
@@ -25,8 +24,6 @@ public class Repository(
     public async Task<TId> CreateAsync<T, TId>(CancellationToken cancellationToken, object parameters) 
         where TId : IEquatable<TId>
     {
-        TId entityId;
-        
         try
         {
             var tableName = GetTableName<T>();
@@ -38,14 +35,14 @@ public class Repository(
 
             var connection = await GetConnection(cancellationToken);
 
-            entityId = await connection.QuerySingleAsync<TId>(query, parameters);
+            var entityId = await connection.QuerySingleAsync<TId>(query, parameters);
+        
+            return entityId;
         }
         catch (Exception ex)
         {
             throw new RepositoryOperationException(ex.Message, ex);
         }
-        
-        return entityId;
     }
 
     public async Task<T?> GetByIdAsync<T, TId>(TId entityId, CancellationToken cancellationToken)
@@ -66,7 +63,7 @@ public class Repository(
         }
         catch (Exception ex)
         {
-            throw new RepositoryOperationException();
+            throw new RepositoryOperationException(ex.Message, ex);
         }
     }
 
@@ -86,29 +83,29 @@ public class Repository(
         }
         catch (Exception ex)
         {
-            throw new RepositoryOperationException();
+            throw new RepositoryOperationException(ex.Message, ex);
         }
     }
 
-    public async Task<int> UpdateAsync<T, TDto>(T entity, CancellationToken cancellationToken)
+    public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken)
         where T : Entity
-        where TDto : BaseEntity
     {
         try
         {
-            var tableName = GetTableName<TDto>();
-            var keyColumnName = GetKeyColumnName<TDto>();
-            var keyColumnValue = GetKeyPropertyValue<TDto>();
+            var dtoType = GetDtoTypeByEntityType<T>();
+            var tableName = GetTableName(dtoType);
+            var keyColumnName = GetKeyColumnName(dtoType);
+            var keyColumnValue = GetKeyPropertyValue(dtoType);
 
-            var query = new StringBuilder(50);
+            var query = new StringBuilder(500);
 
             query.Append($"UPDATE {tableName} SET ");
 
-            var properties = GetProperties<TDto>(true).ToArray();
+            var properties = GetProperties(dtoType, true).ToArray();
 
-            var dto = mapper.Map<TDto>(entity);
+            var dto = mapper.Map(entity, dtoType);
 
-            var parameters = new { dto.Id };
+            var parameters = new { Id = GetKnownDtoKeyColumnValue(dto) };
             
             for (var i = 0; i < properties.Length; i++)
             {
@@ -179,7 +176,7 @@ public class Repository(
         }
         catch (Exception ex)
         {
-            throw new RepositoryOperationException();
+            throw new RepositoryOperationException(ex.Message, ex);
         }
 
         return rowsAffected;
