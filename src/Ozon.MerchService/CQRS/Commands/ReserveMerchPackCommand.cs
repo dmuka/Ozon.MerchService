@@ -1,5 +1,6 @@
 using CSharpCourse.Core.Lib.Enums;
 using MediatR;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;

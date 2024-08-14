@@ -1,6 +1,6 @@
 using Ozon.MerchService.Domain.DataContracts;
 
-namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
+namespace Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 
 public interface IEmployeeRepository : IRepository
 {

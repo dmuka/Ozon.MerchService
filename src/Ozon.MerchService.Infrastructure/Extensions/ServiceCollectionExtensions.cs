@@ -2,6 +2,7 @@ using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;

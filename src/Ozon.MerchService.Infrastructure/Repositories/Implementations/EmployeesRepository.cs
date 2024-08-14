@@ -2,6 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using Dapper;
 using Npgsql;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;

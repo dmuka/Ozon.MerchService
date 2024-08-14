@@ -1,6 +1,7 @@
 using Ozon.MerchService.Domain.Constants;
+using Ozon.MerchService.Domain.Models;
 
-namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
+namespace Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 
 public class Email : ValueObject, IRegexValid
 {

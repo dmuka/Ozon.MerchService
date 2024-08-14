@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
+using Ozon.MerchService.Domain.Models;
+using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
-namespace Ozon.MerchService.Domain.Models.EmployeeAggregate;
+namespace Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 
 [Table("employees")]
 public class Employee(

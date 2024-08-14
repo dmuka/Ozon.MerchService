@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using CSharpCourse.Core.Lib.Enums;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.DataContracts.Attributes;
 using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;

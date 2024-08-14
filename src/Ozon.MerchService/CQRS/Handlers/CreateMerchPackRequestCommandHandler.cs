@@ -2,6 +2,7 @@ using System.Text.Json;
 using MediatR;
 using Ozon.MerchService.CQRS.Commands;
 using Ozon.MerchService.CQRS.Queries;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;

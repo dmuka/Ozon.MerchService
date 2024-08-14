@@ -1,4 +1,5 @@
 using CSharpCourse.Core.Lib.Enums;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 
 namespace Ozon.MerchService.Domain.Events.Integration;

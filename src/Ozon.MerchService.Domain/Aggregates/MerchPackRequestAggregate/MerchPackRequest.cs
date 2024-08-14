@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
+using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.Events.Integration;
 using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.Extensions;
