@@ -10,12 +10,25 @@ using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.CQRS.Handlers;
 
+/// <summary>
+/// Handler for create merch pack request
+/// </summary>
+/// <param name="mediator">Mediator instance</param>
+/// <param name="unitOfWork">Unit of work instance</param>
+/// <param name="repository">Generic repository instance</param>
+/// <param name="employeeRepository">Employee repository instance</param>
 public class CreateMerchPackRequestCommandHandler(
     IMediator mediator,  
     IUnitOfWork unitOfWork,
     IRepository repository,
     IEmployeeRepository employeeRepository) : IRequestHandler<CreateMerchPackRequestCommand, RequestStatus>
 {
+    /// <summary>
+    /// Creates merch pack request
+    /// </summary>
+    /// <param name="command">Command with merch pack request data</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
     public async Task<RequestStatus> Handle(CreateMerchPackRequestCommand command, CancellationToken cancellationToken)
     {
         await unitOfWork.StartTransaction(cancellationToken);    

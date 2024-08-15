@@ -20,7 +20,7 @@ public class GetReceivedMerchPacksQueryHandler(
     /// <summary>
     /// Handle for received merch packs query
     /// </summary>
-    /// <param name="query">Received merch packs query</param>
+    /// <param name="query">Query for received merch packs data</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns></returns>
     public async Task<IEnumerable<MerchPack>> Handle(GetReceivedMerchPacksQuery query, CancellationToken cancellationToken)
