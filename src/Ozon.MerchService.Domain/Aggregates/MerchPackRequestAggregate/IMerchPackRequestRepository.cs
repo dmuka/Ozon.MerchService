@@ -1,7 +1,7 @@
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
-namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+namespace Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
 public interface IMerchPackRequestRepository : IRepository
 {

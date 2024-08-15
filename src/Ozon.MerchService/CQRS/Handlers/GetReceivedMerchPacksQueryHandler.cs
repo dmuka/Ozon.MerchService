@@ -2,7 +2,6 @@ using MediatR;
 using OpenTelemetry.Trace;
 using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
-using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Infrastructure.Helpers;
 

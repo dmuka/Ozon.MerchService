@@ -1,3 +1,4 @@
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
 namespace Ozon.MerchService.Domain.Models.Extensions;

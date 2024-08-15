@@ -1,4 +1,6 @@
-namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.Domain.Models;
+
+namespace Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
 public class RequestType(int id, string name) : Enumeration(id, name)
 {

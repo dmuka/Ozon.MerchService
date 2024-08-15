@@ -1,7 +1,7 @@
 using System.Text.Json;
 using AutoMapper;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.Mapper;

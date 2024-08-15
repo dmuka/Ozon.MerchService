@@ -1,8 +1,8 @@
 using MediatR;
 using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 using Ozon.MerchService.Infrastructure.Services.Interfaces;
 

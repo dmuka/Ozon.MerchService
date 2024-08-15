@@ -1,4 +1,6 @@
-namespace Ozon.MerchService.Domain.Models.MerchPackAggregate;
+using Ozon.MerchService.Domain.Models;
+
+namespace Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
 public class RequestStatus(int id, string name) : Enumeration(id, name)
 {

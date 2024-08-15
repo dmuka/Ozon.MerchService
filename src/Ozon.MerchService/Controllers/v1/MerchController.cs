@@ -2,9 +2,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ozon.MerchService.CQRS.Commands;
 using Ozon.MerchService.CQRS.Queries;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.Events.Domain;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.HttpModels;
 
 namespace Ozon.MerchService.Controllers.v1;

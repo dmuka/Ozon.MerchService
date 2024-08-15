@@ -2,8 +2,7 @@ using System.Text.Json;
 using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
-using Ozon.MerchService.Domain.Models.EmployeeAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
 namespace Ozon.MerchService.Domain.Events.Domain;
 

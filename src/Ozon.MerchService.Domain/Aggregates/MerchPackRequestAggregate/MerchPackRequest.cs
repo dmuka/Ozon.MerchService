@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.Events.Integration;
-using Ozon.MerchService.Domain.Models.EmployeeAggregate;
+using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Domain.Models.Extensions;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.ValueObjects;
 
-namespace Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
+namespace Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
 [Table("merchpack_requests")]
 public class MerchPackRequest : Entity, IAggregationRoot

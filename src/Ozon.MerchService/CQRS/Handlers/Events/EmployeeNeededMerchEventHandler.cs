@@ -1,7 +1,7 @@
 using MediatR;
 using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.Events.Domain;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
 namespace Ozon.MerchService.CQRS.Handlers.Events;
 

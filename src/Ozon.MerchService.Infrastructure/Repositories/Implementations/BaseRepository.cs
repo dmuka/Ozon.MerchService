@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.DataContracts.Attributes;
 using Ozon.MerchService.Domain.Models;
-using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchItemAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 using Ozon.MerchService.Infrastructure.Repositories.Attributes;
 using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 

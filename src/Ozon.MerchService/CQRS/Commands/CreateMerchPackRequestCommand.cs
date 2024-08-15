@@ -1,7 +1,7 @@
 using CSharpCourse.Core.Lib.Enums;
 using MediatR;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
 namespace Ozon.MerchService.CQRS.Commands;
 
