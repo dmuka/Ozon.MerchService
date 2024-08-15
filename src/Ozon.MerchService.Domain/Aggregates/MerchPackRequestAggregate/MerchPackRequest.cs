@@ -21,13 +21,13 @@ public class MerchPackRequest : Entity, IAggregationRoot
         DateTimeOffset requestedAt,
         RequestStatus requestStatus)
     {
-        Employee = employee;
-        MerchPack = merchPack;
-        HrEmail = hrEmail;
+        Employee = employee ?? throw new ArgumentNullException(nameof(employee));
+        MerchPack = merchPack ?? throw new ArgumentNullException(nameof(merchPack));
+        HrEmail = hrEmail ?? throw new ArgumentNullException(nameof(hrEmail));
         ClothingSize = clothingSize;
-        RequestType = requestType;
+        RequestType = requestType ?? throw new ArgumentNullException(nameof(requestType));
         RequestedAt = new RequestedAt(requestedAt);
-        RequestStatus = requestStatus;
+        RequestStatus = requestStatus ?? throw new ArgumentNullException(nameof(requestStatus));
     }
     
     public MerchPackRequest(
