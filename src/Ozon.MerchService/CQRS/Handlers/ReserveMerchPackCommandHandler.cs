@@ -47,11 +47,11 @@ namespace Ozon.MerchService.CQRS.Handlers;
             
             if (merchPackAvailable)
             {
-                command.MerchPackRequest.ReserveMerchPack();
+                command.MerchPackRequest.Reserve();
             }
             else
             {
-                command.MerchPackRequest.QueueMerchPack();
+                command.MerchPackRequest.Queue();
             }
             
             var affectedRows = await merchPackRequestRepository.UpdateAsync(command.MerchPackRequest, token);

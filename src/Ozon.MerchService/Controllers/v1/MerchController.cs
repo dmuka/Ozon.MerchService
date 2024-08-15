@@ -39,7 +39,7 @@ public class MerchController(IMediator mediator) : ControllerBase
     /// <summary>
     /// Reserve merch pack for employee
     /// </summary>
-    /// <param name="reserveMerchRequest">Request object with employee id and merch pack type id</param>
+    /// <param name="request">Request object with employee id and merch pack type id</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Reserved merch pack object</returns>
     [HttpPost]

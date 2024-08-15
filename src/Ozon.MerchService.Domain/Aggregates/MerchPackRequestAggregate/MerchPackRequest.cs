@@ -10,7 +10,6 @@ using Ozon.MerchService.Domain.Models.ValueObjects;
 
 namespace Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
-[Table("merchpack_requests")]
 public class MerchPackRequest : Entity, IAggregationRoot
 {
     public MerchPackRequest(
@@ -120,7 +119,7 @@ public class MerchPackRequest : Entity, IAggregationRoot
         return merchPackRequest;
     }
 
-    public void ReserveMerchPack()
+    public void Reserve()
     {
         if (RequestStatus.Is(RequestStatus.Issued))
         {
@@ -130,21 +129,21 @@ public class MerchPackRequest : Entity, IAggregationRoot
         SetStatusIssued();
     }    
     
-    public void QueueMerchPack()
+    public void Queue()
     {
         AddMerchEndedIntegrationEvent();
                      
         SetStatusIssued();
     }
 
-    public void AddMerchPackIsReadyIntegrationEvent()
+    private void AddMerchPackIsReadyIntegrationEvent()
     {
         var @event = new MerchPackIsReadyIntegrationEvent(Employee.Email, MerchPack.MerchPackType);
         
         AddDomainEvent(@event);
     }
 
-    public void AddMerchEndedIntegrationEvent()
+    private void AddMerchEndedIntegrationEvent()
     {
         var @event = new MerchEndedEvent(HrEmail, MerchPack.MerchPackType);
         
