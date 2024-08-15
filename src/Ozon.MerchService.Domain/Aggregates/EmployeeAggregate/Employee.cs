@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CSharpCourse.Core.Lib.Enums;
 using Ozon.MerchService.Domain.Models;
-using Ozon.MerchService.Domain.Models.EmployeeAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Domain.Models.MerchPackRequestAggregate;
 
@@ -13,13 +12,12 @@ public class Employee(
     Email email)
     : Entity, IAggregationRoot
 {
-    [Column("full_name")]
     public FullName FullName { get; private set; } = fullName;
 
     public Email Email { get; private set; } = email;
 
-    private List<MerchPackRequest> _merchPackRequests = new List<MerchPackRequest>();
-    [NotMapped]   
+    private List<MerchPackRequest> _merchPackRequests = [];
+       
     public IEnumerable<MerchPackRequest> MerchPacksRequests  => _merchPackRequests.AsReadOnly();
 
     public bool CanReceiveMerchPack(MerchType merchType)
