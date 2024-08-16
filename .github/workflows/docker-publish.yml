@@ -7,7 +7,7 @@ name: Docker
 
 on:
   workflow_run:
-    workflows: ["Dotnet"]
+    workflows: [".Net"]
     types:
       - completed
 
