@@ -4,8 +4,12 @@
 name: .NET
 
 on:
+  schedule:
+    - cron: '28 14 * * *'
   push:
     branches: [ "master" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "master" ]
 
