@@ -6,8 +6,14 @@ using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.Mapper;
 
+/// <summary>
+/// Automapper profile for merch service
+/// </summary>
 public class MerchServiceMapperProfile : Profile
 {
+    /// <summary>
+    /// Profile constructor
+    /// </summary>
     public MerchServiceMapperProfile()
     {
         UpdateMerchPackRequest();

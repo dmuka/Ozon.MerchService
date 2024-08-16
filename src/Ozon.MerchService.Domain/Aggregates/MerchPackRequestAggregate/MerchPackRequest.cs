@@ -12,6 +12,8 @@ namespace Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 
 public class MerchPackRequest : Entity, IAggregationRoot
 {
+    private const int EnumerationIdMinimumValue = 1;
+    
     public MerchPackRequest(
         Employee employee,
         MerchPack merchPack,
@@ -58,7 +60,7 @@ public class MerchPackRequest : Entity, IAggregationRoot
 
     public RequestedAt RequestedAt { get; private set; }
 
-    public Issued Issued { get; }
+    public Issued Issued { get; private set; }
 
     public RequestStatus RequestStatus { get; private set; }
     
@@ -72,6 +74,8 @@ public class MerchPackRequest : Entity, IAggregationRoot
         ClothingSize clothingSize,
         RequestType requestType)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id, nameof(id));
+
         var request = new MerchPackRequest(
             employee,
             merchPack,
@@ -103,6 +107,13 @@ public class MerchPackRequest : Entity, IAggregationRoot
         int statusId,
         string statusName)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(merchPackRequestId, nameof(merchPackRequestId));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(employeeId, nameof(employeeId));
+        ArgumentOutOfRangeException.ThrowIfLessThan(requestTypeId, EnumerationIdMinimumValue, nameof(requestTypeId));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(requestTypeId, Enumeration.GetAll<RequestType>().Count(), nameof(requestTypeId));
+        ArgumentOutOfRangeException.ThrowIfLessThan(statusId, EnumerationIdMinimumValue, nameof(statusId));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(statusId, Enumeration.GetAll<RequestStatus>().Count(), nameof(statusId));
+        
         var merchPackRequest = new MerchPackRequest(
             Employee.CreateInstance(employeeId, employeeFullName, string.Empty, employeeEmail),
             new MerchPack(merchPackType, merchPackItems),
@@ -121,19 +132,22 @@ public class MerchPackRequest : Entity, IAggregationRoot
 
     public void Reserve()
     {
+        SetStatusIssued();
+        
         if (RequestStatus.Is(RequestStatus.Issued))
         {
             AddMerchPackIsReadyIntegrationEvent();
         }
-                
-        SetStatusIssued();
     }    
     
     public void Queue()
     {
-        AddMerchEndedIntegrationEvent();
-                     
-        SetStatusIssued();
+        SetStatusQueued();
+
+        if (RequestStatus.Is(RequestStatus.Queued))
+        {
+            AddMerchEndedIntegrationEvent();
+        }
     }
 
     private void AddMerchPackIsReadyIntegrationEvent()
@@ -188,5 +202,6 @@ public class MerchPackRequest : Entity, IAggregationRoot
         }
         
         RequestStatus = RequestStatus.Issued;
+        Issued = new Issued(DateTimeOffset.UtcNow);
     }
 }

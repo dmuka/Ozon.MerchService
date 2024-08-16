@@ -8,7 +8,7 @@ public class Issued : ValueObject
     {
         Value = date;
     }
-    public DateTimeOffset? Value { get; } = null;
+    public DateTimeOffset? Value { get; }
     
     protected override IEnumerable<object> GetEqualityComponents()
     {
