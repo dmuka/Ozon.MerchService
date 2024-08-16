@@ -8,24 +8,39 @@ namespace Ozon.MerchService.Domain.Tests;
 
 public class MerchPackRequestAggregateTests
 {
+    private Employee _employee;
+    private MerchPack _merchPack;
+    private DateTimeOffset _requestedAt;
+    private ClothingSize _clothingSize;
+    private Email _hrEmail;
+    private RequestType _requestType;
+    private RequestStatus _requestStatus;
+
+    public MerchPackRequestAggregateTests()
+    {
+        _employee = new Employee(new FullName("First", "Last"), new Email("employee@email.com"));
+        _merchPack = new MerchPack(MerchType.WelcomePack,
+            new [] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
+        _requestedAt = new DateTimeOffset(2024, 08, 15, 10, 45, 00,
+            new TimeSpan(0, 0, 0, 0));
+        _clothingSize = ClothingSize.L;
+        _hrEmail = new Email("hr@email.com");
+        _requestType = RequestType.Manual;
+        _requestStatus = RequestStatus.Created;
+    }
+    
     [Fact]
     public void CreateMerchPackRequestInstance_AllDataValid_Success()
     {
-        //Arrange
-        var employee = new Employee(new FullName("First", "Last"), new Email("employee@email.com"));
-        var merchPack = new MerchPack(MerchType.WelcomePack,
-            new MerchItem[] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
-        
-        
-        //Act
+        //Arrange - Act
         var instance = new MerchPackRequest(
-            employee, 
-            merchPack, 
-            ClothingSize.L, 
-            new Email("hr@email.com"), 
-            RequestType.Auto, 
-            new DateTimeOffset(2024,08,15,10,45,00, new TimeSpan(0,0,0,0)), 
-            RequestStatus.Created);
+            _employee, 
+            _merchPack, 
+            _clothingSize, 
+            _hrEmail, 
+            _requestType, 
+            _requestedAt, 
+            _requestStatus);
 
         //Assert
         Assert.NotNull(instance);
@@ -34,94 +49,70 @@ public class MerchPackRequestAggregateTests
     [Fact]
     public void CreateMerchPackRequestInstance_EmployeeIsNull_ThrowException()
     {
-        //Arrange
-        var merchPack = new MerchPack(MerchType.WelcomePack,
-            new [] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
-
-        //Act - Assert
+        //Arrange - Act - Assert
         Assert.Throws<ArgumentNullException>(() => new MerchPackRequest(
             null, 
-            merchPack, 
-            ClothingSize.L, 
-            new Email("hr@email.com"), 
-            RequestType.Auto, 
-            new DateTimeOffset(2024,08,15,10,45,00, new TimeSpan(0,0,0,0)), 
-            RequestStatus.Created));
+            _merchPack, 
+            _clothingSize, 
+            _hrEmail, 
+            _requestType, 
+            _requestedAt, 
+            _requestStatus));
     }
     
     [Fact]
     public void CreateMerchPackRequestInstance_MerchPackIsNull_ThrowException()
     {
-        //Arrange
-        var employee = new Employee(new FullName("First", "Last"), new Email("employee@email.com"));
-        var merchPack = new MerchPack(MerchType.WelcomePack,
-            new [] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
-
-        //Act - Assert
+        //Arrange - Act - Assert
         Assert.Throws<ArgumentNullException>(() => new MerchPackRequest(
-            employee, 
+            _employee, 
             null, 
-            ClothingSize.L, 
-            new Email("hr@email.com"), 
-            RequestType.Auto, 
-            new DateTimeOffset(2024,08,15,10,45,00, new TimeSpan(0,0,0,0)), 
-            RequestStatus.Created));
+            _clothingSize, 
+            _hrEmail, 
+            _requestType, 
+            _requestedAt, 
+            _requestStatus));
     }
     
     [Fact]
     public void CreateMerchPackRequestInstance_RequestTypeIsNull_ThrowException()
     {
-        //Arrange
-        var employee = new Employee(new FullName("First", "Last"), new Email("employee@email.com"));
-        var merchPack = new MerchPack(MerchType.WelcomePack,
-            new [] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
-
-        //Act - Assert
+        //Arrange - Act - Assert
         Assert.Throws<ArgumentNullException>(() => new MerchPackRequest(
-            employee, 
-            merchPack, 
-            ClothingSize.L, 
-            new Email("hr@email.com"), 
+            _employee, 
+            _merchPack, 
+            _clothingSize, 
+            _hrEmail, 
             null, 
-            new DateTimeOffset(2024,08,15,10,45,00, new TimeSpan(0,0,0,0)), 
-            RequestStatus.Created));
+            _requestedAt, 
+            _requestStatus));
     }
     
     [Fact]
     public void CreateMerchPackRequestInstance_HrEmailIsNull_ThrowException()
     {
-        //Arrange
-        var employee = new Employee(new FullName("First", "Last"), new Email("employee@email.com"));
-        var merchPack = new MerchPack(MerchType.WelcomePack,
-            new [] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
-
-        //Act - Assert
+        //Arrange - Act - Assert
         Assert.Throws<ArgumentNullException>(() => new MerchPackRequest(
-            employee, 
-            merchPack, 
-            ClothingSize.L, 
+            _employee, 
+            _merchPack, 
+            _clothingSize, 
             null, 
-            RequestType.Auto, 
-            new DateTimeOffset(2024,08,15,10,45,00, new TimeSpan(0,0,0,0)), 
-            RequestStatus.Created));
+            _requestType, 
+            _requestedAt, 
+            _requestStatus));
     }
     
     [Fact]
     public void CreateMerchPackRequestInstance_RequestStatusIsNull_ThrowException()
     {
-        //Arrange
-        var employee = new Employee(new FullName("First", "Last"), new Email("employee@email.com"));
-        var merchPack = new MerchPack(MerchType.WelcomePack,
-            new [] { new MerchItem(1, new ItemType(1, "ItemTypeName"), 1) });
-
-        //Act - Assert
+        //Arrange - Act - Assert
         Assert.Throws<ArgumentNullException>(() => new MerchPackRequest(
-            employee, 
-            merchPack, 
-            ClothingSize.L, 
-            new Email("hr@email.com"), 
-            RequestType.Auto, 
-            new DateTimeOffset(2024,08,15,10,45,00, new TimeSpan(0,0,0,0)), 
+            _employee, 
+            _merchPack, 
+            _clothingSize, 
+            _hrEmail, 
+            _requestType, 
+            _requestedAt, 
             null));
     }
 }
