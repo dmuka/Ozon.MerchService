@@ -1,7 +1,15 @@
 namespace Ozon.MerchService.Infrastructure.Extensions;
 
+/// <summary>
+/// Generic type extensions
+/// </summary>
 public static class GenericTypeExtensions
 {
+    /// <summary>
+    /// Get name of generic type
+    /// </summary>
+    /// <param name="type">Type instance</param>
+    /// <returns>Name of type</returns>
     public static string GetGenericTypeName(this Type type)
     {
         string typeName;
@@ -19,6 +27,11 @@ public static class GenericTypeExtensions
         return typeName;
     }
 
+    /// <summary>
+    /// Get name of generic type
+    /// </summary>
+    /// <param name="object">Object instance</param>
+    /// <returns>Name of type</returns>
     public static string GetGenericTypeName(this object @object)
     {
         return @object.GetType().GetGenericTypeName();

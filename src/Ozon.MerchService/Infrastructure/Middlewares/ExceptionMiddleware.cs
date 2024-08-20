@@ -34,7 +34,7 @@ namespace Ozon.MerchService.Infrastructure.Middlewares;
             catch (RepositoryOperationException repositoryOperationException)
             {
                 await HandleException(context, repositoryOperationException.Message,
-                    (int)repositoryOperationException.InnerException.HResult);
+                    (int)HttpStatusCode.InternalServerError);
             }
             catch (ConsumeException consumeException)
             {

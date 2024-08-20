@@ -12,31 +12,15 @@ namespace Ozon.MerchService.CQRS.Commands;
 /// </summary>
 public class ReserveMerchPackCommand : IRequest<RequestStatus>
 {
+    /// <summary>
+    /// Reserve merch pack command constructor
+    /// </summary>
+    /// <param name="merchPackRequest">Merch pack request instance</param>
+    /// <param name="eventType">Employee event type instance</param>
     public ReserveMerchPackCommand(MerchPackRequest merchPackRequest, EmployeeEventType? eventType)
     {
         EventType = eventType;
         MerchPackRequest = merchPackRequest;
-    }
-    
-    public ReserveMerchPackCommand(
-        string employeeFirstName,
-        string employeeLastName,
-        string employeeEmail,
-        string hrEmail,
-        string hrName,
-        MerchType merchPackType,
-        ClothingSize clothingSize)
-    {
-        Employee = new Employee( new FullName(employeeFirstName, employeeLastName), new Email(employeeEmail));
-        MerchPackRequest = new MerchPackRequest(
-            Employee, 
-            new MerchPack(merchPackType, Array.Empty<MerchItem>()),
-            clothingSize,
-            new Email(hrEmail),
-            RequestType.Manual,
-            DateTimeOffset.UtcNow,
-            RequestStatus.Created
-            );
     }
     
     public ReserveMerchPackCommand(MerchPackRequest merchPackRequest)
