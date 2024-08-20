@@ -5,11 +5,26 @@ using Ozon.MerchService.Infrastructure.Extensions;
 
 namespace Ozon.MerchService.Infrastructure.Mediatr;
 
+/// <summary>
+/// Log validation logic in mediatr pipeline
+/// </summary>
+/// <param name="logger">Logger instance</param>
+/// <param name="validators">Collection of current validators</param>
+/// <typeparam name="TRequest">Type of request</typeparam>
+/// <typeparam name="TResponse">Type of response</typeparam>
 public class ValidatorBehavior<TRequest, TResponse>(
     ILogger<ValidatorBehavior<TRequest, TResponse>> logger,
     IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse> 
     where TRequest : IRequest<TResponse>
 {
+    /// <summary>
+    /// Handle logic to log validation logic in mediatr pipeline
+    /// </summary>
+    /// <param name="request">Request instance</param>
+    /// <param name="next">Next handler in mediatr pipeline</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
+    /// <exception cref="MerchServiceDomainException"></exception>
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var typeName = request.GetGenericTypeName();

@@ -4,6 +4,10 @@ using Grpc.Core.Interceptors;
 
 namespace Ozon.MerchService.Infrastructure.Interceptors;
 
+/// <summary>
+/// Grpc server logging interceptor
+/// </summary>
+/// <param name="logger">Logger instance</param>
 public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : Interceptor
 {
     private readonly JsonSerializerOptions _defaultSerializationOptions = new()
@@ -12,6 +16,15 @@ public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : Intercepto
         WriteIndented = true
     };
 
+    /// <summary>
+    /// Handler to log unary grpc server requests
+    /// </summary>
+    /// <param name="request">Request instance</param>
+    /// <param name="context">Context instance for a server side call</param>
+    /// <param name="continuation">Next server side handler for unary call</param>
+    /// <typeparam name="TRequest">Request type</typeparam>
+    /// <typeparam name="TResponse">Response type</typeparam>
+    /// <returns>Response instance</returns>
     public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
         TRequest request,
         ServerCallContext context,

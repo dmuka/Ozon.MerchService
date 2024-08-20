@@ -2,9 +2,18 @@ using System.Text;
 
 namespace Ozon.MerchService.Infrastructure.Middlewares;
 
-public class BaseMiddleware
+/// <summary>
+/// Base middleware class
+/// </summary>
+public abstract class BaseMiddleware
 {
-    protected string GetRouteHeadersLogMessage(string route, IHeaderDictionary headers)
+    /// <summary>
+    /// Get headers for route
+    /// </summary>
+    /// <param name="route">Route value</param>
+    /// <param name="headers">Headers dictionary</param>
+    /// <returns></returns>
+    protected static string GetRouteHeadersLogMessage(string route, IHeaderDictionary headers)
     {
         var message = new StringBuilder();
         

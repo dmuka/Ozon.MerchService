@@ -35,7 +35,6 @@ public static class ServiceCollectionExtensions
 
                 mediatrServiceConfiguration.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 mediatrServiceConfiguration.AddOpenBehavior(typeof(ValidatorBehavior<,>));
-                mediatrServiceConfiguration.AddOpenBehavior(typeof(ScopedBehavior<,>));
             })
             .AddAutoMapper(typeof(MerchServiceMapperProfile).Assembly)
             //.AddScoped(typeof(IPipelineBehavior<,>), typeof(ScopedBehavior<,>))
