@@ -113,9 +113,11 @@ public class MerchPackRequest : Entity, IAggregationRoot
         ArgumentOutOfRangeException.ThrowIfGreaterThan(requestTypeId, Enumeration.GetAll<RequestType>().Count(), nameof(requestTypeId));
         ArgumentOutOfRangeException.ThrowIfLessThan(statusId, EnumerationIdMinimumValue, nameof(statusId));
         ArgumentOutOfRangeException.ThrowIfGreaterThan(statusId, Enumeration.GetAll<RequestStatus>().Count(), nameof(statusId));
+
+        var names = employeeFullName.Split(' ');
         
         var merchPackRequest = new MerchPackRequest(
-            Employee.CreateInstance(employeeId, employeeFullName, string.Empty, employeeEmail),
+            Employee.CreateInstance(employeeId, names[0], names[1], employeeEmail),
             new MerchPack(merchPackType, merchPackItems),
             clothingSize,
             new Email(hrEmail),
