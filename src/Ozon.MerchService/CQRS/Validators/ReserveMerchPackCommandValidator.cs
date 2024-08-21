@@ -23,7 +23,7 @@ public class ReserveMerchPackCommandValidator : AbstractValidator<ReserveMerchPa
         RuleFor(command => command.MerchPackRequest.HrEmail.Value)
             .NotEmpty().EmailAddress();
 
-        RuleFor(command => command.Employee.FullName.Value)
+        RuleFor(command => command.MerchPackRequest.Employee.FullName.Value)
             .NotEmpty().Length(4,100);
 
         RuleFor(command => command.EventType)

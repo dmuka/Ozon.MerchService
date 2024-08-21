@@ -3,7 +3,7 @@ namespace Ozon.MerchService.Infrastructure.Middlewares;
 /// <summary>
 /// Middleware for ready response
 /// </summary>
-public class ReadyMiddleware(RequestDelegate next)
+public class ReadyMiddleware()
 {
     /// <summary>
     /// Return 200 Ok status code in the response

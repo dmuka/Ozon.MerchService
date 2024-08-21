@@ -1,9 +1,6 @@
 using CSharpCourse.Core.Lib.Enums;
 using MediatR;
-using Ozon.MerchService.Domain.Aggregates.EmployeeAggregate;
 using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
-using Ozon.MerchService.Domain.Models.MerchItemAggregate;
-using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 
 namespace Ozon.MerchService.CQRS.Commands;
 
@@ -23,16 +20,22 @@ public class ReserveMerchPackCommand : IRequest<RequestStatus>
         MerchPackRequest = merchPackRequest;
     }
     
+    /// <summary>
+    /// Reserve merch pack command constructor
+    /// </summary>
+    /// <param name="merchPackRequest">Merch pack request instance</param>
     public ReserveMerchPackCommand(MerchPackRequest merchPackRequest)
     {
         MerchPackRequest = merchPackRequest;
     }
 
-    public MerchPackRequest MerchPackRequest { get; private set; }
     /// <summary>
-    /// Employee
+    /// Merch pack request property
     /// </summary>
-    public Employee Employee { get; private set; }
+    public MerchPackRequest MerchPackRequest { get; private set; }
 
+    /// <summary>
+    /// Employee event type property
+    /// </summary>
     public EmployeeEventType? EventType { get; private set; }
 }
