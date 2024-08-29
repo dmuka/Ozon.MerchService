@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using Dapper;
 using Npgsql;
+using Ozon.MerchService.Domain.Aggregates;
 using Ozon.MerchService.Domain.DataContracts;
 using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;

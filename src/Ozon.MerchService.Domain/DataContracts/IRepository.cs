@@ -1,4 +1,5 @@
 using Npgsql;
+using Ozon.MerchService.Domain.Aggregates;
 using Ozon.MerchService.Domain.Models;
 
 namespace Ozon.MerchService.Domain.DataContracts;

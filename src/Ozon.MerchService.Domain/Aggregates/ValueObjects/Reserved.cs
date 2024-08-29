@@ -1,3 +1,5 @@
+using Ozon.MerchService.Domain.Aggregates;
+
 namespace Ozon.MerchService.Domain.Models.ValueObjects;
 
 public class Reserved : ValueObject

@@ -3,7 +3,7 @@ namespace Ozon.MerchService.Infrastructure.Middlewares;
 /// <summary>
 /// Middleware for live response
 /// </summary>
-public class LiveMiddleware()
+public class LiveMiddleware(RequestDelegate next)
 {
     /// <summary>
     /// Return 200 Ok status code in the response

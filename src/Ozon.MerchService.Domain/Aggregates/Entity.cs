@@ -1,9 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using MediatR;
-using Ozon.MerchService.Domain.DataContracts.Attributes;
 
-namespace Ozon.MerchService.Domain.Models;
+namespace Ozon.MerchService.Domain.Aggregates;
 
 public abstract class Entity
 {

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Ozon.MerchService.CQRS.Commands;
 using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
-using Ozon.MerchService.Domain.Events.Domain;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.HttpModels;
 
@@ -44,7 +43,7 @@ public class MerchController(IMediator mediator) : ControllerBase
     /// <returns>Reserved merch pack object</returns>
     [HttpPost]
     [Route("reserve")]
-    public async Task<ActionResult<MerchPack>> ReserveMerch(
+    public async Task<ActionResult<RequestStatus>> ReserveMerch(
         [FromBody] ReserveMerchRequest request, 
         CancellationToken cancellationToken)
     {

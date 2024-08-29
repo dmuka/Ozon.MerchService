@@ -19,7 +19,7 @@ public class MerchPacksRepository(
     private readonly IDapperQuery _query = query;
     private const int Timeout = 5;
     
-    public async Task<MerchPack> GetMerchPackById(int merchPackId, CancellationToken cancellationToken)
+    public async Task<MerchPack?> GetMerchPackById(int merchPackId, CancellationToken cancellationToken)
     {
         const string sqlQuery = """
                                 SELECT
@@ -49,6 +49,8 @@ public class MerchPacksRepository(
             {
                 var merchPackDto = await connection
                     .QuerySingleOrDefaultAsync<MerchPackDto>(commandDefinition);
+                
+                if (merchPackDto is null) return null;
 
                 var items = JsonSerializer.Deserialize<MerchItemDto[]>(merchPackDto.Items) ?? [];
                 

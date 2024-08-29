@@ -1,4 +1,4 @@
-namespace Ozon.MerchService.Domain.Models;
+namespace Ozon.MerchService.Domain.Aggregates;
 
 /// <summary>
 /// Represents base value object class

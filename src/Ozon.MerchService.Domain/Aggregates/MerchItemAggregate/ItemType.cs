@@ -1,3 +1,5 @@
+using Ozon.MerchService.Domain.Aggregates;
+
 namespace Ozon.MerchService.Domain.Models.MerchItemAggregate;
 
 public class ItemType(int itemTypeId, string itemTypeName) : ValueObject

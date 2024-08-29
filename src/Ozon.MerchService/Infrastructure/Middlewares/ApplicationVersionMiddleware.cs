@@ -6,7 +6,7 @@ namespace Ozon.MerchService.Infrastructure.Middlewares;
 /// <summary>
 /// Middleware for application version information
 /// </summary>
-public class ApplicationVersionMiddleware()
+public class ApplicationVersionMiddleware(RequestDelegate next)
 {
     /// <summary>
     /// Write application version information in response

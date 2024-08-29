@@ -6,15 +6,14 @@ namespace Ozon.MerchService.CQRS.Validators;
 /// <summary>
 /// Get received merch packs query handler validator
 /// </summary>
-public class GetReceivedMerchPacksQueryHandlerValidator : AbstractValidator<GetReceivedMerchPacksQuery>
+public class GetReceivedMerchPacksQueryValidator : AbstractValidator<GetReceivedMerchPacksQuery>
 {
-    
     /// <summary>
     /// Get received merch packs query handler validator constructor
     /// </summary>
-    public GetReceivedMerchPacksQueryHandlerValidator()
+    public GetReceivedMerchPacksQueryValidator()
     {
-        RuleFor(command => command.EmployeeId)
+        RuleFor(query => query.EmployeeId)
             .NotEmpty().GreaterThan(default(long));
     }
 }

@@ -5,7 +5,7 @@ using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 namespace Ozon.MerchService.CQRS.Queries;
 
 /// <summary>
-/// Get merch pack query
+/// Get merch pack for request query
 /// </summary>
 /// <param name="merchPackType">Merch pack type</param>
 /// <param name="clothingSize">Clothing size</param>

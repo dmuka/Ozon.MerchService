@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Ozon.MerchService.Domain.Models;
+namespace Ozon.MerchService.Domain.Aggregates;
 
 public interface IRegexValid
 {

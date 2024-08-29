@@ -1,6 +1,4 @@
-using Ozon.MerchService.Domain.DataContracts.Attributes;
-
-namespace Ozon.MerchService.Domain.Models;
+namespace Ozon.MerchService.Domain.Aggregates;
 
 public class Item : Entity
 {

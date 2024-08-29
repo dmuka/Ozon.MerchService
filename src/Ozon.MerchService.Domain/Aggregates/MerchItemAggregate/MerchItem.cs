@@ -1,3 +1,4 @@
+using Ozon.MerchService.Domain.Aggregates;
 using Ozon.MerchService.Domain.Models.ValueObjects;
 
 namespace Ozon.MerchService.Domain.Models.MerchItemAggregate;

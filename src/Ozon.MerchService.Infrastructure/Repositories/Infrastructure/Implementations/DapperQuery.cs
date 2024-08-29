@@ -1,3 +1,4 @@
+using Ozon.MerchService.Domain.Aggregates;
 using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
@@ -13,7 +14,7 @@ public class DapperQuery(ITracker tracker) : IDapperQuery
         return entity;
     }
 
-    public async Task<T> Call<T>(Func<Task<T>> function) where T : Entity
+    public async Task<T> Call<T>(Func<Task<T>> function) where T : Entity?
     {
         var result = await function();
         if (result is not null) tracker.Track(result);

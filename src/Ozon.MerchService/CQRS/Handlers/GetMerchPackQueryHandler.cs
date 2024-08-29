@@ -8,7 +8,7 @@ using Ozon.MerchService.Infrastructure.Services.Interfaces;
 namespace Ozon.MerchService.CQRS.Handlers;
 
 /// <summary>
-/// Handler for get merch pack of certain type 
+/// Handler to get merch pack of certain type with items skus
 /// </summary>
 /// <param name="merchPacksRepository">Merch pack repository</param>
 /// <param name="stockGrpcService">Stock grpc service</param>
@@ -27,9 +27,11 @@ public class GetMerchPackQueryHandler(
     /// <returns></returns>
     public async Task<MerchPack> Handle(GetMerchPackQuery query, CancellationToken cancellationToken)
     {
-        var tracer = tracerProvider.GetTracer("GetMerchPackQueryHandler");
+        const string handlerName = nameof(GetMerchPackQueryHandler);
+        
+        var tracer = tracerProvider.GetTracer(handlerName);
 
-        using var span = Tracing.StartSpan(tracer, "HandleGetMerchPackQueryHandler", SpanKind.Internal,
+        using var span = Tracing.StartSpan(tracer, handlerName, SpanKind.Internal,
             new Dictionary<string, object>
             {
                 { "item.id", query.MerchPackType }
@@ -37,7 +39,7 @@ public class GetMerchPackQueryHandler(
         
         var merchPack = await merchPacksRepository.GetMerchPackById((int)query.MerchPackType, cancellationToken);
             
-        stockGrpcService.SetItemsSkusInRequest(merchPack.Items.ToList(), query.ClothingSize, cancellationToken);
+        stockGrpcService.SetItemsSkusInRequest(merchPack.Items, query.ClothingSize, cancellationToken);
 
         return merchPack;
     }
