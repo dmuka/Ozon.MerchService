@@ -38,8 +38,8 @@ public class CreateMerchPackRequestCommandHandler(
         if (employee is null)
         {
             var employeeId = await employeeRepository.CreateAsync<Employee, long>(
-                cancellationToken, 
-                new { FullName = command.EmployeeName, Email = command.EmployeeEmail });
+                new { FullName = command.EmployeeName, Email = command.EmployeeEmail }, 
+                cancellationToken);
             
             employee = Employee.CreateInstance(
                 employeeId, 
@@ -54,7 +54,7 @@ public class CreateMerchPackRequestCommandHandler(
         
         var dto = GetDto(command, merchPack, employee);
             
-        var merchPackRequestId = await repository.CreateAsync<MerchPackRequestDto, long>(cancellationToken, dto);
+        var merchPackRequestId = await repository.CreateAsync<MerchPackRequestDto, long>(dto, cancellationToken);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
         

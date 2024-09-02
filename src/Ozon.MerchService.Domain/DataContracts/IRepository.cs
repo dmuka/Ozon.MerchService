@@ -1,24 +1,27 @@
-using Npgsql;
 using Ozon.MerchService.Domain.Aggregates;
-using Ozon.MerchService.Domain.Models;
 
 namespace Ozon.MerchService.Domain.DataContracts;
 
 /// <summary>
 /// Base repository interface
 /// </summary>
-/// <typeparam name="TEntity">Type of entity</typeparam>
-/// <typeparam name="TId">Entity id type</typeparam>
 public interface IRepository
 {
     /// <summary>
+    /// Get all items of type <see cref="T"/>
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <typeparam name="T">Items type</typeparam>
+    /// <returns>All items of type <see cref="T"/></returns>
+    Task<IEnumerable<T>> GetAllAsync<T>(CancellationToken cancellationToken);
+    
+    /// <summary>
     /// Create new item
     /// </summary>
-    /// <param name="item">New item</param>
     /// <param name="token">Cancellation token <see cref="CancellationToken"/></param>
     /// <param name="parameters"></param>
     /// <returns>Created item id</returns>
-    Task<TId> CreateAsync<TEntity, TId>(CancellationToken token, object parameters) 
+    Task<TId> CreateAsync<TEntity, TId>(object parameters, CancellationToken token) 
         where TId : IEquatable<TId>;
     
     /// <summary>

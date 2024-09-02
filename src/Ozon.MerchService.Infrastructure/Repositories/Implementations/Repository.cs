@@ -6,7 +6,6 @@ using Dapper;
 using Npgsql;
 using Ozon.MerchService.Domain.Aggregates;
 using Ozon.MerchService.Domain.DataContracts;
-using Ozon.MerchService.Domain.Models;
 using Ozon.MerchService.Infrastructure.Repositories.Exceptions;
 using Ozon.MerchService.Infrastructure.Repositories.Infrastructure.Interfaces;
 
@@ -22,7 +21,7 @@ public class Repository(
     IMapper mapper) 
     : BaseRepository, IRepository
 {
-    public async Task<TId> CreateAsync<T, TId>(CancellationToken cancellationToken, object parameters) 
+    public async Task<TId> CreateAsync<T, TId>(object parameters, CancellationToken cancellationToken) 
         where TId : IEquatable<TId>
     {
         try
@@ -110,8 +109,6 @@ public class Repository(
             
             for (var i = 0; i < properties.Length; i++)
             {
-                var columnAttribute = properties[i].GetCustomAttribute<ColumnAttribute>();
-
                 object? columnValue = null;
                 
                 if (properties[i].PropertyType == typeof(string))
@@ -132,7 +129,8 @@ public class Repository(
                 {
                     columnValue = properties[i].GetValue(dto);
                 }
-                
+
+                var columnAttribute = properties[i].GetCustomAttribute<ColumnAttribute>();                
                 var columnName = columnAttribute?.Name;
                 
                 query.Append($"{columnName}={columnValue},");

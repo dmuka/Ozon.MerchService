@@ -25,4 +25,15 @@ public class MerchPackController(IMediator mediator) : ControllerBase
         
         return Ok(result);
     }
+    
+    [HttpGet]
+    [Route("all")]
+    public async Task<ActionResult<IEnumerable<MerchPack>>> GetAllMerchPacks(CancellationToken cancellationToken)
+    {
+        var query = new GetAllMerchPacksQuery();
+
+        var result = await mediator.Send(query, cancellationToken);
+        
+        return Ok(result);
+    }
 }
