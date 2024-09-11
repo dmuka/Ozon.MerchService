@@ -1,18 +1,38 @@
-using Ozon.MerchService.Domain.Models.MerchPackAggregate;
+using MediatR;
+using Ozon.MerchService.CQRS.Commands;
+using Ozon.MerchService.CQRS.Queries;
+using Ozon.MerchService.Domain.Aggregates.MerchPackRequestAggregate;
 using Ozon.MerchService.HttpClient.Interfaces;
 using Ozon.MerchService.HttpModels;
 
 namespace Ozon.MerchService.HttpClient.Implementations;
 
-public class MerchServiceHttpClient : IMerchServiceHttpClient
+public class MerchServiceHttpClient(IMediator mediator) : IMerchServiceHttpClient
 {
-    public Task<ReceivedMerchResponse> GetReceivedMerch(ReceivedMerchRequest receivedMerchRequest, CancellationToken cancellationToken)
+    public async Task<ReceivedMerchResponse> GetReceivedMerch(ReceivedMerchRequest receivedMerchRequest, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var query = new GetReceivedMerchPacksQuery(receivedMerchRequest.EmployeeId, receivedMerchRequest.EmployeeEmail);
+
+        var result = await mediator.Send(query, cancellationToken);
+        
+        return new ReceivedMerchResponse { MerchPacks = result.ToList() };
     }
 
-    public Task<MerchPack> ReserveMerch(ReserveMerchRequest reserveMerchRequest, CancellationToken cancellationToken)
+    public async Task<RequestStatus> ReserveMerch(ReserveMerchRequest reserveMerchRequest, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        
+        var command = new CreateMerchPackRequestCommand(
+            reserveMerchRequest.EmployeeFirstName,
+            reserveMerchRequest.EmployeeLastName,
+            reserveMerchRequest.EmployeeEmail,
+            reserveMerchRequest.HrEmail,
+            reserveMerchRequest.HrName,
+            reserveMerchRequest.MerchPackType,
+            reserveMerchRequest.ClothingSize,
+            RequestType.Auto);
+
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result;
     }
 }

@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Ozon.MerchService.HttpModels\Ozon.MerchService.HttpModels.csproj" />
+      <ProjectReference Include="..\Ozon.MerchService\Ozon.MerchService.csproj" />
     </ItemGroup>
 
 </Project>

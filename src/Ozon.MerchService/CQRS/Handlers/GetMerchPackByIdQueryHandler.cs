@@ -3,6 +3,7 @@ using OpenTelemetry.Trace;
 using Ozon.MerchService.CQRS.Queries;
 using Ozon.MerchService.Domain.Models.MerchPackAggregate;
 using Ozon.MerchService.Infrastructure.Helpers;
+using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.CQRS.Handlers;
 
@@ -13,7 +14,7 @@ namespace Ozon.MerchService.CQRS.Handlers;
 /// <param name="tracerProvider">Tracer provider</param>
 public class GetMerchPackByIdQueryHandler(
     IMerchPacksRepository repository, 
-    TracerProvider tracerProvider) : IRequestHandler<GetMerchPackByIdQuery, MerchPack?>
+    TracerProvider tracerProvider) : IRequestHandler<GetMerchPackByIdQuery, MerchPackDto?>
 {
     /// <summary>
     /// Gets merch pack by id
@@ -21,7 +22,7 @@ public class GetMerchPackByIdQueryHandler(
     /// <param name="request">Query with merch pack id</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns></returns>
-    public async Task<MerchPack?> Handle(GetMerchPackByIdQuery request, CancellationToken cancellationToken)
+    public async Task<MerchPackDto?> Handle(GetMerchPackByIdQuery request, CancellationToken cancellationToken)
     {
         const string handlerName = nameof(GetMerchPackByIdQueryHandler);
         
@@ -35,7 +36,7 @@ public class GetMerchPackByIdQueryHandler(
         
         var merchPackId = request.MerchPackId;
 
-        var merchPack = await repository.GetMerchPackById(merchPackId, cancellationToken);
+        var merchPack = await repository.GetByIdAsync<MerchPackDto, int>(merchPackId, cancellationToken);
 
         return merchPack;
     }

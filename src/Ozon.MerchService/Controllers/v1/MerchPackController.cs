@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ozon.MerchService.CQRS.Queries;
-using Ozon.MerchService.Domain.Models.MerchPackAggregate;
+using Ozon.MerchService.Infrastructure.Repositories.DTOs;
 
 namespace Ozon.MerchService.Controllers.v1;
 
@@ -15,7 +15,7 @@ public class MerchPackController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [Route("")]
-    public async Task<ActionResult<MerchPack>> GetMerchPackById(
+    public async Task<ActionResult<MerchPackDto>> GetMerchPackById(
         int merchPackId, 
         CancellationToken cancellationToken)
     {
@@ -28,7 +28,7 @@ public class MerchPackController(IMediator mediator) : ControllerBase
     
     [HttpGet]
     [Route("all")]
-    public async Task<ActionResult<IEnumerable<MerchPack>>> GetAllMerchPacks(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<MerchPackDto>>> GetAllMerchPacks(CancellationToken cancellationToken)
     {
         var query = new GetAllMerchPacksQuery();
 
