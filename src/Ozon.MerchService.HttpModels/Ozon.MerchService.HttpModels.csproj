@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Ozon.MerchService.Domain\Ozon.MerchService.Domain.csproj" />
+      <ProjectReference Include="..\Ozon.MerchService.Infrastructure\Ozon.MerchService.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
